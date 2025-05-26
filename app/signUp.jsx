@@ -26,7 +26,7 @@ const SignUp = () => {
 
     setLoading(true);
 
-    let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileRef.current, 'student');
+    let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileRef.current);
     setLoading(false);
 
     console.log('got results: ', response);
