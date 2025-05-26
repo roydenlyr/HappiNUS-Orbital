@@ -1,17 +1,17 @@
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
 import ChatList from '../../components/ChatList';
 import Loading from '../../components/Loading';
-import { doc, getDocs, query, where } from 'firebase/firestore';
+import { getDocs, query, where } from 'firebase/firestore';
 import { usersRef } from '../../firebaseConfig';
 
 
 const Home = () => {
 
-  const {logout, user} = useAuth();
+  const {user} = useAuth();
   const [users, setUsers] = useState([]);
   useEffect(() => {
     if(user?.uid)
