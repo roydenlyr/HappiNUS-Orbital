@@ -23,7 +23,6 @@ export const AuthContextProvider = ({ children }) => {
             }
         });
         return unsub;
-        setIsAuthenticated(false);
     }, []);
 
     const updateUserData = async (userId) => {

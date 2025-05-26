@@ -2,15 +2,15 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard } from 'react-
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
-import ChatRoomHeader from '../../components/ChatRoomHeader';
-import MessageList from '../../components/MessageList';
+import ChatRoomHeader from '../../../components/ChatRoomHeader';
+import MessageList from '../../../components/MessageList';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather } from '@expo/vector-icons';
-import CustomKeyboardView from '../../components/CustomKeyboardView'
-import {useAuth} from '../../context/authContext'
-import { getRoomId } from '../../components/common';
+import CustomKeyboardView from '../../../components/CustomKeyboardView'
+import {useAuth} from '../../../context/authContext'
+import { getRoomId } from '../../../components/common';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { db } from '../../../firebaseConfig';
 
 
 const ChatRoom = () => {

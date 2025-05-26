@@ -4,6 +4,7 @@ import { Slot, useSegments, useRouter } from 'expo-router'
 import '../global.css'
 import { AuthContextProvider, useAuth } from '../context/authContext'
 import { Provider as PaperProvider } from 'react-native-paper';
+import { UserListProvider } from '../context/userListProvider'
 
 
 const MainLayout = () => {
@@ -21,7 +22,7 @@ const MainLayout = () => {
 
     if(isAuthenticated && !inApp){
       // Redirect to Home
-      router.replace('/home');
+      router.replace('/(app)/(student)/(tabs)/home');
     } else if (!isAuthenticated && !isAuthPage){
       // Redirect to Sign in
       router.replace('/signIn');
@@ -35,7 +36,9 @@ const RootLayout = () => {
   return (
     <PaperProvider>
       <AuthContextProvider>
-        <MainLayout/>
+        <UserListProvider>
+          <MainLayout/>
+        </UserListProvider>
       </AuthContextProvider>
     </PaperProvider>
   )
