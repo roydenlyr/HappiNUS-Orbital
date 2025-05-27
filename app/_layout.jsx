@@ -14,7 +14,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     // Check if user is authenticated
-    if(typeof isAuthenticated == 'undefined' || !user)
+    if(typeof isAuthenticated == 'undefined' || typeof user.role === 'undefined')
       return;
 
     const inApp = segments[0] === '(app)';
