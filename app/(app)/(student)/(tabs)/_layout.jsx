@@ -4,10 +4,6 @@ import { Tabs } from 'expo-router'
 import HomeHeader from '../../../../components/HomeHeader'
 import { Ionicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { useAuth } from '../../../../context/authContext'
-import { getDocs, query, where } from 'firebase/firestore'
-import { usersRef } from '../../../../firebaseConfig'
-
 
 const StudentTabLayout = () => {
   return (

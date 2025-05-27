@@ -8,26 +8,32 @@ import { UserListProvider } from '../context/userListProvider'
 
 
 const MainLayout = () => {
-  const {isAuthenticated} = useAuth();
+  const {isAuthenticated, user} = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
   useEffect(() => {
     // Check if user is authenticated
-    if(typeof isAuthenticated == 'undefined')
+    if(typeof isAuthenticated == 'undefined' || !user)
       return;
 
     const inApp = segments[0] === '(app)';
     const isAuthPage = segments[0] === 'signIn' || segments[0] === 'signUp';
+    const isMentor = user?.role === 'mentor';
 
     if(isAuthenticated && !inApp){
       // Redirect to Home
-      router.replace('/(app)/(student)/(tabs)/home');
+      console.log('IsMentor: ', user.role);
+      
+      if (isMentor)
+        router.replace('/(app)/(mentor)/(tabs)/home');
+      else
+        router.replace('/(app)/(student)/(tabs)/home');
     } else if (!isAuthenticated && !isAuthPage){
       // Redirect to Sign in
       router.replace('/signIn');
     }
-  }, [isAuthenticated, router, segments])
+  }, [isAuthenticated, router, segments, user])
 
   return <Slot/>
 }

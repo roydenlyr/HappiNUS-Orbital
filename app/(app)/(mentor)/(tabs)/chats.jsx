@@ -5,30 +5,13 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { StatusBar } from 'expo-status-bar';
 import ChatList from '../../../../components/ChatList';
 import Loading from '../../../../components/Loading';
-import { getDocs, query, where } from 'firebase/firestore';
-import { usersRef } from '../../../../firebaseConfig';
+import { useUserList } from '../../../../context/userListProvider';
 
 
 const Chats = () => {
 
+  const {users} = useUserList();
   const {user} = useAuth();
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    if(user?.uid)
-      getUsers();
-  }, [])
-  const getUsers = async () => {
-    // Fetch users
-    const q = query(usersRef, where('userId', '!=', user?.uid));
-
-    const querySnapshot = await getDocs(q);
-    let data = [];
-    querySnapshot.forEach(doc => {
-      data.push({...doc.data()});
-    });
-
-    setUsers(data);
-  }
 
   return (
     <View className='flex-1 bg-white'>
