@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getDocs, query, where } from 'firebase/firestore';
-import { usersRef } from '../firebaseConfig';
+import { roomRef, usersRef } from '../firebaseConfig';
 import { useAuth } from './authContext';
 
 const UserListContext = createContext();
