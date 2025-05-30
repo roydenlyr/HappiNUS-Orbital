@@ -3,7 +3,7 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import HomeHeader from '../../../components/HomeHeader'
 
-const StudentLayout = () => {
+const MentorLayout = () => {
 
   return (
     <Stack>
@@ -12,5 +12,5 @@ const StudentLayout = () => {
   )
 }
  
-export default StudentLayout
+export default MentorLayout
 

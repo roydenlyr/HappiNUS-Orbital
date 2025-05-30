@@ -13,26 +13,22 @@ const MainLayout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is authenticated
-    console.log('Checking role');
-    
+    // Check if user is authenticated    
     if(typeof isAuthenticated == 'undefined')
       return;
 
     const inApp = segments[0] === '(app)';
     const isAuthPage = segments[0] === 'signIn' || segments[0] === 'signUp';
-    const isMentor = user?.role === 'mentor';
-
-    console.log('role? ', user?.role)
+    const role = user?.role;
 
     if(isAuthenticated && !inApp){
-      // Redirect to Home
-      console.log('IsMentor: ', user);
-      
-      if (isMentor)
-        router.replace('/(app)/(mentor)/(tabs)/home');
-      else
+      // Redirect to Home      
+      if (role === 'student')
         router.replace('/(app)/(student)/(tabs)/home');
+      else if (role === 'mentor')
+        router.replace('/(app)/(mentor)/(tabs)/home');
+      else if (role === 'admin')
+        router.replace('/(app)/(admin)/(tabs)/addMentor');
     } else if (!isAuthenticated && !isAuthPage){
       // Redirect to Sign in
       router.replace('/signIn');

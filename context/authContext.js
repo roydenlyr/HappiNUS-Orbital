@@ -88,8 +88,36 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
+    const registerMentor = async(email, password, username, profileUrl, role, faculty, gender, dob, matricYear) => {
+        try {
+             const response = await createUserWithEmailAndPassword(auth, email, password);
+             console.log('response.user: ', response?.user);
+
+            await setDoc(doc(db, 'users', response?.user?.uid), {
+                username,
+                profileUrl,
+                role,
+                userId: response?.user?.uid,
+                faculty,
+                gender,
+                dob,
+                matricYear
+            });
+            return {success: true, data: response?.user};
+        } catch(e){
+            let msg = e.message;
+            if(msg.includes('(auth/invalid-email)')) {
+                msg = 'Invalid email';
+            }
+            if(msg.includes('(auth/email-already-in-use)')) {
+                msg = 'This email is already in use';
+            }
+            return {success: false, msg};
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout}}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, registerMentor}}>
             {children}
         </AuthContext.Provider>
     )
