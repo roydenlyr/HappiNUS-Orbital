@@ -14,7 +14,7 @@ import { db } from '../../../firebaseConfig';
 
 
 const ChatRoom = () => {
-    const item = useLocalSearchParams();
+    const item = useLocalSearchParams();    
     const {user} = useAuth();
     const router = useRouter();
     const [messages, setMessages] = useState([]);

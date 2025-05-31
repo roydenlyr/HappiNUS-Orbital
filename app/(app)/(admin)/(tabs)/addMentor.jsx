@@ -15,12 +15,12 @@ const genderOptions = [
 ]
 
 const facultyOptions = [
-  { label: 'Design & Engineering', value: 'Design & Engineering' },
-  { label: 'Computing', value: 'Computing' },
-  { label: 'Business', value: 'Business' },
+  { label: 'College of Design & Engineering', value: 'Collge of Design & Engineering' },
+  { label: 'School of Computing', value: 'School of Computing' },
+  { label: 'NUS Business School', value: 'NUS Business School' },
   { label: 'Arts & Social Sciences', value: 'Arts & Social Sciences' },
-  { label: 'Medicine/Dentistry', value: 'Medicine/Dentistry' },
-  { label: 'Law', value: 'CDE' },
+  { label: 'Yong Loo Lin School of Medicine', value: 'Yong Loo Lin School of Medicine' },
+  { label: 'Faculty of Law', value: 'Faculty of Law' },
 ]
 
 const AddMentor = () => {
@@ -34,9 +34,7 @@ const AddMentor = () => {
   const [faculty, setFaculty] = useState('');
 
   const emailRef = useRef("");
-  const passwordRef = useRef("");
   const usernameRef = useRef("");
-  const profileRef = useRef("");
   const facultyRef = useRef("");
   const genderRef = useRef("");
   const dobRef = useRef("");
