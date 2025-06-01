@@ -35,7 +35,6 @@ Recent mental health incidents at Prince George's Park Residences underscore the
 
 #### 🛠 Administrators
 - Manage mentor accounts (add/remove).
-- *(Pending decision)* Access to chat history, balancing oversight with privacy.
 
 ---
 
@@ -52,3 +51,37 @@ Clone the repository:
 git clone https://github.com/your-username/HappiNUS.git
 cd HappiNUS
 npx expo start
+```
+
+---
+
+## 👥 How to Use the App
+
+### 🔐 Admin Access
+An admin account has already been created for demonstration purposes:
+
+- **Email:** `admin@gmail.com`  
+- **Password:** `123456`
+
+#### ➕ Adding a Mentor
+1. Log in using the admin credentials.
+2. Navigate to the **Admin Dashboard**.
+3. Use the interface to add a new mentor by filling in the required details.
+4. Once added, the mentor will appear in the student-facing chat selection view.
+
+---
+
+### 🧑‍🎓 Student Flow
+1. Sign up for a new student account via the **Sign Up** page.
+2. After logging in, go to the **Chat** tab.
+3. You will see a list of available mentors (including the one created by the admin).
+4. Click the **chat bubble icon** on a mentor’s profile card.
+5. This will open a dedicated chatroom where you can begin your conversation anonymously with the selected mentor.
+
+---
+
+### 🧑‍🏫 Mentor Flow
+1. Log in using the credentials of a mentor account (created by the admin).
+2. After signing in, navigate to the **Chat** tab.
+3. You will see conversations initiated by student users.
+4. Select a conversation to begin providing support.
