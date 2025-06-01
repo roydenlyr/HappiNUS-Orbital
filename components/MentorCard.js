@@ -19,9 +19,7 @@ const MentorCard = ({mentor}) => {
   const router = useRouter();
 
   const handleChatNow = () => {
-    router.push({pathname: '/chatRoom', params: mentor});
-    console.log('Rerouting...');
-    
+    router.replace({pathname: '/chatRoom', params: mentor});    
   }
 
   

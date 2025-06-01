@@ -10,15 +10,15 @@ import { useUserList } from '../../../../context/userListProvider';
 
 const Chats = () => {
 
-  const {users} = useUserList();
+  const {chatUsers} = useUserList();
   const {user} = useAuth();
 
   return (
     <View className='flex-1 bg-white'>
       <StatusBar style='light' />
       {
-        users.length > 0 ? (
-          <ChatList currentUser={user} users={users} />
+        chatUsers.length > 0 ? (
+          <ChatList currentUser={user} users={chatUsers} />
         ) : (
           <View className='flex items-center' style={{top: hp(30)}}>
             {/* <ActivityIndicator size='large'/> */}
