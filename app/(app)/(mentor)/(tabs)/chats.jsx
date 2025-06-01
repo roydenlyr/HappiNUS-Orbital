@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -22,7 +22,8 @@ const Chats = () => {
         ) : (
           <View className='flex items-center' style={{top: hp(30)}}>
             {/* <ActivityIndicator size='large'/> */}
-            <Loading size={hp(15)} />
+            {/* <Loading size={hp(15)} /> */}
+            <Text>You have not been assigned any students...</Text>
           </View>
         )
       }
