@@ -33,4 +33,3 @@ Recent incidents at Prince George's Park Residences have highlighted the urgent 
 
 #### 🛠 Administrator
 - Add and remove peer mentor accounts.
-- *(Open Question)*: Should administrators have access to chat history? (Requires discussion on privacy concerns)
