@@ -85,3 +85,13 @@ An admin account has already been created for demonstration purposes:
 2. After signing in, navigate to the **Chat** tab.
 3. You will see conversations initiated by student users.
 4. Select a conversation to begin providing support.
+
+---
+
+### 📱 Real-Time Chat Demo
+If you have **two devices**, you can:
+- Log in as a **student** on one device.
+- Log in as the **corresponding mentor** on the other.
+- Chat back and forth to experience the real-time messaging functionality!
+
+---
