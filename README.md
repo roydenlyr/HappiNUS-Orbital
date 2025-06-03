@@ -48,7 +48,7 @@ Recent mental health incidents at Prince George's Park Residences underscore the
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/HappiNUS.git
+git clone https://github.com/roydenlyr/HappiNUS.git
 cd HappiNUS
 npx expo start
 ```
