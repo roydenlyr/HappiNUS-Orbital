@@ -7,7 +7,7 @@ const StudentLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen name='(tabs)' options={{headerShown: false, title: 'Home'}}/>
+      <Stack.Screen name='(tabs)' options={{headerShown: false, title: 'Chats'}}/>
       <Stack.Screen name='selectMentor' options={{title: ''}}/>
     </Stack>
   )

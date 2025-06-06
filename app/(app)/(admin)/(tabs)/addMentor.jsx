@@ -18,7 +18,7 @@ const facultyOptions = [
   { label: 'College of Design & Engineering', value: 'Collge of Design & Engineering' },
   { label: 'School of Computing', value: 'School of Computing' },
   { label: 'NUS Business School', value: 'NUS Business School' },
-  { label: 'Arts & Social Sciences', value: 'Arts & Social Sciences' },
+  { label: 'Faculty of Arts & Social Sciences', value: 'Faculty of Arts & Social Sciences' },
   { label: 'Yong Loo Lin School of Medicine', value: 'Yong Loo Lin School of Medicine' },
   { label: 'Faculty of Law', value: 'Faculty of Law' },
 ]
