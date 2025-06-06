@@ -48,7 +48,7 @@ const MentorCard = ({mentor}) => {
         </View>
         <View style={{marginTop: hp(2)}} className='flex-row gap-4'>
           <Ionicons name='school-sharp' color={'white'} size={hp(3)}/>
-          <Text style={{fontSize: hp(3)}} className='font-semibold text-white'>{mentor.faculty}</Text>
+          <Text style={{fontSize: hp(3)}} className='font-semibold text-white pr-10'>{mentor.faculty}</Text>
         </View>
       </View>
       <View style={{marginTop: hp(2)}} className='flex-row gap-4 justify-end m-3'>
