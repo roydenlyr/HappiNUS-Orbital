@@ -1,11 +1,26 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Pressable } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
-import { Entypo, Ionicons } from '@expo/vector-icons'
+import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Image } from 'expo-image';
+import { summariseChat } from '../services/summariseChat';
 
-const ChatRoomHeader = ({user, router}) => {
+const ChatRoomHeader = ({user, router, messages}) => {
+
+    const handleSummary = async () => {
+        if (messages){
+            try {
+                const summary = await summariseChat(messages, user.userId);
+                console.log('Summary: ', summary);
+            } catch (error) {
+                console.error('Failed to summarise: ', error.message);
+            }
+        } else{
+            
+        }
+    }
+
   return (
     <Stack.Screen 
         options={{
@@ -25,12 +40,14 @@ const ChatRoomHeader = ({user, router}) => {
                     </View>
                 </View>
             ),
-            headerRight: () => (
+            headerRight: user?.role === 'student' ? () => (
                 <View className='flex-row items-center gap-8'>
-                    <Ionicons name='call' size={hp(2.8)} color={'#737373'}/>
-                    <Ionicons name='videocam' size={hp(2.8)} color={'#737373'}/>
+                    <FontAwesome name='stack-exchange' size={hp(2.8)} color={'#737373'}/>
+                    <Pressable onPress={handleSummary}>
+                        <Feather name='clipboard' size={hp(2.8)} color={'#737373'}/>
+                    </Pressable>
                 </View>
-            )
+            ) : undefined
     }} />
   )
 }

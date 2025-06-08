@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard, Pressable } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +11,7 @@ import {useAuth} from '../../../context/authContext'
 import { getRoomId } from '../../../components/common';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
-
+import { summariseChat } from '../../../services/summariseChat';
 
 const ChatRoom = () => {
     const item = useLocalSearchParams();
@@ -93,7 +93,7 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1 bg-white'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={item} router={router}/>
+            <ChatRoomHeader user={item} router={router} messages={messages}/>
             <View className='h-3 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>
