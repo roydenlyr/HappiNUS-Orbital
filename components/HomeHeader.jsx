@@ -28,6 +28,7 @@ const HomeHeader = () => {
     }
 
   return (
+    <View className='bg-white'>
     <View style={{paddingTop: ios? top : top + 10}} className='flex-row justify-between px-5 bg-indigo-400 pb-6 rounded-b-3xl' >
       <View className='justify-center'>
         <Text style={{fontSize: hp(3)}} className='font-medium text-white'>HappiNUS</Text>
@@ -52,6 +53,7 @@ const HomeHeader = () => {
             <MenuItem text='Sign out' action={handleLogout} value={null} icon={<AntDesign name='logout' size={hp(2.5)} color='#737373' />}/>
         </Menu>
       </View>
+    </View>
     </View>
   )
 }
