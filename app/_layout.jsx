@@ -5,7 +5,8 @@ import '../global.css'
 import { AuthContextProvider, useAuth } from '../context/authContext'
 import { Provider as PaperProvider } from 'react-native-paper';
 import { UserListProvider } from '../context/userListProvider'
-
+import Toast from 'react-native-toast-message';
+import CustomToastConfig from '../components/CustomToastConfig'
 
 const MainLayout = () => {
   const {isAuthenticated, user} = useAuth();
@@ -14,9 +15,10 @@ const MainLayout = () => {
 
   useEffect(() => {
     // Check if user is authenticated    
-    if(typeof isAuthenticated == 'undefined')
+    if(typeof isAuthenticated == 'undefined'){
       return;
-
+    }
+      
     const inApp = segments[0] === '(app)';
     const isAuthPage = segments[0] === 'signIn' || segments[0] === 'signUp';
     const role = user?.role;
@@ -44,6 +46,7 @@ const RootLayout = () => {
       <AuthContextProvider>
         <UserListProvider>
           <MainLayout/>
+          <Toast config={CustomToastConfig}/>
         </UserListProvider>
       </AuthContextProvider>
     </PaperProvider>
