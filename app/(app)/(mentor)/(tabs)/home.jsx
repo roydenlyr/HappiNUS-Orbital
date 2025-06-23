@@ -28,7 +28,6 @@ const Home = () => {
       const coords = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        timestamp: Date.now()
       };
 
       await addDoc(collection(db, 'alerts'), {
@@ -66,46 +65,48 @@ const Home = () => {
         ...doc.data()
       }));
       setAlerts(activeAlerts);
-      
+      // console.log('Updating Alerts...');
       
     });
     return () => unsub();
   }, []);
 
-  useEffect(() => {
-  console.log('Active Alerts: ', alerts);
-}, [alerts]);
+//   useEffect(() => {
+//   console.log('Active Alerts: ', alerts);
+// }, [alerts]);
 
   useEffect(() => {
-    console.log('Alert Status: ', activateAlert);
+    // console.log('Alert Status: ', activateAlert);
     handleAlert();
   }, [activateAlert]);
 
   return (
     <View className='flex-1 bg-white p-10'>
       <View className='mb-5 rounded-xl overflow-hidden'>
-      <MapView style={{height: hp(25), width: '100%'}} initialRegion={{
+      <MapView key={alerts.map(a => a.id).join(',')} style={{height: hp(25), width: '100%'}} initialRegion={{
         latitude: 1.29773,
         longitude: 103.77667,
         latitudeDelta: 0.15,
         longitudeDelta: 0.15
       }}>
-        {/* {alerts?.map((alert) => (
+        {          
+        alerts && alerts.length > 0 && alerts?.map((alert) => (
           <Marker key={alert?.id}
           coordinate={{latitude: alert?.location?.latitude, longitude: alert?.location?.longitude}}
           title={alert?.triggeredBy}
-          description={`Triggered at ${Timestamp.now()}`}/>
-        ))} */}
+          description={`Triggered at ${alert.timestamp.toDate().toLocaleString()}`}
+          />
+        ))}
       </MapView>
       </View>
       {
         activateAlert ? (
-          <TouchableOpacity onPress={() => {setActivateAlert(false);}} className='flex-row rounded-xl bg-red-500 justify-center items-center gap-5 p-5'>
+          <TouchableOpacity onPress={() => setActivateAlert(false)} className='flex-row rounded-xl bg-red-500 justify-center items-center gap-5 p-5'>
             <Feather name='bell-off' size={hp(3)} color={'white'}/>
             <Text className='font-semibold text-white' size={hp(3)}>Deactivate</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={() => {setActivateAlert(true);}} className='flex-row rounded-xl bg-green-500 justify-center items-center gap-5 p-5'>
+          <TouchableOpacity onPress={() => setActivateAlert(true)} className='flex-row rounded-xl bg-green-500 justify-center items-center gap-5 p-5'>
             <Feather name='bell' size={hp(3)} color={'white'}/>
             <Text className='font-semibold text-white' size={hp(3)}>Activate</Text>
           </TouchableOpacity>

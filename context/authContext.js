@@ -14,8 +14,6 @@ export const AuthContextProvider = ({ children }) => {
             // console.log('got user: ', user);
             
             if (user){
-                
-                // setUser(user);
                 updateUserData(user);
             } else {
                 setIsAuthenticated(false);
@@ -28,7 +26,7 @@ export const AuthContextProvider = ({ children }) => {
     const updateUserData = async (firebaseUser) => {
         const docRef = doc(db, 'users', firebaseUser.uid); 
         const docSnap = await getDoc(docRef);
-
+        
         if(docSnap.exists()){
             let data = docSnap.data();  
             setUser({...firebaseUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId, role: data.role});
@@ -36,7 +34,7 @@ export const AuthContextProvider = ({ children }) => {
         } else{
             console.warn('User doc not found');
             setUser(null);
-        }
+        }       
     }
 
     const login = async (email, password) => {

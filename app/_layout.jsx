@@ -14,9 +14,10 @@ const MainLayout = () => {
 
   useEffect(() => {
     // Check if user is authenticated    
-    if(typeof isAuthenticated == 'undefined')
+    if(typeof isAuthenticated == 'undefined'){
       return;
-
+    }
+      
     const inApp = segments[0] === '(app)';
     const isAuthPage = segments[0] === 'signIn' || segments[0] === 'signUp';
     const role = user?.role;
