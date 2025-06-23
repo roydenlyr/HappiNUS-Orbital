@@ -1,18 +1,24 @@
 import { View, Text, TouchableOpacity, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Feather } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import * as Location from 'expo-location';
 import { addDoc, collection, getDocs, onSnapshot, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import { useAuth } from '../../../../context/authContext';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Circle, Marker } from 'react-native-maps';
+import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
 
 const Home = () => {
 
   const [activateAlert, setActivateAlert] = useState(undefined);
   const [alerts, setAlerts] = useState([]);
+  const [previousAlertIds, setPreviousAlertIds] = useState([]);
+
+  const mapRef = useRef(null);
   const {user} = useAuth();
+  const router = useRouter();
 
   const handleAlert = async () => {
     if (activateAlert){
@@ -36,6 +42,13 @@ const Home = () => {
         location: coords,
         timestamp: Timestamp.now()
       });
+
+      Toast.show({
+        type: 'success',
+        text1: '🚨 Red Alert Activated',
+        text2: `Triggered by ${user.username}`,
+        position: 'top',
+      });
     } else if (activateAlert === false) {
         console.log('Deactivating Alert...');
       const q = query(
@@ -53,6 +66,13 @@ const Home = () => {
         await Promise.all(updates);
         Alert.alert('Red Alert', 'Your Alert has been deactivated.');      
         setActivateAlert(null);
+
+        Toast.show({
+          type: 'info',
+          text1: '🔕 Alert Deactivated',
+          text2: 'Your red alert has been turned off.',
+          position: 'top',
+        });
     }
   }
 
@@ -64,31 +84,51 @@ const Home = () => {
         id: doc.id,
         ...doc.data()
       }));
+
+      const newAlert = activeAlerts.find(a => !previousAlertIds.includes(a.id));
+
+      if (newAlert){
+
+      if (newAlert && newAlert.triggeredBy !== user.username){
+        Toast.show({
+        type: 'info',
+        text1: '🚨 New Red Alert',
+        text2: `Triggered by ${newAlert.triggeredBy}`,
+        position: 'top',
+        onPress: () => {router.push('/(mentor)/(tabs)/home'); Toast.hide();}
+      });
+      }
+
+      if (mapRef.current && newAlert?.location) {
+        mapRef.current.animateToRegion({
+        latitude: newAlert.location.latitude,
+        longitude: newAlert.location.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05
+      }, 500);
+    }
+  }
+
       setAlerts(activeAlerts);
-      // console.log('Updating Alerts...');
+      setPreviousAlertIds(activeAlerts.map(a => a.id))
       
     });
     return () => unsub();
   }, []);
 
-//   useEffect(() => {
-//   console.log('Active Alerts: ', alerts);
-// }, [alerts]);
-
   useEffect(() => {
-    // console.log('Alert Status: ', activateAlert);
     handleAlert();
   }, [activateAlert]);
 
   return (
-    <View className='flex-1 bg-white p-10'>
+    <View className='flex-1 bg-white p-5'>
       <View className='mb-5 rounded-xl overflow-hidden'>
       <MapView key={alerts.map(a => a.id).join(',')} style={{height: hp(25), width: '100%'}} initialRegion={{
         latitude: 1.29773,
         longitude: 103.77667,
         latitudeDelta: 0.15,
         longitudeDelta: 0.15
-      }}>
+      }} ref={mapRef}>
         {          
         alerts && alerts.length > 0 && alerts?.map((alert) => (
           <Marker key={alert?.id}
