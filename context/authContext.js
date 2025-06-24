@@ -29,7 +29,7 @@ export const AuthContextProvider = ({ children }) => {
         
         if(docSnap.exists()){
             let data = docSnap.data();  
-            setUser({...firebaseUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId, role: data.role});
+            setUser({...firebaseUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId, role: data.role, activeAlert: data.activeAlert || false});
             setIsAuthenticated(true);
         } else{
             console.warn('User doc not found');
@@ -86,7 +86,7 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
-    const registerMentor = async(email, password, username, profileUrl, role, faculty, gender, dob, matricYear) => {
+    const registerMentor = async(email, password, username, profileUrl, role, faculty, gender, dob, matricYear, activeAlert) => {
         try {
              const response = await createUserWithEmailAndPassword(auth, email, password);
              console.log('response.user: ', response?.user);
@@ -99,7 +99,8 @@ export const AuthContextProvider = ({ children }) => {
                 faculty,
                 gender,
                 dob,
-                matricYear
+                matricYear,
+                activeAlert
             });
             return {success: true, data: response?.user};
         } catch(e){

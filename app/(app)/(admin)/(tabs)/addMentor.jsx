@@ -59,7 +59,7 @@ const AddMentor = () => {
     setLoading(true);
 
     let response = await registerMentor(emailRef.current, '123456', usernameRef.current, 'https://cdn.pixabay.com/photo/2023/10/03/10/49/anonymous-8291223_1280.png', 'mentor', 
-      facultyRef.current, genderRef.current, dobRef.current, matricYearRef.current
+      facultyRef.current, genderRef.current, dobRef.current, matricYearRef.current, false
     );
     setLoading(false);
 

@@ -13,7 +13,17 @@ exports.summariseChat = functions
       throw new functions.https.HttpsError("invalid-argument", "Messages must be a non-empty array.");
     }
 
-    const prompt = `Summarize the following anonymous support chat:\n\n${messages.map(m => `${m.sender}: ${m.text}`).join('\n')}`;
+    const prompt = `Summarize the following anonymous mental health support conversation. Focus on:
+      - The main concerns or issues expressed by the user.
+      - Any emotional tone or distress signals detected.
+      - Key context, such as events or relationships mentioned.
+      - Support already offered or attempted by the mentor.
+      - Any follow-up actions or unresolved areas to be aware of.
+
+      Write in a clear and concise manner to help a new mentor quickly understand the situation and take over effectively.
+
+      Conversation:
+      ${messages.map(m => `${m.sender}: ${m.text}`).join('\n')}`;
 
     try {
         console.log('Sending prompt to OpenAI');
