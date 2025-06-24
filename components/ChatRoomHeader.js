@@ -14,7 +14,8 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
     const [rephraseLoading, setRephraseLoading] = useState(false);
 
     const handleSummary = async () => {
-        if (messages){
+        
+        if (messages && messages.length > 0){
             setSummaryLoading(true);
             try {
                 const summary = await summariseChat(messages, user.userId);
