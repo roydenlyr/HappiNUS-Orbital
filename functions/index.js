@@ -13,17 +13,15 @@ exports.summariseChat = functions
       throw new functions.https.HttpsError("invalid-argument", "Messages must be a non-empty array.");
     }
 
-    const prompt = `Summarize the following anonymous mental health support conversation. Focus on:
-      - The main concerns or issues expressed by the user.
-      - Any emotional tone or distress signals detected.
-      - Key context, such as events or relationships mentioned.
-      - Support already offered or attempted by the mentor.
-      - Any follow-up actions or unresolved areas to be aware of.
+    const prompt = `Summarize the following anonymous support chat in a plain, readable format (no markdown, no formatting like asterisks or bold text). 
+      Focus on:
+      - Main concerns/issues
+      - Emotional tone/distress signals
+      - Key context or themes
+      - Support offered by mentor
+      - Follow-up actions and unresolved areas
 
-      Write in a clear and concise manner to help a new mentor quickly understand the situation and take over effectively.
-
-      Conversation:
-      ${messages.map(m => `${m.sender}: ${m.text}`).join('\n')}`;
+      Here is the conversation:\n\n${messages.map(m => `${m.sender}: ${m.text}`).join('\n')}`;
 
     try {
         console.log('Sending prompt to OpenAI');
@@ -77,7 +75,7 @@ exports.summariseChat = functions
           messages: [
             {
               role: "system",
-              content: "You are a peer support mentor. Rephrase the message to be empathetic, clear, and supportive. Do not use em dash."
+              content: "You are a peer support mentor. Rephrase the following message to be empathetic, supportive, and easy to understand. Use a warm, conversational tone. Avoid using complex punctuation like em dashes or semicolons. Keep the message clear and concise."
             },
             { role: "user", content: original }
           ],
