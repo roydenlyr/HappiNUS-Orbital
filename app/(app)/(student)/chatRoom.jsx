@@ -11,21 +11,24 @@ import {useAuth} from '../../../context/authContext'
 import { getRoomId } from '../../../components/common';
 import { addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
-import Toast from 'react-native-toast-message';
+import { useChatContext } from '../../../context/chatContext';
 
 const ChatRoom = () => {
     const item = useLocalSearchParams();
     const {user} = useAuth();
     const router = useRouter();
     const [messages, setMessages] = useState([]);
+    const [otherUserLastSeen, setOtherUserLastSeen] = useState(null);
     const textRef = useRef('');
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
+    const {setActiveRoomId} = useChatContext();
 
     useEffect(() => {
         createRoomIfNotExists();
 
         let roomId = getRoomId(user?.userId, item?.userId);
+        setActiveRoomId(roomId);
         const docRef = doc(db, 'rooms', roomId);
         const messagesRef = collection(docRef, 'messages');
         const q = query(messagesRef, orderBy('createdAt', 'asc'));
@@ -35,6 +38,11 @@ const ChatRoom = () => {
                 return doc.data();
             })
             setMessages([...allMessages]);
+
+            const roomDoc = doc(db, 'rooms', roomId);
+            updateDoc(roomDoc, {
+                [`lastSeen.${user.userId}`]: serverTimestamp()
+                }).catch(err => console.error('Failed to update lastSeen', err));            
         });
 
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', updateScrollView)
@@ -42,6 +50,7 @@ const ChatRoom = () => {
         return () => {
             unsub();
             keyboardDidShowListener.remove();
+            setActiveRoomId(null);
         }
     }, []);
 
@@ -78,7 +87,9 @@ const ChatRoom = () => {
             const docRef = doc(db, 'rooms', roomId);
             const messagesRef = collection(docRef, 'messages');
             textRef.current = '';
-            if(inputRef) inputRef?.current?.clear();
+            if(inputRef){
+                inputRef?.current?.clear();
+            } 
 
             const newDoc = await addDoc(messagesRef, {
                 userId: user?.userId,
@@ -105,6 +116,23 @@ const ChatRoom = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const roomId = getRoomId(user?.userId, item?.userId);
+        const roomRef = doc(db, 'rooms', roomId);
+
+        const unsubscribe = onSnapshot(roomRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.data();
+                const lastSeenTimestamp = data?.lastSeen?.[item?.userId];
+                if (lastSeenTimestamp) {
+                    setOtherUserLastSeen(lastSeenTimestamp.toDate());
+                }
+            }
+        });
+
+        return unsubscribe;
+    }, []);
+
   return (
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
@@ -113,7 +141,7 @@ const ChatRoom = () => {
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>
-                    <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} />
+                    <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} otherUserId={item?.userId} lastSeen={otherUserLastSeen} />
                 </View>
 
                 <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-5'>
@@ -121,7 +149,7 @@ const ChatRoom = () => {
                         <TextInput multiline={true} ref={inputRef} onChangeText={value => textRef.current = value} placeholder='Type message...' 
                         style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll'}} className='flex-1 mr-2' />
                     </View>
-                    <TouchableOpacity onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end'>
+                    <TouchableOpacity onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end' hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
                         <FontAwesome name='send' size={hp(2.7)} color={'white'}/>
                     </TouchableOpacity>
                 </View>

@@ -7,6 +7,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { UserListProvider } from '../context/userListProvider'
 import Toast from 'react-native-toast-message';
 import CustomToastConfig from '../components/CustomToastConfig'
+import { ChatContextProvider } from '../context/chatContext';
 
 const MainLayout = () => {
   const {isAuthenticated, user} = useAuth();
@@ -45,8 +46,10 @@ const RootLayout = () => {
     <PaperProvider>
       <AuthContextProvider>
         <UserListProvider>
-          <MainLayout/>
-          <Toast config={CustomToastConfig}/>
+          <ChatContextProvider>
+            <MainLayout/>
+            <Toast config={CustomToastConfig}/>
+          </ChatContextProvider>
         </UserListProvider>
       </AuthContextProvider>
     </PaperProvider>
