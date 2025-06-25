@@ -3,7 +3,7 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import MessageItem from './MessageItem'
 
-const MessageList = ({messages, currentUser, scrollViewRef}) => {
+const MessageList = ({messages, currentUser, scrollViewRef, otherUserId, lastSeen}) => {
   return (
     <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingTop: 10}}>
       {
@@ -23,7 +23,7 @@ const MessageList = ({messages, currentUser, scrollViewRef}) => {
                 </Text>
               </View>
             )}
-              <MessageItem message={message} key={index} currentUser={currentUser}/>
+              <MessageItem message={message} key={index} currentUser={currentUser} otherUserId={otherUserId} lastSeen={lastSeen}/>
             </View>
           )
         })
