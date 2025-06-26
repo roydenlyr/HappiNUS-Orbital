@@ -58,7 +58,7 @@ const AddMentor = () => {
 
     setLoading(true);
 
-    let response = await registerMentor(emailRef.current, '123456', usernameRef.current, 'https://cdn.pixabay.com/photo/2023/10/03/10/49/anonymous-8291223_1280.png', 'mentor', 
+    let response = await registerMentor(emailRef.current, '123456', usernameRef.current, 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23', 'mentor', 
       facultyRef.current, genderRef.current, dobRef.current, matricYearRef.current, false
     );
     setLoading(false);

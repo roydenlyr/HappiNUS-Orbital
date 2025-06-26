@@ -29,7 +29,8 @@ export const AuthContextProvider = ({ children }) => {
         
         if(docSnap.exists()){
             let data = docSnap.data();  
-            setUser({...firebaseUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId, role: data.role, activeAlert: data.activeAlert || false});
+            setUser({...firebaseUser, username: data.username, profileUrl: data.profileUrl, userId: data.userId, role: data.role, 
+                activeAlert: data.activeAlert || false, dob: data.dob, faculty: data.faculty, gender: data.gender, matricYear: data.matricYear});
             setIsAuthenticated(true);
         } else{
             console.warn('User doc not found');

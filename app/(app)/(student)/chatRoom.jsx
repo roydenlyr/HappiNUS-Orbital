@@ -24,6 +24,9 @@ const ChatRoom = () => {
     const scrollViewRef = useRef(null);
     const {setActiveRoomId} = useChatContext();
 
+    console.log('ProfleURL: ', item.profileUrl);
+    
+
     useEffect(() => {
         createRoomIfNotExists();
 
@@ -74,7 +77,11 @@ const ChatRoom = () => {
             await setDoc(doc(db, 'rooms', roomId), {
                 roomId,
                 createdAt: Timestamp.fromDate(new Date()),
-                participants: [user.userId, item.userId]
+                participants: [user.userId, item.userId],
+                lastSeen: {
+                    [user.userId]: serverTimestamp(),
+                    [item.userId]: serverTimestamp()
+                }
             });
         }
     }
@@ -137,7 +144,7 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={item} router={router} messages={messages} textRef={textRef} inputRef={inputRef}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}}  router={router} messages={messages} textRef={textRef} inputRef={inputRef}/>
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>
