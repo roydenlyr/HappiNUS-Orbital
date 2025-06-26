@@ -196,7 +196,7 @@ const Home = () => {
                 <Text className='mt-1 mb-1'>Location: {alert.locationName}</Text>
                 <Text>Time: {alert.timestamp.toDate().toLocaleString()}</Text>
                 {
-                  index !== alerts.length - 1 ? (<View className='mt-2 mb-2 border-b'/>) : <View className='mb-2'/>
+                  index !== alerts.length - 1 ? (<View className='mt-2 mb-2 border-b border-neutral-400'/>) : <View className='mb-2'/>
                 }
                 
               </Pressable>

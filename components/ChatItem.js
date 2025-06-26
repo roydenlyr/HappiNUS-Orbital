@@ -20,7 +20,12 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const openChatRoom = () => {
-    router.push({ pathname: "/chatRoom", params: item });
+    router.push({ pathname: "/chatRoom", 
+      params: {
+        ...item,
+        profileUrl: encodeURIComponent(item.profileUrl)
+      }});
+    // router.push({ pathname: "/(shared)/chatRoom", params: item });
   };
 
   const [lastMessage, setLastMessage] = useState(undefined);

@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Dimensions } from 'react-native'
+import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather, Octicons } from '@expo/vector-icons';
@@ -16,17 +16,16 @@ const SignUp = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const usernameRef = useRef("");
-  const profileRef = useRef("");
 
   const handleRegister = async () => {
-    if(!emailRef.current || !passwordRef.current || !usernameRef.current || !profileRef.current){
+    if(!emailRef.current || !passwordRef.current || !usernameRef.current){
       Alert.alert('Sign Up', 'Please fill in all the fields!');
       return;
     }
 
     setLoading(true);
 
-    let response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileRef.current, 'student');
+    let response = await register(emailRef.current, passwordRef.current, usernameRef.current, 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile2.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23', 'student');
     setLoading(false);
 
     console.log('got results: ', response);
@@ -36,7 +35,8 @@ const SignUp = () => {
   }
 
   return (
-    <CustomKeyboardView>
+    <CustomKeyboardView inSignUp={true}>
+      <ScrollView>
       <StatusBar style='dark' />
       <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12'>
         {/* SignIn Image */}
@@ -61,11 +61,6 @@ const SignUp = () => {
             <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
               <Octicons name='lock' size={hp(2.7)} color={'gray'}/>
               <TextInput onChangeText={value => passwordRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' secureTextEntry placeholder='Password' placeholderTextColor={'gray'}/>
-            </View>
-
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
-              <Feather name='image' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => profileRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Profile url' placeholderTextColor={'gray'}/>
             </View>
 
             {/* SignUp Button */}
@@ -95,6 +90,7 @@ const SignUp = () => {
           </View>
         </View>
       </View>
+      </ScrollView>
     </CustomKeyboardView>
   )
 }

@@ -8,19 +8,21 @@ import { useAuth } from '../context/authContext';
 import { Menu } from 'react-native-paper';
 import { MenuItem, Divider } from './CustomMenuItems';
 import { AntDesign, Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const HomeHeader = () => {
 
     const {user, logout} = useAuth();
     const ios = Platform.OS === 'ios';
     const {top} = useSafeAreaInsets();
+    const router = useRouter();
 
     const [visible, setVisible] = useState(false);
     const openMenu = () => setVisible(true);
     const closeMenu = () => setVisible(false);
 
     const handleProfile = () => {
-
+      router.push({pathname: '/profile'});
     }
 
     const handleLogout = async () => {
@@ -40,7 +42,7 @@ const HomeHeader = () => {
                 <Image
                     onTouchEnd={openMenu}
                     style={{height: hp(4.3), aspectRatio: 1, borderRadius: 100}}
-                    source={user?.profileUrl}
+                    source={{uri: user?.profileUrl}}
                     placeholder={blurhash}
                     transition={500}
                 />

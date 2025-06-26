@@ -6,6 +6,8 @@ import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import Loading from '../components/Loading';
 import { useAuth } from '../context/authContext';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 const SignIn = () => {
   const router = useRouter();
@@ -28,6 +30,21 @@ const SignIn = () => {
     console.log('sign in response: ', response);
     if(!response.success){
       Alert.alert('Sign In', response.msg);
+    }
+  }
+
+  const handleForgetPassword = async () => {
+    if (!emailRef.current){
+      Alert.alert('Reset Password', 'Please enter your email address first.');
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, emailRef.current);
+      Alert.alert('Reset Password', `A password reset link has been sent to ${emailRef.current}.`);
+    } catch (error) {
+      console.log('Password reset error: ', error);
+      Alert.alert('Reset Failed', error.message);
     }
   }
 
@@ -54,7 +71,9 @@ const SignIn = () => {
                 <Octicons name='lock' size={hp(2.7)} color={'gray'}/>
                 <TextInput onChangeText={value => passwordRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' secureTextEntry placeholder='Password' placeholderTextColor={'gray'}/>
               </View>
-              <Text style={{fontSize: hp(1.8)}} className='font-semibold text-right text-neutral-500'>Forgot password?</Text>
+              <Pressable onPress={() => handleForgetPassword()}>
+                <Text style={{fontSize: hp(1.8)}} className='font-semibold text-right text-neutral-500'>Forgot password?</Text>
+              </Pressable>
             </View>
 
             {/* SignIn Button */}
