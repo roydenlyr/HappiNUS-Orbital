@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather, Ionicons, Octicons } from '@expo/vector-icons';
@@ -66,11 +66,14 @@ const AddMentor = () => {
     console.log('got results: ', response);
     if (!response.success){
       Alert.alert('Register', response.msg);
+    } else {
+      Alert.alert('Register', 'Mentor added successfully!');
     }
   }
 
   return (
     <CustomKeyboardView>
+      <ScrollView>
       <StatusBar style='dark' />
       <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12 bg-white'>
         {/* SignIn Image */}
@@ -142,6 +145,7 @@ const AddMentor = () => {
           </View>
         </View>
       </View>
+      </ScrollView>
     </CustomKeyboardView>
   )
 }

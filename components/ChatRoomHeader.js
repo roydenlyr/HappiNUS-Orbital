@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Pressable, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -13,12 +13,7 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
     
-    console.log('Encoded: ', user.profileUrl);
     user.profileUrl = decodeURIComponent(user.profileUrl);
-    console.log('Decoded: ', user.username);
-    console.log('ProfileURL: ', user.profileUrl);
-    
-        
     
     const handleSummary = async () => {
         
@@ -83,7 +78,7 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
                         <Entypo name='chevron-left' size={hp(4)} color='#737373' />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
-                        <Image source={{uri: user?.profileUrl}} style={{height: hp(4.5), aspectRatio: 1, borderRadius: 100}} />
+                        <Image source={{uri: user.profileUrl}} style={{height: hp(4.5), aspectRatio: 1, borderRadius: 100}} />
 
                         <Text style={{fontSize: hp(2.5)}} className='text-neutral-700 font-medium'>
                             {user?.username}
