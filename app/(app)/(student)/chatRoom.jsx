@@ -22,10 +22,7 @@ const ChatRoom = () => {
     const textRef = useRef('');
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
-    const {setActiveRoomId} = useChatContext();
-
-    console.log('ProfleURL: ', item.profileUrl);
-    
+    const {setActiveRoomId} = useChatContext();    
 
     useEffect(() => {
         createRoomIfNotExists();

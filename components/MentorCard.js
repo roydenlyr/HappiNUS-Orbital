@@ -19,14 +19,17 @@ const MentorCard = ({mentor}) => {
   const router = useRouter();
 
   const handleChatNow = () => {
-    router.replace({pathname: '/chatRoom', params: mentor});    
+    router.replace({pathname: '/chatRoom', params: {
+      ...mentor,
+      profileUrl: encodeURIComponent(mentor.profileUrl)
+    }});    
   }
 
   
   return (
     <View style={{borderRadius: 40, height: '100%', width: wp(70), maxWidth: 600}} className='bg-indigo-500 self-center'>
-      <View style={{shadowColor: 'black', shadowRadius: 30, shadowOffset: {width: 0, height: 40}, shadowOpacity: 0.8}} className='flex-row justify-center -mt-14'>
-        <Image source={{uri: mentor.profileUrl}} className='h-40 w-40' />
+      <View style={{shadowColor: 'black', shadowRadius: 10, shadowOffset: {width: 0, height: 10}, shadowOpacity: 0.5}} className='flex-row justify-center -mt-14'>
+        <Image source={{uri: mentor.profileUrl}} style={{borderRadius: 100}} className='h-40 w-40' />
       </View>
 
       <View className='flex-1 justify-center px-5'>

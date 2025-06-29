@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 const Home = () => {
 
   const mapRef = useRef(null);
-  const {user} = useAuth();
+  const {user, refreshUser} = useAuth();
   const router = useRouter();
 
   const [activateAlert, setActivateAlert] = useState(user?.activeAlert);
@@ -154,6 +154,10 @@ const Home = () => {
       }, 500);
     }
   }
+
+  useEffect(() => {
+    refreshUser();
+  }, []);
 
   return (
     <View className='flex-1 bg-white p-5'>

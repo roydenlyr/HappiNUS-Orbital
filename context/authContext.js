@@ -116,8 +116,24 @@ export const AuthContextProvider = ({ children }) => {
         }
     }
 
+    const refreshUser = async () => {
+        try {
+            if (!user) return;
+
+            const docRef = doc(db, 'users', user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()){
+                const data = docSnap.data();
+                setUser({...user, profileUrl: data.profileUrl});
+            }
+        } catch (error) {
+            console.error('Failed to refresh user: ', error);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, registerMentor}}>
+        <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout, registerMentor, refreshUser}}>
             {children}
         </AuthContext.Provider>
     )
