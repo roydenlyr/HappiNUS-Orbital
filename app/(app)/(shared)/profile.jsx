@@ -16,8 +16,8 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
 
 const Profile= () => {
 
-    const {user} = useAuth();
-    const [profilePicture, setProfilePicture] = useState(user.profileUrl);
+    const {user, logout} = useAuth();
+    const [profilePicture, setProfilePicture] = useState(user?.profileUrl);
     const [showChangePw, setShowChangePw] = useState(false);
 
     const passwordRef = useRef("");
@@ -41,14 +41,14 @@ const Profile= () => {
         if (result.canceled) return;
 
         const selectedImageUri = result.assets[0].uri;
-        const downloadURL = await uploadImageToFirebase(selectedImageUri, user.userId);
+        const downloadURL = await uploadImageToFirebase(selectedImageUri, user?.userId);
         if (!downloadURL) {
             Alert.alert('Upload failed', 'Unable to upload image');
             return;
         }
 
         try {
-            await updateDoc(doc(db, 'users', user.userId), {
+            await updateDoc(doc(db, 'users', user?.userId), {
             profileUrl: downloadURL,
             });
             setProfilePicture(downloadURL);
@@ -97,7 +97,7 @@ const Profile= () => {
         }
 
         try {
-            const credential = EmailAuthProvider.credential(user.email, passwordRef.current);
+            const credential = EmailAuthProvider.credential(user?.email, passwordRef.current);
             await reauthenticateWithCredential(auth.currentUser, credential);
 
             await updatePassword(auth.currentUser, newPasswordRef.current);
@@ -110,10 +110,31 @@ const Profile= () => {
 
     }
 
+    const handleLogout = () => {
+        Alert.alert(
+            'Sign Out',
+            'Confirm sign out?',
+            [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Yes',
+                style: 'destructive',
+                onPress: async () => {
+                await logout();
+                },
+            },
+            ],
+            { cancelable: true }
+        );
+    };
+
   return (
     <CustomKeyBoardView inProfile={true}>
     <ScrollView className='bg-white'>
-    <View className='justify-start px-10'>
+    <View className='justify-start px-10 flex-1'>
         <View className='flex-row self-center'>
             <Image
                 source={{uri: profilePicture}}
@@ -127,14 +148,14 @@ const Profile= () => {
             </TouchableOpacity>
         </View>
         <View className='items-center'>
-            <Text className='font-bold my-1' style={{fontSize: hp(3)}}>{user.username}</Text>
-            <Text className='font-medium' style={{color: 'gray', fontSize: hp(1.8)}}>{capitalizeFirstLetter(user.role)}</Text>
+            <Text className='font-bold my-1' style={{fontSize: hp(3)}}>{user?.username}</Text>
+            <Text className='font-medium' style={{color: 'gray', fontSize: hp(1.8)}}>{capitalizeFirstLetter(user?.role)}</Text>
         </View>
 
         {/* Email */}
         <View className='pt-10'>
             <Text className='font-semibold pb-2' style={{fontSize: hp(2.5)}}>Email Address</Text>
-            <Text className='font-semibold pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user.email}</Text>
+            <Text className='font-semibold pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.email}</Text>
             <View className='border-b -mt-1'/>
             { !showChangePw && (
                 <TouchableOpacity onPress={() => setShowChangePw(true)} className='bg-black rounded-xl mt-3 justify-center items-center flex-row gap-5' style={{height: hp(5)}}>
@@ -161,6 +182,9 @@ const Profile= () => {
                 </View>
             )
         }
+        <TouchableOpacity onPress={handleLogout} className='bg-white rounded-xl mt-3 justify-center items-center border-2 border-black'>
+            <Text className='font-semibold' style={{fontSize: hp(2.5)}}>Sign Out</Text>
+        </TouchableOpacity>
     </View>
     </ScrollView>
     </CustomKeyBoardView>

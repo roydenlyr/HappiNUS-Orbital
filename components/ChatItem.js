@@ -91,6 +91,7 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
       className={`flex-row justify-between mx-4 items-center gap-3 mb-4 pb-2 ${
         noBorder ? "" : "border-b border-b-neutral-200"
       } `}
+      style={{maxHeight: hp(8)}}
     >
       <Image
         style={{ height: hp(6), width: hp(6), borderRadius: 100 }}
@@ -117,13 +118,13 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
         </View>
         <View className='flex-row justify-between'>
             <Text
-            style={{ fontSize: hp(1.6) }}
-            className="font-medium text-neutral-500"
+            style={{ fontSize: hp(1.6), textAlign: 'justify' }}
+            className="font-medium text-neutral-500 flex-1"
             >
             {renderLastMessage()}
             </Text>
             {unreadCount > 0 && (
-            <View className="bg-red-500 px-2 py-1 rounded-full ml-2">
+            <View className="bg-red-500 px-2 py-1 rounded-full ml-2 items-center justify-center self-center">
               <Text style={{ fontSize: hp(1.3) }} className="text-white font-bold">
                 {unreadCount}
               </Text>
