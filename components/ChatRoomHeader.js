@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
-import { Entypo, Feather, FontAwesome, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Entypo, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Image } from 'expo-image';
 import { summariseChat } from '../services/summariseChat';
@@ -67,6 +67,23 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
         }
     }
 
+    const handleEndChat = () => {
+        // Add a active status for chatroom --> set to false to represent chat closed
+        // Add a timestamp for time of end convo
+        // Retain chatroom for 3 days from chat end
+        // Add a pill saying 'Chat has ended on {inactiveOn}'
+        // Once 3 days up, delete chatroom
+    }
+
+    const handleChangeMentor = () => {
+        // Does student want to retain message for the next selected mentor to see?
+        // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
+        // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
+        // its by the previous mentor
+        // Add a pill saying '- New Mentor convo starts from here -'
+        // No --> Delete chatroom, route to select mentor page
+    }
+
   return (
     <Stack.Screen 
         options={{
@@ -88,7 +105,7 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
             ),
             headerRight: user?.role === 'student' ? () => (
                 <View className='flex-row items-center gap-8'>
-                    <Pressable onPress={handleRephrase}>
+                    <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
                         {
                             rephraseLoading ? (
                                 <Loading size={hp(5)}/>
@@ -107,7 +124,25 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
                         }
                     </Pressable>
                 </View>
-            ) : undefined
+            ) : () => (
+                <View className='flex-row items-center gap-8'>
+                    {/* <Pressable onPress={handleFeedBack}>
+                        {
+                            <AntDesign name='staro' size={hp(2.8)}  color={'gray'}/>
+                        }
+                    </Pressable> */}
+                    <Pressable onPress={handleChangeMentor}>
+                        {
+                            <MaterialIcons name='switch-account' size={hp(2.8)}  color={'gray'}/>
+                        }
+                    </Pressable>
+                    <Pressable onPress={handleEndChat}>
+                        {
+                            <Octicons name='x-circle' size={hp(2.8)}  color={'gray'}/>
+                        }
+                    </Pressable>
+                </View>
+            )
     }} />
   )
 }
