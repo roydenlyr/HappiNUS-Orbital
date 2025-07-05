@@ -141,7 +141,7 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}}  router={router} messages={messages} textRef={textRef} inputRef={inputRef}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} messages={messages} textRef={textRef} inputRef={inputRef}/>
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>

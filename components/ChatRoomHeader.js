@@ -1,17 +1,22 @@
 import { View, Text, TouchableOpacity, Pressable, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Stack } from 'expo-router'
+import React, { useEffect, useRef, useState } from 'react'
+import { Stack, useRouter } from 'expo-router'
 import { AntDesign, Entypo, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Image } from 'expo-image';
 import { summariseChat } from '../services/summariseChat';
 import { rephraseMessage } from '../services/rephraseMessage';
 import Loading from './Loading';
+import { doc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 
-const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
+const ChatRoomHeader = ({user, messages, textRef, inputRef}) => {
 
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
+    const [changeLoading, setChangeLoading] = useState(false);
+
+    const router = useRouter();
     
     user.profileUrl = decodeURIComponent(user.profileUrl);
     
@@ -77,11 +82,54 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
 
     const handleChangeMentor = () => {
         // Does student want to retain message for the next selected mentor to see?
-        // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
-        // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
-        // its by the previous mentor
-        // Add a pill saying '- New Mentor convo starts from here -'
-        // No --> Delete chatroom, route to select mentor page
+        
+        setChangeLoading(true);
+        Alert.alert('Change Mentor', 'Are you sure you want to proceed?', 
+            [{
+                text: 'Dismiss',
+                //style: 'cancel'
+            },{
+                text: 'Proceed',
+                onPress: () => {
+                    Alert.alert('Keep Chat History', 'Would you like your new mentor to see this chat for better context?', 
+                        [{
+                            text: 'No', 
+                            onPress: () => {
+                                proceedWithMentorChange(false);
+                            }
+                        },{
+                            text: 'Yes',
+                            onPress: () => {
+                                proceedWithMentorChange(true);
+                            }
+                        }]
+                    );
+                }
+            }], {
+                cancelable: true
+            }
+        );
+        setChangeLoading(false);
+    }
+
+    const proceedWithMentorChange = (keepChat) => {
+        if (keepChat === null){
+            Alert.alert('Failed to change mentor', 'Please try again...');
+            return;
+        }
+
+        // const roomRef = doc(db, 'rooms', )
+
+        if (keepChat) {
+            // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
+            // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
+            // its by the previous mentor
+            // Add a pill saying '- New Mentor convo starts from here -'
+
+        } else {
+            // No --> Deactivate chatroom, route to select mentor page
+
+        }
     }
 
   return (
@@ -91,7 +139,13 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
             headerShadowVisible: false,
             headerLeft: () => (
                 <View className='flex-row items-center gap-4'>
-                    <TouchableOpacity onPress={() => router.back()}>
+                    <TouchableOpacity onPress={() => {
+                        if (user.role === 'mentor') {
+                            router.navigate('/(student)/(tabs)/chats');
+                        } else {
+                            router.navigate('/(mentor)/(tabs)/chats');
+                        }
+                    }}>
                         <Entypo name='chevron-left' size={hp(4)} color='#737373' />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
@@ -131,9 +185,13 @@ const ChatRoomHeader = ({user, router, messages, textRef, inputRef}) => {
                             <AntDesign name='staro' size={hp(2.8)}  color={'gray'}/>
                         }
                     </Pressable> */}
-                    <Pressable onPress={handleChangeMentor}>
+                    <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
                         {
-                            <MaterialIcons name='switch-account' size={hp(2.8)}  color={'gray'}/>
+                            changeLoading ? (
+                                <Loading size={hp(5)}/>
+                            ) : (
+                                <MaterialIcons name='switch-account' size={hp(2.8)}  color={'gray'}/>
+                            )
                         }
                     </Pressable>
                     <Pressable onPress={handleEndChat}>
