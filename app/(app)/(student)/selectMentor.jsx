@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, Dimensions } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
-import Modal from 'react-native-modal';
-import { Picker } from '@react-native-picker/picker';
-import { useUserList } from '../../../context/userListProvider';
-import MentorCard from '../../../components/MentorCard';
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { Feather } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
+import { useState } from 'react';
+import { StatusBar, Text, TouchableOpacity, View } from 'react-native';
+import Modal from 'react-native-modal';
+import Carousel from 'react-native-reanimated-carousel';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import MentorCard from '../../../components/MentorCard';
+import { useUserList } from '../../../context/userListProvider';
 
 const SelectMentor = () => {
   const { mentors } = useUserList();
@@ -27,7 +27,7 @@ const SelectMentor = () => {
 
       {/* Filter Button */}
       <View className='justify-center items-center mb-20'>
-        <TouchableOpacity onPress={() => setFilterVisible(true)} className='flex-row bg-indigo-500 rounded-full items-center justify-center gap-3' style={{width: wp(55), maxWidth: 600}}>
+        <TouchableOpacity onPress={() => setFilterVisible(true)} className='flex-row bg-indigo-500 rounded-full items-center justify-center gap-3' style={{width: wp(55), maxWidth: 600, padding: hp(1)}}>
           <Feather name='filter' color={'white'} size={hp(3)}/>
           <Text className='font-semibold text-white'>Open Filter</Text>
         </TouchableOpacity>
@@ -40,12 +40,15 @@ const SelectMentor = () => {
         pagingEnabled
         snapEnabled
         slideStyle={{ overflow: 'visible' }}
-        height={hp(50)}
+        height={hp(55)}
         width={wp(100)}
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.9,
           parallaxScrollingOffset: wp(25),
+        }}
+        style = {{
+          paddingTop: hp(6)
         }}
       />
 
