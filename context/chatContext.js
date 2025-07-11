@@ -52,7 +52,7 @@ export const ChatContextProvider = ({ children }) => {
                 params: {
                     userId: msg.userId,
                     username: msg.senderName,
-                    profileUrl: msg.profileUrl,
+                    profileUrl: encodeURIComponent(msg.profileUrl),
                 },
                 });
                 Toast.hide();

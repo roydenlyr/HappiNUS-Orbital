@@ -22,12 +22,13 @@ const ChatRoom = () => {
     const textRef = useRef('');
     const inputRef = useRef(null);
     const scrollViewRef = useRef(null);
-    const {setActiveRoomId} = useChatContext();    
+    const {setActiveRoomId} = useChatContext();
+    const roomId = getRoomId(user?.userId, item?.userId);
 
     useEffect(() => {
         createRoomIfNotExists();
 
-        let roomId = getRoomId(user?.userId, item?.userId);
+        // let roomId = getRoomId(user?.userId, item?.userId);
         setActiveRoomId(roomId);
         const docRef = doc(db, 'rooms', roomId);
         const messagesRef = collection(docRef, 'messages');
@@ -66,7 +67,7 @@ const ChatRoom = () => {
 
     const createRoomIfNotExists = async () => {
         // Room id
-        let roomId = getRoomId(user?.userId, item?.userId);
+        // let roomId = getRoomId(user?.userId, item?.userId);
         const roomRef = doc(db, 'rooms', roomId);
         const roomSnap = await getDoc(roomRef);
 
@@ -78,7 +79,8 @@ const ChatRoom = () => {
                 lastSeen: {
                     [user.userId]: serverTimestamp(),
                     [item.userId]: serverTimestamp()
-                }
+                },
+                active: true
             });
         }
     }
@@ -110,7 +112,7 @@ const ChatRoom = () => {
     }
 
     useEffect(() => {
-        const roomId = getRoomId(user?.userId, item?.userId);
+        // const roomId = getRoomId(user?.userId, item?.userId);
         const roomDoc = doc(db, 'rooms', roomId);
 
         return () => {
@@ -121,7 +123,7 @@ const ChatRoom = () => {
     }, []);
 
     useEffect(() => {
-        const roomId = getRoomId(user?.userId, item?.userId);
+        // const roomId = getRoomId(user?.userId, item?.userId);
         const roomRef = doc(db, 'rooms', roomId);
 
         const unsubscribe = onSnapshot(roomRef, (snapshot) => {
@@ -141,7 +143,7 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}}  router={router} messages={messages} textRef={textRef} inputRef={inputRef}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef}/>
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>

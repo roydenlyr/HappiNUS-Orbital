@@ -77,7 +77,7 @@ const SelectMentor = () => {
             <Picker.Item label="All" value="" />
             <Picker.Item label="College of Design & Engineering" value="College of Design & Engineering" />
             <Picker.Item label="School of Computing" value="School of Computing" />
-            <Picker.Item label="Nus Business School" value="NUS Business School" />
+            <Picker.Item label="NUS Business School" value="NUS Business School" />
             <Picker.Item label="Faculty of Arts and Social Sciences" value="Faculty of Arts and Social Sciences" />
             <Picker.Item label="Yong Loo Lin School of Medicine" value="Yoo Long Lin School of Medicine" />
             <Picker.Item label="Faculty of Law" value="Faculty of Law" />
