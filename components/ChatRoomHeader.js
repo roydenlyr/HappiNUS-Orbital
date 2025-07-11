@@ -7,10 +7,10 @@ import { Image } from 'expo-image';
 import { summariseChat } from '../services/summariseChat';
 import { rephraseMessage } from '../services/rephraseMessage';
 import Loading from './Loading';
-import { doc } from 'firebase/firestore';
+import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-const ChatRoomHeader = ({user, messages, textRef, inputRef}) => {
+const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
 
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
@@ -112,24 +112,41 @@ const ChatRoomHeader = ({user, messages, textRef, inputRef}) => {
         setChangeLoading(false);
     }
 
-    const proceedWithMentorChange = (keepChat) => {
+    const proceedWithMentorChange = async (keepChat) => {
         if (keepChat === null){
             Alert.alert('Failed to change mentor', 'Please try again...');
             return;
         }
 
-        // const roomRef = doc(db, 'rooms', )
+        try {
+            await updateDoc(doc(db, 'rooms', roomId), {
+                active: false,
+                inactiveOn: Timestamp.now()
+            });
 
-        if (keepChat) {
-            // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
-            // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
-            // its by the previous mentor
-            // Add a pill saying '- New Mentor convo starts from here -'
-
-        } else {
-            // No --> Deactivate chatroom, route to select mentor page
-
+            router.replace({
+                pathname: '/(student)/selectMentor',
+                params: {
+                    fromRoom: roomId,
+                    keepChat: keepChat ? 'true' : 'false',
+                    previousMentorId: user.userId
+                }
+            });
+        } catch (error) {
+            console.error('Mentor change failed: ', error);
+            Alert.alert('Error', 'Unable to initiate mentor change.');
         }
+
+        // if (keepChat) {
+        //     // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
+        //     // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
+        //     // its by the previous mentor
+        //     // Add a pill saying '- New Mentor convo starts from here -'
+
+        // } else {
+        //     // No --> Deactivate chatroom, route to select mentor page
+
+        // }
     }
 
   return (
@@ -138,15 +155,16 @@ const ChatRoomHeader = ({user, messages, textRef, inputRef}) => {
             title: '', 
             headerShadowVisible: false,
             headerLeft: () => (
-                <View className='flex-row items-center gap-4'>
-                    <TouchableOpacity onPress={() => {
+                <View className='flex-row items-center gap-3 -ml-3'>
+                    <TouchableOpacity
+                    onPress={() => {
                         if (user.role === 'mentor') {
                             router.navigate('/(student)/(tabs)/chats');
                         } else {
                             router.navigate('/(mentor)/(tabs)/chats');
                         }
                     }}>
-                        <Entypo name='chevron-left' size={hp(4)} color='#737373' />
+                        <Entypo name='chevron-left' size={hp(3)} color='#737373' />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
                         <Image source={{uri: user.profileUrl}} style={{height: hp(4.5), aspectRatio: 1, borderRadius: 100}} />
