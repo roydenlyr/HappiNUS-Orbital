@@ -9,7 +9,7 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 import CustomKeyboardView from '../../../components/CustomKeyboardView'
 import {useAuth} from '../../../context/authContext'
 import { getRoomId } from '../../../components/common';
-import { addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { useChatContext } from '../../../context/chatContext';
 
@@ -25,10 +25,15 @@ const ChatRoom = () => {
     const {setActiveRoomId} = useChatContext();
     const roomId = getRoomId(user?.userId, item?.userId);
 
+    const fromRoom = item?.fromRoom || null;
+    const keepChat = item?.keepChat === 'true'; // Convert string to boolean
+
+    const [isActive, setIsActive] = useState(true);
+    const [chatEndDate, setChatEndDate] = useState(null);
+
     useEffect(() => {
         createRoomIfNotExists();
-
-        // let roomId = getRoomId(user?.userId, item?.userId);
+        
         setActiveRoomId(roomId);
         const docRef = doc(db, 'rooms', roomId);
         const messagesRef = collection(docRef, 'messages');
@@ -43,7 +48,8 @@ const ChatRoom = () => {
             const roomDoc = doc(db, 'rooms', roomId);
             updateDoc(roomDoc, {
                 [`lastSeen.${user.userId}`]: serverTimestamp()
-                }).catch(err => console.error('Failed to update lastSeen', err));            
+                });
+                //.catch(err => console.error('(1) Failed to update lastSeen', err));
         });
 
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', updateScrollView)
@@ -66,8 +72,6 @@ const ChatRoom = () => {
     }
 
     const createRoomIfNotExists = async () => {
-        // Room id
-        // let roomId = getRoomId(user?.userId, item?.userId);
         const roomRef = doc(db, 'rooms', roomId);
         const roomSnap = await getDoc(roomRef);
 
@@ -82,6 +86,31 @@ const ChatRoom = () => {
                 },
                 active: true
             });
+
+            if (fromRoom && keepChat) {
+                console.log('Transferring Chat...');
+                
+                const oldMessagesSnap = await getDocs(collection(db, 'rooms', fromRoom, 'messages'));
+                const batch = writeBatch(db);
+
+                oldMessagesSnap.forEach((message) => {
+                    const data = message.data();
+                    const isPrevMentor = data.userId !== item.userId && data.userId !== user.userId;
+
+                    batch.set(doc(db, 'rooms', roomId, 'messages', message.id), {
+                        ...data,
+                        fromPreviousMentor: isPrevMentor
+                    });
+                });
+
+                batch.set(doc(db, 'rooms', roomId, 'messages', 'sys-divider'), {
+                    text: 'This chat has been handed over sucessfully 😊',
+                    type: 'system',
+                    createdAt: Timestamp.now()
+                });
+
+                await batch.commit();
+            }
         }
     }
 
@@ -112,18 +141,16 @@ const ChatRoom = () => {
     }
 
     useEffect(() => {
-        // const roomId = getRoomId(user?.userId, item?.userId);
         const roomDoc = doc(db, 'rooms', roomId);
 
         return () => {
             updateDoc(roomDoc, {
                 [`lastSeen.${user.userId}`]: serverTimestamp()
-            }).catch(err => console.error('Failed to update lastSeen', err));
+            }).catch(err => console.error('(2) Failed to update lastSeen', err));
         };
     }, []);
 
     useEffect(() => {
-        // const roomId = getRoomId(user?.userId, item?.userId);
         const roomRef = doc(db, 'rooms', roomId);
 
         const unsubscribe = onSnapshot(roomRef, (snapshot) => {
@@ -132,6 +159,10 @@ const ChatRoom = () => {
                 const lastSeenTimestamp = data?.lastSeen?.[item?.userId];
                 if (lastSeenTimestamp) {
                     setOtherUserLastSeen(lastSeenTimestamp.toDate());
+                }
+                if (typeof data.active !== 'undefined'){
+                    setIsActive(data.active);
+                    setChatEndDate(data.inactiveOn);
                 }
             }
         });
@@ -143,23 +174,25 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive}/>
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>
-                    <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} otherUserId={item?.userId} lastSeen={otherUserLastSeen} />
+                    <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} otherUserId={item?.userId} lastSeen={otherUserLastSeen} isActive={isActive} chatEndDate={chatEndDate} />
                 </View>
-
-                <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-5'>
-                    <View className='flex-row justify-between bg-white border p-2 border-neutral-300 rounded-xl pl-5 mx-3'>
-                        <TextInput multiline={true} ref={inputRef} onChangeText={value => textRef.current = value} placeholder='Type message...' 
-                        style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll'}} className='flex-1 mr-2' />
-                    </View>
-                    <TouchableOpacity onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end' hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-                        <FontAwesome name='send' size={hp(2.7)} color={'white'}/>
-                    </TouchableOpacity>
-                </View>
-
+                {
+                    isActive && (
+                        <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-5'>
+                            <View className='flex-row justify-between bg-white border p-2 border-neutral-300 rounded-xl pl-5 mx-3'>
+                                <TextInput multiline={true} ref={inputRef} onChangeText={value => textRef.current = value} placeholder='Type message...' 
+                                style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll'}} className='flex-1 mr-2' />
+                            </View>
+                            <TouchableOpacity onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end' hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+                                <FontAwesome name='send' size={hp(2.7)} color={'white'}/>
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
             </View>
         </View>
     </CustomKeyboardView>

@@ -52,10 +52,43 @@ const MessageItem = ({message, currentUser, otherUserId, lastSeen}) => {
             </View>
         </View>
     )
-  } else {
+  } else if (otherUserId === message?.userId) {
     return (
         <View style={{width: wp(80)}} className='ml-3 mb-2'>
             <View className='flex self-start p-3 px-4 rounded-2xl bg-white border-neutral-200 border'>
+                <Text style={{fontSize: hp(2)}}>
+                    {message?.text}
+                </Text>
+                <Text style={{ fontSize: hp(1.3), color: '#666', marginTop: 4, alignSelf: 'flex-end' }}>
+                    {time}
+                </Text>
+            </View>
+        </View>
+    )
+  } else if (message.type !== 'system' && currentUser.role === 'mentor') {
+    return (
+        <View className='flex-row justify-end mb-2 mr-3'>
+            <View style={{width: wp(80)}}>
+                <View className='flex self-end p-3 rounded-2xl bg-neutral-200 border border-indigo-200'>
+                    <Text style={{fontSize: hp(2)}}>
+                        {message?.text}
+                    </Text>
+                    <View className='flex-row items-center justify-end mt-1 gap-1'>
+                        <Text style={{ fontSize: hp(1.3), color: '#666'}}>
+                            {time}
+                        </Text>
+                        <Animated.View style={animatedStyle}>
+                            <MaterialCommunityIcons name={isRead ? 'check-all' : 'check-underline'} color={'#666'} size={hp(1.3)}/>
+                        </Animated.View>
+                    </View>
+                </View>
+            </View>
+        </View>
+    )
+  } else if (message.type !== 'system' && currentUser.role === 'student') {
+    return (
+        <View style={{width: wp(80)}} className='ml-3 mb-2'>
+            <View className='flex self-start p-3 px-4 rounded-2xl bg-neutral-200 border-neutral-200 border'>
                 <Text style={{fontSize: hp(2)}}>
                     {message?.text}
                 </Text>
