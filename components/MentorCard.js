@@ -19,12 +19,14 @@ const MentorCard = ({mentor}) => {
   const router = useRouter();
 
   const handleChatNow = () => {
-    router.replace({pathname: '/chatRoom', params: mentor});    
+    router.replace({pathname: '/chatRoom', params: {
+      ...mentor,
+      profileUrl: encodeURIComponent(mentor.profileUrl)
+    }});     
   }
 
   
   return (
-    //  <View style={{borderRadius: 40, height: '100%', width: wp(70), maxWidth: 600}} className='bg-indigo-500 self-center'>
 <LinearGradient
   colors={['#667eea', '#764ba2']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
   style={{ borderRadius: 40, height: '100%', width: wp(70), maxWidth: 600, alignSelf: 'center', paddingTop: hp(8)}}
@@ -34,8 +36,7 @@ const MentorCard = ({mentor}) => {
       </View>
       <View className='flex-1 justify-center px-5'>
         <View style={{marginTop: hp(2), alignItems: 'center'}}>
-          {/* <FontAwesome name='user-o' color={'white'} size={hp(3)}/> */}
-          <Text style={{fontSize: hp(2), fontSize: hp(4)}} className='font-bold text-white'>{mentor.username}</Text>
+          <Text style={{fontSize: hp(4)}} className='font-bold text-white'>{mentor.username}</Text>
         </View>
         <View style={{marginTop: hp(2), paddingLeft: hp(2)}} className='flex-row gap-4'>
           <Ionicons name={genderIcon} color={'white'} size={hp(3)}/>
