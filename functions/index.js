@@ -1,11 +1,13 @@
 const functions = require("firebase-functions/v1");
 const axios = require("axios");
+const admin = require("firebase-admin");
+admin.initializeApp();
 
 const OPENAI_API_KEY = functions.config().openai.key;
 
 exports.summariseChat = functions
   .region("us-central1")
-  .runWith({ memory: "256MB", timeoutSeconds: 10, failurePolicy: false }) // Optional tuning
+  .runWith({ memory: "256MB", timeoutSeconds: 10}) // Optional tuning
   .https.onCall(async (data, context) => {
     const messages = data.messages;
 
@@ -100,3 +102,37 @@ exports.summariseChat = functions
       throw new functions.https.HttpsError("internal", "Unexpected error during rephrasing.");
     }
   });
+
+  exports.deleteExpiredChatRooms = functions.pubsub
+    .schedule("every 1 hours")
+    .onRun(async (context) => {
+      const db = admin.firestore();
+      const now = admin.firestore.Timestamp.now();
+      const threeDaysAgo = admin.firestore.Timestamp.fromMillis(now.toMillis() - 3 * 24 * 60 * 60 * 1000);
+
+      const snapshot = await db.collection("rooms").where("active", "==", false)
+        .where("inactiveOn", "<=", threeDaysAgo).get();
+
+      const batch = db.batch();
+      
+      for (const doc of snapshot.docs){
+        await deleteCollection(db, doc.ref.collection('messages'));
+        batch.delete(doc.ref);
+      };
+
+      await batch.commit();
+      console.log(`Deleted ${snapshot.size} expired chat rooms.`);
+      return null;
+    });
+
+  const deleteCollection = async (db, collectionRef, batchSize = 100) => {
+    const query = collectionRef.limit(batchSize);
+    const snapshot = await query.get();
+    if (snapshot.empty) return;
+
+    const batch = db.batch();
+    snapshot.docs.forEach(doc => batch.delete(doc.ref));
+    await batch.commit();
+
+    return deleteCollection(collectionRef, batchSize);
+  }

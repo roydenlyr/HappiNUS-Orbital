@@ -7,8 +7,12 @@ import Carousel from 'react-native-reanimated-carousel';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MentorCard from '../../../components/MentorCard';
 import { useUserList } from '../../../context/userListProvider';
+import { useLocalSearchParams } from 'expo-router';
 
 const SelectMentor = () => {
+
+  const { fromRoom, keepChat } = useLocalSearchParams();
+
   const { mentors } = useUserList();
 
   const [isFilterVisible, setFilterVisible] = useState(false);
@@ -36,7 +40,7 @@ const SelectMentor = () => {
       {/* Carousel */}
       <Carousel
         data={filteredMentors}
-        renderItem={({ item }) => <MentorCard mentor={item} />}
+        renderItem={({ item }) => <MentorCard mentor={item} fromRoom={fromRoom} keepChat={keepChat}/>}
         pagingEnabled
         snapEnabled
         slideStyle={{ overflow: 'visible' }}

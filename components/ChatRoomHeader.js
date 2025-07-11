@@ -10,11 +10,12 @@ import Loading from './Loading';
 import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
+const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive}) => {
 
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
     const [changeLoading, setChangeLoading] = useState(false);
+    const [endChatLoading, setEndChatLoading] = useState(false);
 
     const router = useRouter();
     
@@ -78,6 +79,23 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
         // Retain chatroom for 3 days from chat end
         // Add a pill saying 'Chat has ended on {inactiveOn}'
         // Once 3 days up, delete chatroom
+        setEndChatLoading(true);
+        Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed? This action is permanent and cannot be undone.', [{
+            text: 'Dismiss',
+        }, {
+            text: 'Proceed',
+            onPress: async () => {
+                try {
+                    await updateDoc(doc(db, 'rooms', roomId), {
+                        active: false,
+                        inactiveOn: Timestamp.now()
+                    });
+                } catch (error) {
+                    console.error('End Chat Failed: ', error);
+                    Alert.alert('Error', 'Unable to end chat.');
+                }
+            }
+        }]);
     }
 
     const handleChangeMentor = () => {
@@ -129,24 +147,12 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
                 params: {
                     fromRoom: roomId,
                     keepChat: keepChat ? 'true' : 'false',
-                    previousMentorId: user.userId
                 }
             });
         } catch (error) {
             console.error('Mentor change failed: ', error);
             Alert.alert('Error', 'Unable to initiate mentor change.');
         }
-
-        // if (keepChat) {
-        //     // Yes --> Transfer current chat into newly created chatroom with the newly selected mentor
-        //     // [MessageItem.js] if userId of message sent is not by student or new mentor, colour code with a different colour to show 
-        //     // its by the previous mentor
-        //     // Add a pill saying '- New Mentor convo starts from here -'
-
-        // } else {
-        //     // No --> Deactivate chatroom, route to select mentor page
-
-        // }
     }
 
   return (
@@ -175,7 +181,11 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
                     </View>
                 </View>
             ),
-            headerRight: user?.role === 'student' ? () => (
+            headerRight: () => {
+                if (!isActive) return null;
+
+                if (user?.role === 'student') {
+                return (
                 <View className='flex-row items-center gap-8'>
                     <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
                         {
@@ -196,7 +206,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
                         }
                     </Pressable>
                 </View>
-            ) : () => (
+            ) } else { return (
                 <View className='flex-row items-center gap-8'>
                     {/* <Pressable onPress={handleFeedBack}>
                         {
@@ -218,8 +228,8 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef}) => {
                         }
                     </Pressable>
                 </View>
-            )
-    }} />
+            )}
+    }}} />
   )
 }
 

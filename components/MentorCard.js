@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-const MentorCard = ({mentor}) => {
+const MentorCard = ({mentor, fromRoom, keepChat}) => {
   // Calculating by academic year
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -21,7 +21,9 @@ const MentorCard = ({mentor}) => {
   const handleChatNow = () => {
     router.replace({pathname: '/chatRoom', params: {
       ...mentor,
-      profileUrl: encodeURIComponent(mentor.profileUrl)
+      profileUrl: encodeURIComponent(mentor.profileUrl),
+      fromRoom,
+      keepChat,
     }});     
   }
 
