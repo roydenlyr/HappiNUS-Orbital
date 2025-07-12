@@ -40,7 +40,13 @@ export const UserListProvider = ({ children }) => {
     const usersProfiles = await Promise.all(
       otherUserIds.map(async (uid) => {
         const userDoc = await getDoc(doc(db, 'users', uid));
-        return userDoc.exists() ? userDoc.data() : null;
+        return userDoc.exists() ? userDoc.data() : {
+          username: 'Account Deleted',
+          userId: uid,
+          profileUrl: 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23',
+          role: 'mentor',
+          deleted: true
+        };
       })
     );
 

@@ -95,6 +95,9 @@ const ChatRoom = () => {
 
                 oldMessagesSnap.forEach((message) => {
                     const data = message.data();
+
+                    if (data?.subType === 'removed') return;
+
                     const isPrevMentor = data.userId !== item.userId && data.userId !== user.userId;
 
                     batch.set(doc(db, 'rooms', roomId, 'messages', message.id), {
@@ -104,8 +107,9 @@ const ChatRoom = () => {
                 });
 
                 batch.set(doc(db, 'rooms', roomId, 'messages', 'sys-divider'), {
-                    text: 'This chat has been handed over sucessfully 😊',
+                    text: `This chat has been handed over successfully 😊.${'\n'}This is the beginning of your new chat`,
                     type: 'system',
+                    subType: 'handover',
                     createdAt: Timestamp.now()
                 });
 
@@ -174,7 +178,7 @@ const ChatRoom = () => {
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
             <StatusBar style='dark' />
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate}/>
             <View className='h-1 border-b border-neutral-300' />
             <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
                 <View className='flex-1'>

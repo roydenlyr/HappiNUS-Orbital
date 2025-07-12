@@ -3,9 +3,9 @@ import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather, Ionicons, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import CustomKeyboardView from '../../../../components/CustomKeyboardView';
-import {useAuth} from '../../../../context/authContext';
-import Loading from '../../../../components/Loading';
+import CustomKeyboardView from '../../../components/CustomKeyboardView';
+import {useAuth} from '../../../context/authContext';
+import Loading from '../../../components/Loading';
 import { Dropdown } from 'react-native-element-dropdown';
 
 const genderOptions = [
@@ -40,10 +40,6 @@ const AddMentor = () => {
   const dobRef = useRef("");
   const matricYearRef = useRef("");
 
-  const handleLogout = async () => {
-      await logout();
-  }
-
   const handleRegister = async () => {
     if(!emailRef.current || !facultyRef.current || !usernameRef.current || !genderRef.current || !dobRef.current || !matricYearRef.current){
       console.log('Email: ', emailRef.current);
@@ -77,8 +73,8 @@ const AddMentor = () => {
       <StatusBar style='dark' />
       <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12 bg-white'>
         {/* SignIn Image */}
-        <View className='items-center'>
-          <Image style={styles.logo} source={require('../../../../assets/images/HappiNUS2.png')}/>
+        <View className='items-center -m-10'>
+          <Image style={styles.logo} source={require('../../../assets/images/HappiNUS2.png')}/>
         </View>
 
         <View className='gap-8'>
@@ -133,15 +129,7 @@ const AddMentor = () => {
                   </Text>
                 </TouchableOpacity>
               )}
-            </View>
-            
-            {/* Temp Sign Out */}
-            <View className='flex-row justify-center'>
-              <Pressable onPress={handleLogout}>
-                <Text style={{fontSize: hp(1.8)}} className='font-bold text-indigo-500'>Sign Out</Text>
-              </Pressable>
-            </View>
-
+            </View>   
           </View>
         </View>
       </View>
