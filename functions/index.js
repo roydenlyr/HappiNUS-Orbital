@@ -116,6 +116,12 @@ exports.summariseChat = functions
       const batch = db.batch();
       
       for (const doc of snapshot.docs){
+        const data = doc.data();
+        if (!data.inactiveOn) {
+          console.warn(`Skipping room ${doc.id} - missing inactiveOn field.`);
+          continue;
+        }
+
         await deleteCollection(db, doc.ref.collection('messages'));
         batch.delete(doc.ref);
       };
@@ -136,3 +142,45 @@ exports.summariseChat = functions
 
     return deleteCollection(collectionRef, batchSize);
   }
+
+  exports.deleteAccount = functions.https.onCall(async (data, context) => {
+    const { userId } = data;
+
+    if (!userId) {
+      throw new functions.https.HttpsError('invalid-argument', 'User ID is required.');
+    }
+
+    const DEFAULT_IMAGE_KEYWORDS = [
+      'smile.jpg',
+      'smile2.jpg'
+    ];
+
+    try {
+      await admin.auth().deleteUser(userId);
+
+      // await admin.firestore().collection('users').doc(userId).delete();
+      const userDocRef = admin.firestore().collection('users').doc(userId);
+      const userDoc = await userDocRef.get();
+
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        const profileUrl = userData?.profileUrl
+
+        if (profileUrl && !DEFAULT_IMAGE_KEYWORDS.some(k => profileUrl.includes(k))){
+          const match = profileUrl.match(/\/o\/(.*?)\?alt/);
+          if (match && match[1]) {
+            const filePath = decodeURIComponent(match[1]);
+            await admin.storage().bucket().file(filePath).delete().catch(err => {
+              console.warn('Profile picture deletion warning: ', err.message);
+            });
+          }
+        }
+        await userDocRef.delete();
+      }
+
+      return {success: true, message: 'User account deleted successfully.'};
+    } catch (error) {
+      console.error('Deletion failed: ', error);
+      throw new functions.https.HttpsError('internal', 'Failed to delete mentor account.');
+    }
+  })

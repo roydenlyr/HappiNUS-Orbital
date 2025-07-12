@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native'
 import MessageItem from './MessageItem'
 
 const MessageList = ({messages, currentUser, scrollViewRef, otherUserId, lastSeen, isActive, chatEndDate}) => {
+  console.log(otherUserId);
+  
   return (
     <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingTop: 10}}>
       {
@@ -26,8 +28,8 @@ const MessageList = ({messages, currentUser, scrollViewRef, otherUserId, lastSee
             {
               message.type === 'system' && (
                 <View className="items-center mb-3">
-                  <Text className="text-xs text-neutral-500 bg-neutral-200 px-4 py-1 rounded-full">
-                    🔔 This is the beginning of your new chat.
+                  <Text className="text-xs text-neutral-500 bg-neutral-200 px-4 py-1 rounded-full mx-2 text-center">
+                    {message.text}
                   </Text>
                 </View>
               )
@@ -38,7 +40,7 @@ const MessageList = ({messages, currentUser, scrollViewRef, otherUserId, lastSee
         })
       }
       {
-        !isActive && (
+        !isActive && chatEndDate && (
           <View className="items-center mb-3 pb-5">
             <Text className="text-xs text-neutral-500 bg-neutral-200 px-4 py-1 rounded-full text-center">
               Chat has ended on {chatEndDate.toDate().toLocaleString() + '.\n'}

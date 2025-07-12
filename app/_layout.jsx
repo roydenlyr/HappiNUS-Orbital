@@ -31,7 +31,7 @@ const MainLayout = () => {
       else if (role === 'mentor')
         router.replace('/(app)/(mentor)/(tabs)/home');
       else if (role === 'admin')
-        router.replace('/(app)/(admin)/(tabs)/addMentor');
+        router.replace('/(app)/(admin)/(tabs)/home');
     } else if (!isAuthenticated && !isAuthPage){
       // Redirect to Sign in
       router.replace('/signIn');

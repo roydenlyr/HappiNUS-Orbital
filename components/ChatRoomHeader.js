@@ -10,7 +10,7 @@ import Loading from './Loading';
 import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
-const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive}) => {
+const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, chatEndDate}) => {
 
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
@@ -182,7 +182,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive}) =
                 </View>
             ),
             headerRight: () => {
-                if (!isActive) return null;
+                if (!isActive && chatEndDate) return null;
 
                 if (user?.role === 'student') {
                 return (
