@@ -184,3 +184,42 @@ exports.summariseChat = functions
       throw new functions.https.HttpsError('internal', 'Failed to delete mentor account.');
     }
   })
+
+  exports.registerMentor = functions.https.onCall(async (data, context) => {
+    const { email, password, username, faculty, gender, dob, matricYear } = data;
+
+    // if (!context.auth || context.auth.token.role !== 'admin') {
+    //   throw new functions.https.HttpsError('permission-denied', 'Only admins can register mentors.');
+    // }
+
+    try {
+      const userRecord = await admin.auth().createUser({
+        email,
+        password,
+        displayName: username,
+      });
+
+      await admin.firestore().collection('users').doc(userRecord.uid).set({
+        userId: userRecord.uid,
+        username,
+        profileUrl: 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23',
+        role: 'mentor',
+        faculty,
+        gender,
+        dob,
+        matricYear,
+        activeAlert: false
+      });
+
+      return {success: true, uid: userRecord.uid};
+    } catch (error) {
+        let msg = error.message;
+        if(msg.includes('(auth/invalid-email)')) {
+            msg = 'Invalid email';
+        }
+        if(msg.includes('(auth/email-already-in-use)')) {
+            msg = 'This email is already in use';
+        }
+        return {success: false, msg};
+    }
+  })

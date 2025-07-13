@@ -110,7 +110,8 @@ const ChatRoom = () => {
                     text: `This chat has been handed over successfully 😊.${'\n'}This is the beginning of your new chat`,
                     type: 'system',
                     subType: 'handover',
-                    createdAt: Timestamp.now()
+                    createdAt: Timestamp.now(),
+                    senderName: 'system'
                 });
 
                 await batch.commit();
@@ -138,7 +139,6 @@ const ChatRoom = () => {
                 createdAt: Timestamp.fromDate(new Date())
             });
 
-            console.log('new message id: ', newDoc.id);
         } catch (err){
             Alert.alert('Message',err.message)
         }

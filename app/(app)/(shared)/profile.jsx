@@ -4,15 +4,17 @@ import { Image } from 'expo-image'
 import { useAuth } from '../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { blurhash } from '../../../components/common';
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { doc, updateDoc } from 'firebase/firestore';
-import { auth, db, app } from '../../../firebaseConfig';
+import { addDoc, collection, doc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { auth, db, app, functions } from '../../../firebaseConfig';
 import { TextInput } from 'react-native-paper';
 import CustomKeyBoardView from '../../../components/CustomKeyboardView';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { httpsCallable } from 'firebase/functions';
+import { useRouter } from 'expo-router';
 
 const Profile= () => {
 
@@ -23,6 +25,8 @@ const Profile= () => {
     const passwordRef = useRef("");
     const newPasswordRef = useRef("");
     const confirmPasswordRef = useRef("");
+
+    const router = useRouter();
 
     const changeProfilePicture = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -131,6 +135,80 @@ const Profile= () => {
         );
     };
 
+    const handleDeleteAccount = () => {
+        Alert.alert('Delete Confirmation', 'Are you sure you want to proceed? This action cannot be undone', [{
+            text: 'Dismiss'
+        }, {
+            text: 'Proceed',
+            onPress: () => proceedWithDeletion()
+        }])
+    }
+
+    const proceedWithDeletion = async () => {
+        try {
+            const roomQuery = query(collection(db, 'rooms'),
+                where('participants', 'array-contains', user.userId),
+                where('active', '==', true));
+
+            const roomSnap = await getDocs(roomQuery);
+
+            if (!roomSnap.empty) {
+                Alert.alert('You have an Active Chat', 'Your chat will be permanently deleted. Do you wish to proceed?', [{
+                    text: 'Cancel'
+                }, {
+                    text: 'Proceed anyway',
+                    onPress: () => handleForceDelete(roomSnap.docs, user.userId)
+                }])
+            } else {
+                await callDeleteAccount(user.userId);
+            }
+        } catch (error) {
+            console.error('Error checking student chat: ', error);
+            Alert.alert('Error', 'Could not complete deletion');
+        }
+    }
+
+    const handleForceDelete = async (docs, userId) => {
+        try {
+            for (const docSnap of docs) {
+                const roomRef = doc(db, 'rooms', docSnap.id);
+                await updateDoc(roomRef, {
+                    active: false,
+                    inactiveOn: Timestamp.now()
+                });
+
+                const msgRef = collection(roomRef, 'messages');
+                await addDoc(msgRef, {
+                    type: 'system',
+                    subType: 'removed',
+                    text: '⚠️ This user account has been deleted.',
+                    createdAt: Timestamp.now(),
+                    senderName: 'system'
+                });
+            }
+
+            await callDeleteAccount(userId);
+        } catch (error) {
+            console.error('Error ending student chat: ', error);
+            Alert.alert('Error', 'Failed to clean up student chat.');
+        }
+    }
+
+    const callDeleteAccount = async (userId) => {
+        try {
+            const deleteUser = httpsCallable(functions, 'deleteAccount');
+            const result = await deleteUser({userId: userId});
+
+            if (result.data.success) {
+                Alert.alert('Success', result.data.message);
+                await logout();
+            }
+        } catch (error) {
+            console.error('User deletion error: ', error);
+            Alert.alert('Error', error?.message || 'Failed to delete user.');
+        }
+    }
+
   return (
     <CustomKeyBoardView inProfile={true}>
     <ScrollView className='bg-white'>
@@ -185,6 +263,16 @@ const Profile= () => {
         <TouchableOpacity onPress={handleLogout} className='bg-white rounded-xl mt-3 justify-center items-center border-2 border-black'>
             <Text className='font-semibold' style={{fontSize: hp(2.5)}}>Sign Out</Text>
         </TouchableOpacity>
+        {
+            user?.role === 'student' && (
+                <View className='justify-end items-end'>
+                <TouchableOpacity onPress={handleDeleteAccount} className='bg-rose-500 rounded-xl mt-3 justify-center items-center flex-row gap-1 p-2'>
+                    <Text className=' text-white' style={{fontSize: hp(1.5)}}>Delete Account</Text>
+                    <MaterialIcons name='delete-outline' size={hp(1.8)} color={'white'}/>
+                </TouchableOpacity>
+                </View>
+            )
+        }
     </View>
     </ScrollView>
     </CustomKeyBoardView>

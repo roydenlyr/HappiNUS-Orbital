@@ -7,6 +7,8 @@ import CustomKeyboardView from '../../../components/CustomKeyboardView';
 import {useAuth} from '../../../context/authContext';
 import Loading from '../../../components/Loading';
 import { Dropdown } from 'react-native-element-dropdown';
+import { httpsCallable } from 'firebase/functions';
+import { functions } from '../../../firebaseConfig';
 
 const genderOptions = [
   { label: 'Male', value: 'Male' },
@@ -26,7 +28,7 @@ const facultyOptions = [
 const AddMentor = () => {
 
   const router = useRouter();
-  const {registerMentor, logout} = useAuth();
+  const {logout} = useAuth();
   const [loading, setLoading] = useState(false);
 
   // Dropdown List
@@ -39,6 +41,8 @@ const AddMentor = () => {
   const genderRef = useRef("");
   const dobRef = useRef("");
   const matricYearRef = useRef("");
+
+  const registerMentor = httpsCallable(functions, 'registerMentor');
 
   const handleRegister = async () => {
     if(!emailRef.current || !facultyRef.current || !usernameRef.current || !genderRef.current || !dobRef.current || !matricYearRef.current){
@@ -54,14 +58,24 @@ const AddMentor = () => {
 
     setLoading(true);
 
-    let response = await registerMentor(emailRef.current, '123456', usernameRef.current, 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23', 'mentor', 
-      facultyRef.current, genderRef.current, dobRef.current, matricYearRef.current, false
-    );
+    // let response = await registerMentor(emailRef.current, '123456', usernameRef.current, 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23', 'mentor', 
+    //   facultyRef.current, genderRef.current, dobRef.current, matricYearRef.current, false
+    // );
+
+    let response = await registerMentor({
+      email: emailRef.current,
+      password: '123456',
+      username: usernameRef.current,
+      faculty: facultyRef.current,
+      gender: genderRef.current,
+      dob: dobRef.current,
+      matricYear: matricYearRef.current
+    })
+
     setLoading(false);
 
-    console.log('got results: ', response);
-    if (!response.success){
-      Alert.alert('Register', response.msg);
+    if (!response.data.success){
+      Alert.alert('Register', response.data.msg || 'Mentor creation failed.');
     } else {
       Alert.alert('Register', 'Mentor added successfully!');
     }
