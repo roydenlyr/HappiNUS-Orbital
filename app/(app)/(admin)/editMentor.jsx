@@ -39,9 +39,7 @@ const EditMentor = () => {
                         onPress: () => handleForceDelete(roomSnap.docs, mentor.userId)
                     }]
                 );
-            } else {
-                console.log('mentor has no active chats');
-                
+            } else {                
                 await callDeleteMentor(mentor.userId);
             }
         } catch (error) {

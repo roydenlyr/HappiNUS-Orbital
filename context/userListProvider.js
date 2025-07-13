@@ -43,8 +43,14 @@ export const UserListProvider = ({ children }) => {
         return userDoc.exists() ? userDoc.data() : {
           username: 'Account Deleted',
           userId: uid,
-          profileUrl: 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23',
-          role: 'mentor',
+          profileUrl: (
+            user.role === 'mentor' ? 
+            'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile2.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23' :
+            'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23'
+          ),
+          role: (
+            user.role === 'mentor' ? 'student' : 'mentor'
+          ),
           deleted: true
         };
       })

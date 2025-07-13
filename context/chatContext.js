@@ -53,6 +53,7 @@ export const ChatContextProvider = ({ children }) => {
                     userId: msg.userId,
                     username: msg.senderName,
                     profileUrl: encodeURIComponent(msg.profileUrl),
+                    role: (currentUser.role === 'mentor' ? 'student' : 'mentor')
                 },
                 });
                 Toast.hide();

@@ -93,6 +93,8 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 } catch (error) {
                     console.error('End Chat Failed: ', error);
                     Alert.alert('Error', 'Unable to end chat.');
+                } finally {
+                    setEndChatLoading(false);
                 }
             }
         }]);
@@ -222,9 +224,13 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             )
                         }
                     </Pressable>
-                    <Pressable onPress={handleEndChat}>
+                    <Pressable onPress={handleEndChat} disabled={endChatLoading}>
                         {
-                            <Octicons name='x-circle' size={hp(2.8)}  color={'gray'}/>
+                            endChatLoading ? (
+                                <Loading size={hp(5)}/>
+                            ) : (
+                                <Octicons name='x-circle' size={hp(2.8)}  color={'gray'}/>
+                            )
                         }
                     </Pressable>
                 </View>
