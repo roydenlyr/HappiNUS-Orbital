@@ -24,8 +24,8 @@ const MentorList = () => {
         renderItem={({item, index}) => 
             <TouchableOpacity
                 onPress={() => router.push({pathname: '/editMentor', params: {...item, profileUrl: encodeURIComponent(item.profileUrl)}})}
-                className={`flex-row justify-start mx-4 items-center gap-5 mb-4 pb-2 
-                    ${index + 1 === mentors.length ? "" : "border-b border-b-neutral-200"}`}
+                className={`flex-row justify-start mx-4 items-center gap-5  
+                    ${index + 1 === mentors.length ? "" : "border-b border-b-neutral-200 mb-3 pb-3"}`}
             >
                 <Image 
                     style={{ height: hp(6), width: hp(6), borderRadius: 100 }}

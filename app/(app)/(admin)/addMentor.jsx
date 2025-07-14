@@ -83,16 +83,15 @@ const AddMentor = () => {
 
   return (
     <CustomKeyboardView>
-      <ScrollView>
-      <StatusBar style='dark' />
-      <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12 bg-white'>
-        {/* SignIn Image */}
-        <View className='items-center -m-10'>
+      <ScrollView className='bg-white'>
+      <StatusBar style='auto' />
+      <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12'>
+        <View className='items-center -mb-10 -mt-20'>
           <Image style={styles.logo} source={require('../../../assets/images/HappiNUS2.png')}/>
         </View>
 
         <View className='gap-8'>
-          <Text style={{fontSize: hp(4)}} className='font-bold tracking-wider text-center text-neutral-950'>Register New Mentor</Text>
+          {/* <Text style={{fontSize: hp(4)}} className='font-bold tracking-wider text-center text-neutral-950'>Register New Mentor</Text> */}
 
           <View className='gap-4'>
             <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>

@@ -6,10 +6,10 @@ import { useRouter } from 'expo-router'
 const ChatList = ({users, currentUser}) => {
     const router = useRouter();
   return (
-    <View className='flex-1'>
+    <View>
         <FlatList 
             data={users} 
-            contentContainerStyle={{flex: 1, paddingVertical: 25}} 
+            contentContainerStyle={{paddingVertical: 15}} 
             keyExtractor={item => Math.random()} 
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => <ChatItem 

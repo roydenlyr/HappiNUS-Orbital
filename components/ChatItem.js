@@ -88,8 +88,8 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
   return (
     <TouchableOpacity
       onPress={openChatRoom}
-      className={`flex-row justify-between mx-4 items-center gap-3 mb-4 pb-2 ${
-        noBorder ? "" : "border-b border-b-neutral-200"
+      className={`flex-row justify-between mx-4 items-center gap-3 ${
+        noBorder ? "" : "border-b border-b-neutral-200 mb-4 pb-4"
       } `}
       style={{maxHeight: hp(8)}}
     >
