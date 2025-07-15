@@ -7,7 +7,7 @@ import { db } from '../../../../firebaseConfig';
 import Toast from 'react-native-toast-message';
 import MapView, { Marker } from 'react-native-maps';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { FontAwesome, FontAwesome5, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome6 } from '@expo/vector-icons';
 
 const AdminHome = () => {
 
@@ -19,7 +19,7 @@ const AdminHome = () => {
   const [previousAlertIds, setPreviousAlertIds] = useState([]);
   const [totalStudents, setTotalStudents] = useState(0);
   const [totalMentors, setTotalMentors] = useState(0);
-  const [totalActiveChats, setTotalActiveChats] = useState(0)
+  const [totalActiveChats, setTotalActiveChats] = useState(0);
 
   useEffect(() => {
     refreshUser();

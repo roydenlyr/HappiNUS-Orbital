@@ -222,9 +222,7 @@ const EditMentor = () => {
                         }
                         
                     </View>
-                </View>
-                
-                
+                </View>             
             </View>
         </ScrollView>
     </CustomKeyBoardView>
