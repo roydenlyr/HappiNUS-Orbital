@@ -1,6 +1,7 @@
 const functions = require("firebase-functions/v1");
 const axios = require("axios");
 const admin = require("firebase-admin");
+const quotes = require("./data/daily_quotes.json");
 admin.initializeApp();
 
 const OPENAI_API_KEY = functions.config().openai.key;
@@ -223,3 +224,22 @@ exports.summariseChat = functions
         return {success: false, msg};
     }
   })
+
+  exports.uploadQuotes = functions.https.onRequest(async (req, res) => {
+  try {
+    const batch = admin.firestore().batch();
+    const ref = admin.firestore().collection('quotes').doc('daily').collection('days');
+
+    Object.entries(quotes).forEach(([day, quote]) => {
+      batch.set(ref.doc(day), quote);
+    });
+
+    await batch.commit();
+
+    console.log('Uploaded quotes to Firestore.');
+    res.status(200).json({ success: true, message: 'Quotes uploaded successfully.' });
+  } catch (error) {
+    console.error('Failed to upload quotes:', error);
+    res.status(500).json({ success: false, message: 'Failed to upload quotes.', error: error.message });
+  }
+});
