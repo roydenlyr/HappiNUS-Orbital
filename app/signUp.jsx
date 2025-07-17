@@ -5,7 +5,7 @@ import { Feather, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import {useAuth} from '../context/authContext'
-import Loading from '../components/Loading';
+import { Loading } from '../components/Animation';
 
 const SignUp = () => {
 

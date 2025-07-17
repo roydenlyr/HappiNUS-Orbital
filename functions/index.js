@@ -2,6 +2,7 @@ const functions = require("firebase-functions/v1");
 const axios = require("axios");
 const admin = require("firebase-admin");
 const quotes = require("./data/daily_quotes.json");
+const disney_quotes = require("./data/disney_quotes.json");
 admin.initializeApp();
 
 const OPENAI_API_KEY = functions.config().openai.key;
@@ -134,6 +135,10 @@ exports.summariseChat = functions
 
   const deleteCollection = async (db, collectionRef, batchSize = 100) => {
     const query = collectionRef.limit(batchSize);
+    if (!collectionRef || typeof collectionRef.limit !== 'function') {
+      console.error('Invalid CollectionReference passed to deleteCollection: ', collectionRef);
+      return;
+    }
     const snapshot = await query.get();
     if (snapshot.empty) return;
 
@@ -141,7 +146,7 @@ exports.summariseChat = functions
     snapshot.docs.forEach(doc => batch.delete(doc.ref));
     await batch.commit();
 
-    return deleteCollection(collectionRef, batchSize);
+    return deleteCollection(db, collectionRef, batchSize);
   }
 
   exports.deleteAccount = functions.https.onCall(async (data, context) => {
@@ -228,9 +233,9 @@ exports.summariseChat = functions
   exports.uploadQuotes = functions.https.onRequest(async (req, res) => {
   try {
     const batch = admin.firestore().batch();
-    const ref = admin.firestore().collection('quotes').doc('daily').collection('days');
+    const ref = admin.firestore().collection('disney_quotes');
 
-    Object.entries(quotes).forEach(([day, quote]) => {
+    Object.entries(disney_quotes).forEach(([day, quote]) => {
       batch.set(ref.doc(day), quote);
     });
 

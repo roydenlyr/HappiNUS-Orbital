@@ -1,7 +1,7 @@
 import { ActivityIndicator, View } from 'react-native'
 import React from 'react'
 import { Redirect } from 'expo-router';
-import Loading from '../components/Loading';
+import { Loading } from '../components/Animation';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const StartPage = () => {

@@ -11,7 +11,7 @@ import { Image } from 'expo-image';
 import { blurhash } from '../../../components/common';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import Loading from '../../../components/Loading';
+import { Loading } from '../../../components/Animation';
 
 const genderOptions = [
   { label: 'Male', value: 'Male' },
@@ -20,7 +20,7 @@ const genderOptions = [
 ]
 
 const facultyOptions = [
-  { label: 'College of Design & Engineering', value: 'Collge of Design & Engineering' },
+  { label: 'College of Design & Engineering', value: 'College of Design & Engineering' },
   { label: 'School of Computing', value: 'School of Computing' },
   { label: 'NUS Business School', value: 'NUS Business School' },
   { label: 'Faculty of Arts & Social Sciences', value: 'Faculty of Arts & Social Sciences' },

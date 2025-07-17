@@ -1,4 +1,4 @@
-import { View, Text, Platform, StyleSheet } from 'react-native'
+import { View, Text, Platform, StyleSheet, useColorScheme } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,8 +9,13 @@ import { Menu } from 'react-native-paper';
 import { MenuItem, Divider } from './CustomMenuItems';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import Logo from '../assets/images/SplashScreen.svg';
+import { Colors } from '../constants/Colors';
 
 const HomeHeader = () => {
+
+    const colorScheme = useColorScheme();
+    const theme = Colors[colorScheme] ?? Colors.light;
 
     const {user, logout} = useAuth();
     const ios = Platform.OS === 'ios';
@@ -30,18 +35,18 @@ const HomeHeader = () => {
     }
 
   return (
-    <View className='bg-white'>
-    <View style={{paddingTop: ios? top : top + 10}} className='flex-row justify-between px-5 bg-indigo-400 pb-6 rounded-b-3xl' >
-      <View className='justify-center'>
-        <Text style={{fontSize: hp(3)}} className='font-medium text-white'>HappiNUS</Text>
+    <View style={{backgroundColor: theme.appBackground}}>
+    <View style={{paddingTop: ios? top : top + 10, backgroundColor: theme.homeHeaderBackground}} className='flex-row justify-between px-5 pb-6 rounded-b-3xl' >
+      <View className='justify-center flex-1 items-center -my-20'>
+        <Logo width={'100%'} height={hp(20)}/>
       </View>
         
-      <View className='items-end'>
+      <View className='items-end justify-center'>
        <Menu
             visible={visible} onDismiss={closeMenu} anchor={
                 <Image
                     onTouchEnd={openMenu}
-                    style={{height: hp(4.3), aspectRatio: 1, borderRadius: 100}}
+                    style={{height: hp(4.8), aspectRatio: 1, borderRadius: 100, borderColor: theme.border, borderWidth: '0.8'}}
                     source={{uri: user?.profileUrl}}
                     placeholder={blurhash}
                     transition={500}
