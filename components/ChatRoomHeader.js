@@ -6,7 +6,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { Image } from 'expo-image';
 import { summariseChat } from '../services/summariseChat';
 import { rephraseMessage } from '../services/rephraseMessage';
-import Loading from './Loading';
+import { Loading } from './Animation';
 import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 

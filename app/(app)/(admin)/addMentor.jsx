@@ -5,7 +5,7 @@ import { Feather, Ionicons, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../../../components/CustomKeyboardView';
 import {useAuth} from '../../../context/authContext';
-import Loading from '../../../components/Loading';
+import { Loading } from '../../../components/Animation';
 import { Dropdown } from 'react-native-element-dropdown';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../../../firebaseConfig';
@@ -17,7 +17,7 @@ const genderOptions = [
 ]
 
 const facultyOptions = [
-  { label: 'College of Design & Engineering', value: 'Collge of Design & Engineering' },
+  { label: 'College of Design & Engineering', value: 'College of Design & Engineering' },
   { label: 'School of Computing', value: 'School of Computing' },
   { label: 'NUS Business School', value: 'NUS Business School' },
   { label: 'Faculty of Arts & Social Sciences', value: 'Faculty of Arts & Social Sciences' },

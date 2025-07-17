@@ -4,7 +4,7 @@ import { useAuth } from '../../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
 import ChatList from '../../../../components/ChatList';
-import Loading from '../../../../components/Loading';
+import { Loading } from '../../../../components/Animation';
 import { useUserList } from '../../../../context/userListProvider';
 import { getRoomId } from '../../../../components/common';
 import { doc, getDoc } from 'firebase/firestore';

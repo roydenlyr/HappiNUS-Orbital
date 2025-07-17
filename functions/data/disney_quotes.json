@@ -1,0 +1,372 @@
+{
+  "1": {
+    "text": "The flower that blooms in adversity is the most rare and beautiful of all.",
+    "author": "Mulan",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FMulan.jpeg?alt=media&token=b4a19d81-a7e6-4c62-9fb9-f90d759aa62a"
+  },
+  "2": {
+    "text": "Hakuna Matata! It means no worries for the rest of your days.",
+    "author": "The Lion King",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLion%20King.jpeg?alt=media&token=2dc7afcb-1d90-46f4-b611-d1b0e4bca369"
+  },
+  "3": {
+    "text": "To infinity and beyond!",
+    "author": "Toy Story",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FToy%20Story.jpeg?alt=media&token=8f2b4760-5b1f-4a2a-a1ac-d11e59fb9555"
+  },
+  "4": {
+    "text": "The past can hurt. But the way I see it, you can either run from it, or learn from it.",
+    "author": "The Lion King",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLion%20King.jpeg?alt=media&token=2dc7afcb-1d90-46f4-b611-d1b0e4bca369"
+  },
+  "5": {
+    "text": "You\u2019ve got a friend in me.",
+    "author": "Toy Story",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FToy%20Story.jpeg?alt=media&token=8f2b4760-5b1f-4a2a-a1ac-d11e59fb9555"
+  },
+  "6": {
+    "text": "If you can dream it, you can do it.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "7": {
+    "text": "When you wish upon a star, makes no difference who you are.",
+    "author": "Pinocchio",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPinocchio.jpeg?alt=media&token=017dbf0a-20a7-491a-b3b0-09cf31a253fb"
+  },
+  "8": {
+    "text": "A dream is a wish your heart makes.",
+    "author": "Cinderella",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FCinderella.jpeg?alt=media&token=6a6c6734-53f4-4944-93c9-778e25895ac4"
+  },
+  "9": {
+    "text": "Adventure is out there.",
+    "author": "Up",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FUp.jpeg?alt=media&token=3b7fa9b6-e98b-40df-b812-0ef4f424f0e3"
+  },
+  "10": {
+    "text": "Remember, you\u2019re the one who can fill the world with sunshine.",
+    "author": "Snow White",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FSnow%20White.jpeg?alt=media&token=b04f38a2-5b5e-4401-82cf-6e1e8b76e116"
+  },
+  "11": {
+    "text": "You\u2019re mad. Bonkers. Off your head. But I\u2019ll tell you a secret\u2026 all the best people are.",
+    "author": "Alice in Wonderland",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FAlice%20in%20Wonderland.jpeg?alt=media&token=a2564f4f-6350-45d7-87f7-698c9dd7a9f8"
+  },
+  "12": {
+    "text": "Ohana means family. Family means nobody gets left behind or forgotten.",
+    "author": "Lilo & Stitch",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLilo%20and%20Stitch.jpeg?alt=media&token=7361c992-d119-4d84-aad5-85eec0e3966a"
+  },
+  "13": {
+    "text": "The only way to get what you want in this world is through hard work.",
+    "author": "The Princess and the Frog",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPrincess%20and%20the%20Frog.jpeg?alt=media&token=ab0670ec-8973-4371-85e6-5476ddd05889"
+  },
+  "14": {
+    "text": "You\u2019re braver than you believe, stronger than you seem, and smarter than you think.",
+    "author": "Winnie the Pooh",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWinnie%20the%20Pooh.jpeg?alt=media&token=38c1931e-d138-47b3-86eb-daa24b112d51"
+  },
+  "15": {
+    "text": "Just keep swimming.",
+    "author": "Finding Nemo",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FFinding%20Nemo.jpeg?alt=media&token=5d6a4ad4-7f7c-445f-89fc-4e5e721b9848"
+  },
+  "16": {
+    "text": "Even miracles take a little time.",
+    "author": "Cinderella",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FCinderella.jpeg?alt=media&token=6a6c6734-53f4-4944-93c9-778e25895ac4"
+  },
+  "17": {
+    "text": "Sometimes the right path is not the easiest one.",
+    "author": "Pocahontas",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPocahontas.jpeg?alt=media&token=1431dffc-4563-4e70-8fa4-821a329de610"
+  },
+  "18": {
+    "text": "You control your destiny \u2013 you don\u2019t need magic to do it.",
+    "author": "Brave",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBrave.jpeg?alt=media&token=8db7ca23-90ac-453a-83a0-33d76475b0ab"
+  },
+  "19": {
+    "text": "Life is a journey to be experienced, not a problem to be solved.",
+    "author": "Winnie the Pooh",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWinnie%20the%20Pooh.jpeg?alt=media&token=38c1931e-d138-47b3-86eb-daa24b112d51"
+  },
+  "20": {
+    "text": "In every job that must be done, there is an element of fun.",
+    "author": "Mary Poppins",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FMary%20Poppins.jpeg?alt=media&token=52e162f5-b594-4ca6-b689-8f6bfa2c6ee3"
+  },
+  "21": {
+    "text": "You must be imaginative, strong-hearted. You must try things that may not work, and you must not let anyone define your limits because of where you come from.",
+    "author": "Ratatouille",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FRatatouille.jpeg?alt=media&token=04cbc498-b71f-466a-9fa9-5ece412bf258"
+  },
+  "22": {
+    "text": "The only thing predictable about life is its unpredictability.",
+    "author": "Ratatouille",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FRatatouille.jpeg?alt=media&token=04cbc498-b71f-466a-9fa9-5ece412bf258"
+  },
+  "23": {
+    "text": "Sometimes the smallest things take up the most room in your heart.",
+    "author": "Winnie the Pooh",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWinnie%20the%20Pooh.jpeg?alt=media&token=38c1931e-d138-47b3-86eb-daa24b112d51"
+  },
+  "24": {
+    "text": "The things that make me different are the things that make me.",
+    "author": "Winnie the Pooh",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWinnie%20the%20Pooh.jpeg?alt=media&token=38c1931e-d138-47b3-86eb-daa24b112d51"
+  },
+  "25": {
+    "text": "Look inside yourself. You are more than what you have become.",
+    "author": "The Lion King",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLion%20King.jpeg?alt=media&token=2dc7afcb-1d90-46f4-b611-d1b0e4bca369"
+  },
+  "26": {
+    "text": "You\u2019re never too old to be young.",
+    "author": "Snow White",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FSnow%20White.jpeg?alt=media&token=b04f38a2-5b5e-4401-82cf-6e1e8b76e116"
+  },
+  "27": {
+    "text": "Today is a good day to try.",
+    "author": "The Hunchback of Notre Dame",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Hunchback%20of%20Notre%20Dame.jpeg?alt=media&token=c47bac77-6f86-44f0-a7c6-a5da837e4770"
+  },
+  "28": {
+    "text": "You can\u2019t force someone to like you. It takes time for friendship to grow.",
+    "author": "Frozen",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FFrozen.jpeg?alt=media&token=1468e9b8-2a62-4ae8-8999-d5df13c19087"
+  },
+  "29": {
+    "text": "Change is good.",
+    "author": "The Lion King",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLion%20King.jpeg?alt=media&token=2dc7afcb-1d90-46f4-b611-d1b0e4bca369"
+  },
+  "30": {
+    "text": "Don\u2019t just fly, soar.",
+    "author": "Dumbo",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FDumbo.jpeg?alt=media&token=dd514579-e746-4c9c-9aee-18038fd488fd"
+  },
+  "31": {
+    "text": "The very things that hold you down are going to lift you up.",
+    "author": "Dumbo",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FDumbo.jpeg?alt=media&token=dd514579-e746-4c9c-9aee-18038fd488fd"
+  },
+  "32": {
+    "text": "You don\u2019t lose hope, love. If you do, you lose everything.",
+    "author": "Beauty and the Beast",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBeauty%20and%20the%20Beast.jpeg?alt=media&token=b53e7504-df41-476e-860d-0b338e67208c"
+  },
+  "33": {
+    "text": "Your identity is your most valuable possession. Protect it.",
+    "author": "The Incredibles",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Incredibles.jpeg?alt=media&token=e4cbbfa9-3101-4dc0-9eea-751114f3bc38"
+  },
+  "34": {
+    "text": "All it takes is faith and trust.",
+    "author": "Peter Pan",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPeter%20Pan.jpeg?alt=media&token=58b03c86-1ecb-4af8-ad74-c23ee718b70c"
+  },
+  "35": {
+    "text": "If watching is all you\u2019re going to do, then you\u2019re going to watch your life go by without you.",
+    "author": "The Hunchback of Notre Dame",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Hunchback%20of%20Notre%20Dame.jpeg?alt=media&token=c47bac77-6f86-44f0-a7c6-a5da837e4770"
+  },
+  "36": {
+    "text": "Believe you can, then you will.",
+    "author": "Mulan",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FMulan.jpeg?alt=media&token=b4a19d81-a7e6-4c62-9fb9-f90d759aa62a"
+  },
+  "37": {
+    "text": "If you focus on what you left behind, you will never see what lies ahead.",
+    "author": "Ratatouille",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FRatatouille.jpeg?alt=media&token=04cbc498-b71f-466a-9fa9-5ece412bf258"
+  },
+  "38": {
+    "text": "The problem is not the problem. The problem is your attitude about the problem.",
+    "author": "Pirates of the Caribbean",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPirates%20of%20the%20Caribbean.jpeg?alt=media&token=346caff6-c8ee-4c79-9426-63622a096503"
+  },
+  "39": {
+    "text": "Your only limit is your soul.",
+    "author": "Ratatouille",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FRatatouille.jpeg?alt=media&token=04cbc498-b71f-466a-9fa9-5ece412bf258"
+  },
+  "40": {
+    "text": "I never look back, darling! It distracts from the now.",
+    "author": "The Incredibles",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Incredibles.jpeg?alt=media&token=e4cbbfa9-3101-4dc0-9eea-751114f3bc38"
+  },
+  "41": {
+    "text": "The important thing is that we stick together.",
+    "author": "Toy Story",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FToy%20Story.jpeg?alt=media&token=8f2b4760-5b1f-4a2a-a1ac-d11e59fb9555"
+  },
+  "42": {
+    "text": "Venture outside your comfort zone. The rewards are worth it.",
+    "author": "Tangled",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FTangled.jpeg?alt=media&token=3d59c0cb-e7f8-4760-9b3a-81f1eac8e77c"
+  },
+  "43": {
+    "text": "To infinity and beyond!",
+    "author": "Toy Story",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FToy%20Story.jpeg?alt=media&token=8f2b4760-5b1f-4a2a-a1ac-d11e59fb9555"
+  },
+  "44": {
+    "text": "You don\u2019t have time to be timid. You must be bold, daring.",
+    "author": "Beauty and the Beast",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBeauty%20and%20the%20Beast.jpeg?alt=media&token=b53e7504-df41-476e-860d-0b338e67208c"
+  },
+  "45": {
+    "text": "Love is an open door.",
+    "author": "Frozen",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FFrozen.jpeg?alt=media&token=1468e9b8-2a62-4ae8-8999-d5df13c19087"
+  },
+  "46": {
+    "text": "Some people are worth melting for.",
+    "author": "Frozen",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FFrozen.jpeg?alt=media&token=1468e9b8-2a62-4ae8-8999-d5df13c19087"
+  },
+  "47": {
+    "text": "So this is love. So this is what makes life divine.",
+    "author": "Cinderella",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FCinderella.jpeg?alt=media&token=6a6c6734-53f4-4944-93c9-778e25895ac4"
+  },
+  "48": {
+    "text": "You were my new dream.",
+    "author": "Tangled",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FTangled.jpeg?alt=media&token=3d59c0cb-e7f8-4760-9b3a-81f1eac8e77c"
+  },
+  "49": {
+    "text": "I wouldn\u2019t have nothing if I didn\u2019t have you.",
+    "author": "Monsters, Inc.",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FMonster%20Inc.jpeg?alt=media&token=facdbde1-7a0b-4d50-b821-4a15af6dbfad"
+  },
+  "50": {
+    "text": "My dream wouldn\u2019t be complete without you in it.",
+    "author": "The Princess and the Frog",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPrincess%20and%20the%20Frog.jpeg?alt=media&token=ab0670ec-8973-4371-85e6-5476ddd05889"
+  },
+  "51": {
+    "text": "Any day spent with you is my favorite day.",
+    "author": "Winnie the Pooh",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWinnie%20the%20Pooh.jpeg?alt=media&token=38c1931e-d138-47b3-86eb-daa24b112d51"
+  },
+  "52": {
+    "text": "You\u2019re the one that I\u2019ve been looking for.",
+    "author": "The Little Mermaid",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Little%20Mermaid.jpeg?alt=media&token=34172389-8fe1-413e-b2f3-a2339ee52e7c"
+  },
+  "53": {
+    "text": "Can you feel the love tonight?",
+    "author": "The Lion King",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FLion%20King.jpeg?alt=media&token=2dc7afcb-1d90-46f4-b611-d1b0e4bca369"
+  },
+  "54": {
+    "text": "You mean more to me than anyone in this whole world.",
+    "author": "Peter Pan",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FPeter%20Pan.jpeg?alt=media&token=58b03c86-1ecb-4af8-ad74-c23ee718b70c"
+  },
+  "55": {
+    "text": "Have courage and be kind.",
+    "author": "Cinderella",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FCinderella.jpeg?alt=media&token=6a6c6734-53f4-4944-93c9-778e25895ac4"
+  },
+  "56": {
+    "text": "The only way to achieve the impossible is to believe it is possible.",
+    "author": "Alice in Wonderland",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FAlice%20in%20Wonderland.jpeg?alt=media&token=a2564f4f-6350-45d7-87f7-698c9dd7a9f8"
+  },
+  "57": {
+    "text": "I am not a prize to be won.",
+    "author": "Aladdin",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FAladdin.jpeg?alt=media&token=8ebc2c51-12f3-41b9-90d9-a9aa22f7d44f"
+  },
+  "58": {
+    "text": "I want adventure in the great wide somewhere!",
+    "author": "Beauty and the Beast",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBeauty%20and%20the%20Beast.jpeg?alt=media&token=b53e7504-df41-476e-860d-0b338e67208c"
+  },
+  "59": {
+    "text": "You control your destiny, you don\u2019t need magic to do it.",
+    "author": "Brave",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBrave.jpeg?alt=media&token=8db7ca23-90ac-453a-83a0-33d76475b0ab"
+  },
+  "60": {
+    "text": "Remember, you are the one who can fill the world with sunshine.",
+    "author": "Snow White",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FSnow%20White.jpeg?alt=media&token=b04f38a2-5b5e-4401-82cf-6e1e8b76e116"
+  },
+  "61": {
+    "text": "I want much more than this provincial life.",
+    "author": "Beauty and the Beast",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FBeauty%20and%20the%20Beast.jpeg?alt=media&token=b53e7504-df41-476e-860d-0b338e67208c"
+  },
+  "62": {
+    "text": "I\u2019m like a shooting star, I\u2019ve come so far. I can\u2019t go back to where I used to be.",
+    "author": "Aladdin",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FAladdin.jpeg?alt=media&token=8ebc2c51-12f3-41b9-90d9-a9aa22f7d44f"
+  },
+  "63": {
+    "text": "Who says that my dreams have to stay just my dreams?",
+    "author": "The Little Mermaid",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FThe%20Little%20Mermaid.jpeg?alt=media&token=34172389-8fe1-413e-b2f3-a2339ee52e7c"
+  },
+  "64": {
+    "text": "The greatest risk any of us will take is to be seen as we are.",
+    "author": "Cinderella",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FCinderella.jpeg?alt=media&token=6a6c6734-53f4-4944-93c9-778e25895ac4"
+  },
+  "65": {
+    "text": "All our dreams can come true, if we have the courage to pursue them.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "66": {
+    "text": "It\u2019s kind of fun to do the impossible.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "67": {
+    "text": "The way to get started is to quit talking and begin doing.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "68": {
+    "text": "Laughter is timeless, imagination has no age, dreams are forever.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "69": {
+    "text": "When you believe in a thing, believe in it all the way, implicitly and unquestionable.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "70": {
+    "text": "The more you like yourself, the less you are like anyone else, which makes you unique.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "71": {
+    "text": "You can dream, create, design and build the most wonderful place in the world\u2026 but it requires people to make the dream a reality.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "72": {
+    "text": "First, think. Second, believe. Third, dream. And finally, dare.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "73": {
+    "text": "I only hope that we never lose sight of one thing \u2013 that it was all started by a mouse.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  },
+  "74": {
+    "text": "Our greatest natural resource is the minds of our children.",
+    "author": "Walt Disney",
+    "picture": "https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/authorPictures%2FWalt%20Disney.jpeg?alt=media&token=a7bc9e02-02ba-4430-9479-5d4df8487ca6"
+  }
+}

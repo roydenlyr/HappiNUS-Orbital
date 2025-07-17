@@ -1,14 +1,15 @@
-import { Pressable, Text, View, StatusBar } from 'react-native'
+import { Pressable, Text, View, StatusBar, useColorScheme } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ChatList from '../../../../components/ChatList';
-import Loading from '../../../../components/Loading';
+import { Loading } from '../../../../components/Animation';
 import { useUserList } from '../../../../context/userListProvider';
 import { useRouter } from 'expo-router';
 import { getRoomId } from '../../../../components/common';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
+import { Colors } from '../../../../constants/Colors';
 
 
 const Chats = () => {
@@ -21,6 +22,9 @@ const Chats = () => {
   const [activeChats, setActiveChats] = useState([]);
   const [inactiveChats, setInactiveChats] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true);
+
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme] ?? Colors.light;
 
   useEffect(() => {
     const fetchChatStatus = async () => {
@@ -53,11 +57,13 @@ const Chats = () => {
   }, [chatUsers]);
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1' style={{backgroundColor: theme.appBackground}}>
       <StatusBar barStyle={'auto'} />
       {
         loadingChats ? (
-          <Loading size={hp(15)} />
+          <View className='flex-1 justify-center items-center'>
+            <Loading size={hp(15)} />
+          </View>
         ) : (
           <View>
             {activeChats.length > 0 && (
