@@ -20,7 +20,10 @@ export const Colors = {
     tabBarFocused: '#7C4A2D',
     tabBarNotFocused: '#6B5848',
     tabBarBackground: '#D9CBC2',
-    button: '#7C4A2D'
+    button: '#7C4A2D',
+    selectionActive: '#B6856C',
+    selectionInactive: '#D9CBC2',
+    modalCardBackground: '#EDE4DD'
   },
   dark: {
     text: '#ECEDEE',
