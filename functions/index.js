@@ -105,6 +105,147 @@ exports.summariseChat = functions
     }
   });
 
+  exports.explainGAD7Result = functions
+    .region("us-central1")
+    .runWith({memory: "256MB", timeoutSeconds: 15})
+    .https.onCall(async (data, context) => {
+      const totalScore = data.totalScore;
+      const severity = data.severity;
+      const prompt = 
+        `You are a mental health support mentor. The user has completed the GAD-7 anxiety assessment.
+        Their total score is **${totalScore}**, which falls into the **${severity}** category.
+        Give a warm, empathetic, and supportive explanation of what this score generally means. Avoid sounding clinical or judgmental.
+        Also suggest some friendly, approachable next steps the user might consider—like relaxation techniques, talking to someone they trust, or considering professional help if appropriate.
+        Keep the tone gentle, non-threatening, and stigma-free. Write as if you’re speaking directly to the user in a supportive chat.
+        Avoid disclaimers about not being a doctor. Assume this is part of a peer support system. 
+        
+        INSTRUCTIONS:
+        - Avoid any formatting: Do NOT use markdown, bold text, asterisk, bullet points, numbered list, or headings.
+        - Use simple, conversational sentences. No technical jargon.
+        - Keep the tone friendly, gentle, and non-clinical as if you are speaking directly to the user in a supportive one-on-one chat.
+        - Include kind suggestions for next steps or well-being practices, but embed them naturally into the paragraph (not as a list).
+        - Keep the response concise but reassuring.
+        - End with an open offer of support, reminding the user that caring for their mental health is an ongoing journey.
+        - Allow some paragraphing to prevent big chuncks of text,
+        `;
+      
+      try {
+        const response = await axios.post(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            model: "gpt-4o",
+            messages: [
+              {
+                role: "system",
+                content: "You are a compassionate peer support mentor in a mental health app. Your role is to gently explain mental health assessments and suggest next steps in a kind and approachable way."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.7
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${OPENAI_API_KEY}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+
+        return {
+          explanation: response.data.choices[0].message.content,
+          score: totalScore,
+          severity
+        };
+
+      } catch (err) {
+        console.error("GAD-7 explanation failed:", err?.response?.status, err?.response?.data || err.message);
+
+        if (err.response?.status === 429) {
+          throw new functions.https.HttpsError("resource-exhausted", "Rate limit hit. Please try again later.");
+        }
+
+        throw new functions.https.HttpsError("internal", "Unexpected error during GAD-7 explanation.");
+      }
+    });
+
+    exports.explainPHQ9Result = functions
+    .region("us-central1")
+    .runWith({memory: "256MB", timeoutSeconds: 15})
+    .https.onCall(async (data, context) => {
+      const totalScore = data.totalScore;
+      const severity = data.severity;
+      const prompt = 
+        `The user has completed the PHQ-9 depression self-assessment.
+
+        Their total score is ${totalScore}, which falls into the ${severity} category.
+
+        Write a kind, supportive explanation of what this score typically suggests about how the person might be feeling. 
+        Be gentle, non-judgmental, and avoid medical or clinical terms. This is not a diagnosis but a conversation.
+
+        Include friendly suggestions for how the user can take care of their mental well-being—such as practicing self-care, talking to someone they trust, engaging in activities they enjoy, or reaching out for professional support if they wish to.
+
+        **Important Instructions:**
+        - Do NOT use any markdown: no bold, no asterisks, no bullet points, no lists, no headings.
+        - Write as if you're having a one-on-one chat. Keep it light, warm, and easy to read.
+        - Allow natural paragraph breaks to make the text readable, but avoid large text blocks.
+        - Keep the message concise but reassuring.
+        - End with an open reminder that mental health is an ongoing journey, and it's okay to seek support anytime.
+        `;
+
+      const sys_prompt = 
+        `You are a compassionate peer support mentor in a mental health support app. 
+
+        Your role is to gently explain the results of mental health self-assessments like the PHQ-9. 
+        Provide warm, empathetic, and non-clinical explanations of what the user's score generally means. 
+        Offer friendly, approachable suggestions for maintaining emotional well-being or seeking further support. 
+        Always keep the tone supportive, stigma-free, and conversational.
+        `
+      
+      try {
+        const response = await axios.post(
+          "https://api.openai.com/v1/chat/completions",
+          {
+            model: "gpt-4o",
+            messages: [
+              {
+                role: "system",
+                content: sys_prompt
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.7
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${OPENAI_API_KEY}`,
+              "Content-Type": "application/json"
+            }
+          }
+        );
+
+        return {
+          explanation: response.data.choices[0].message.content,
+          score: totalScore,
+          severity
+        };
+
+      } catch (err) {
+        console.error("PHQ-9 explanation failed:", err?.response?.status, err?.response?.data || err.message);
+
+        if (err.response?.status === 429) {
+          throw new functions.https.HttpsError("resource-exhausted", "Rate limit hit. Please try again later.");
+        }
+
+        throw new functions.https.HttpsError("internal", "Unexpected error during PHQ-9 explanation.");
+      }
+    });
+
   exports.deleteExpiredChatRooms = functions.pubsub
     .schedule("every 1 hours")
     .onRun(async (context) => {

@@ -17,3 +17,11 @@ export function Sloth({size}) {
     </View>
   )
 }
+
+export function LoadingSmile({size}) {
+  return (
+    <View style={{height: size, aspectRatio: 1}}>
+      <LottieView style={{flex: 1}} source={require('../assets/images/LoadingSmile.json')} autoPlay loop/>
+    </View>
+  )
+}

@@ -13,6 +13,8 @@ import Carousel from 'react-native-reanimated-carousel';
 import { SYMPTOMS, COPING_TECHNIQUES } from '../../../../constants/Data';
 import TitleCard from '../../../../components/TitleCard';
 import Modal from 'react-native-modal';
+import ModalCard from '../../../../components/ModalCard';
+import { useRouter } from 'expo-router';
 
 const Home = () => {
 
@@ -27,6 +29,8 @@ const Home = () => {
   const [cardsSelection, setCardsSelection] = useState(SYMPTOMS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
+
+  const router = useRouter();
 
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
@@ -141,16 +145,16 @@ const Home = () => {
           </View>
           
           <View className='flex-1 justify-center items-center gap-5 -ml-6'>
-            <TouchableOpacity style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
+            <TouchableOpacity onPress={() => router.push('/GAD')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
                 <Feather name='info' size={hp(2.3)} color={'white'}/> 
-                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_500Medium': undefined), fontSize: hp(2.3)}} className='text-white'>Resources</Text>
+                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3)}} className='text-white'>Resources</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
+            <TouchableOpacity onPress={() => router.push('/contacts')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
                 <AntDesign name='contacts' size={hp(2.3)} color={'white'}/>
-                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_500Medium': undefined), fontSize: hp(2.3)}} className='text-white'>Contacts</Text>
+                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3)}} className='text-white'>Contacts</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -208,15 +212,9 @@ const Home = () => {
             animationOut={'fadeOut'}
             backdropOpacity={0.5}
             propagateSwipe={true}
-            
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
           >
-            <View style={{width: wp(80), height: hp(60), borderRadius: 20, backgroundColor: theme.modalCardBackground}} className='items-center p-3'>
-              <Text style={{fontFamily: (fontsLoaded ? 'Poppins_600SemiBold': undefined), fontSize: hp(2)}}>{selectedCard?.title}</Text>
-              <ScrollView className='flex-1 w-full'>
-                <Text>{selectedCard?.title}</Text>
-              </ScrollView>
-            </View>
+            <ModalCard card={selectedCard} cards={cardsSelection} closeModal={() => setSelectedCard(null)}/>
           </Modal>
         )} 
     </View>
