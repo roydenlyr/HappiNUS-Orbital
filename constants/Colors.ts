@@ -8,7 +8,7 @@ const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
+    text: '#2C211B',
     background: '#fff',
     tint: tintColorLight,
     icon: '#687076',
@@ -23,7 +23,10 @@ export const Colors = {
     button: '#7C4A2D',
     selectionActive: '#B6856C',
     selectionInactive: '#D9CBC2',
-    modalCardBackground: '#EDE4DD'
+    modalCardBackground: '#EDE4DD',
+    ctaButton: '#C28262',
+    header: '#7C4A2D',
+    textContrast: '#FFFFFF'
   },
   dark: {
     text: '#ECEDEE',
