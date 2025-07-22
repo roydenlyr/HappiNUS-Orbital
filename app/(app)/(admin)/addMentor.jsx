@@ -1,14 +1,17 @@
-import { Alert, Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather, Ionicons, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../../../components/CustomKeyboardView';
 import {useAuth} from '../../../context/authContext';
-import { Loading } from '../../../components/Animation';
+import { Loading, LoadingSmile } from '../../../components/Animation';
 import { Dropdown } from 'react-native-element-dropdown';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../../../firebaseConfig';
+import { Colors } from '../../../constants/Colors';
+import Logo from '../../../assets/images/SplashScreen.svg'
+import LogoDark from '../../../assets/images/SplashScreen(Dark).svg'
 
 const genderOptions = [
   { label: 'Male', value: 'Male' },
@@ -41,6 +44,9 @@ const AddMentor = () => {
   const genderRef = useRef("");
   const dobRef = useRef("");
   const matricYearRef = useRef("");
+
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme] ?? Colors.light;
 
   const registerMentor = httpsCallable(functions, 'registerMentor');
 
@@ -83,49 +89,55 @@ const AddMentor = () => {
 
   return (
     <CustomKeyboardView>
-      <ScrollView className='bg-white'>
+      <ScrollView style={{backgroundColor: theme.appBackground}}>
       <StatusBar style='auto' />
       <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12'>
-        <View className='items-center -mb-10 -mt-20'>
-          <Image style={styles.logo} source={require('../../../assets/images/HappiNUS2.png')}/>
+        <View className='items-center -mb-20 -mt-20'>
+          {
+            colorScheme === 'light' ? (
+              <Logo width={'100%'} height={hp(20)}/>
+            ) : (
+              <LogoDark width={'100%'} height={hp(20)}/>
+            )
+          }
         </View>
 
         <View className='gap-8'>
           {/* <Text style={{fontSize: hp(4)}} className='font-bold tracking-wider text-center text-neutral-950'>Register New Mentor</Text> */}
 
           <View className='gap-4'>
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Feather name='user' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => usernameRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Name' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => usernameRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold text-neutral-700' placeholder='Name' placeholderTextColor={'gray'}/>
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Octicons name='mail' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => emailRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Email Address (NUS)' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => emailRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold text-neutral-700' placeholder='Email Address (NUS)' placeholderTextColor={'gray'}/>
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Ionicons name='school-outline' size={hp(2.7)} color={'gray'}/>
               {/* <TextInput onChangeText={value => facultyRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Faculty' placeholderTextColor={'gray'}/> */}
               <Dropdown style={{flex: 1}} containerStyle={{borderRadius: 12}} data={facultyOptions} labelField={'label'} valueField={'value'} placeholder='Faculty' placeholderStyle={{color: 'gray', fontSize: hp(2)}}
-                selectedTextStyle={{fontSize: hp(2), color: '#404040', fontWeight: '600'}} itemTextStyle={{fontSize: hp(2)}} value={faculty} onChange={item => {setFaculty(item.value); facultyRef.current = item.value;}} />
+                selectedTextStyle={{fontSize: hp(2), color: theme.text, fontWeight: '600'}} itemTextStyle={{fontSize: hp(2)}} value={faculty} onChange={item => {setFaculty(item.value); facultyRef.current = item.value;}} />
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Ionicons name='transgender-outline' size={hp(2.7)} color={'gray'}/>
               {/* <TextInput onChangeText={value => genderRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Gender' placeholderTextColor={'gray'}/> */}
               <Dropdown style={{flex: 1}} containerStyle={{borderRadius: 12}} data={genderOptions} labelField={'label'} valueField={'value'} placeholder='Gender' placeholderStyle={{color: 'gray', fontSize: hp(2)}}
-                selectedTextStyle={{fontSize: hp(2), color: '#404040', fontWeight: '600'}} itemTextStyle={{fontSize: hp(2)}} value={gender} onChange={item => {setGender(item.value); genderRef.current = item.value;}} />
+                selectedTextStyle={{fontSize: hp(2), color: theme.text, fontWeight: '600'}} itemTextStyle={{fontSize: hp(2)}} value={gender} onChange={item => {setGender(item.value); genderRef.current = item.value;}} />
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Feather name='calendar' size={hp(2.7)} color={'gray'}/>
-              <TextInput keyboardType='numeric' maxLength={4} onChangeText={value => dobRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Year of Birth' placeholderTextColor={'gray'}/>
+              <TextInput keyboardType='numeric' maxLength={4} onChangeText={value => dobRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold text-neutral-700' placeholder='Year of Birth' placeholderTextColor={'gray'}/>
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Feather name='calendar' size={hp(2.7)} color={'gray'}/>
-              <TextInput keyboardType='numeric' maxLength={4} onChangeText={value => matricYearRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Matriculation Year' placeholderTextColor={'gray'}/>
+              <TextInput keyboardType='numeric' maxLength={4} onChangeText={value => matricYearRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold text-neutral-700' placeholder='Matriculation Year' placeholderTextColor={'gray'}/>
             </View>
 
             {/* SignUp Button */}
@@ -133,11 +145,11 @@ const AddMentor = () => {
             <View>
               {loading ? (
                 <View className='flex-row justify-center'>
-                  <Loading size={hp(10)}/>
+                  <LoadingSmile size={hp(10)}/>
                 </View>
               ) : (
-                <TouchableOpacity onPress={handleRegister} style={{height: hp(6.5)}} className='bg-indigo-500 rounded-xl justify-center items-center'>
-                  <Text style={{fontSize: hp(2.7)}} className='text-white font-bold tracking-wider'>
+                <TouchableOpacity onPress={handleRegister} style={{ backgroundColor: theme.button}} className='rounded-xl justify-center items-center p-3'>
+                  <Text style={{fontSize: hp(2.7), color: theme.textContrast}} className='font-semibold tracking-wider'>
                     Add Mentor
                   </Text>
                 </TouchableOpacity>

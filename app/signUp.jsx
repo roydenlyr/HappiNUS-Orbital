@@ -1,11 +1,15 @@
-import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
+import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView, useColorScheme } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Feather, Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import CustomKeyboardView from '../components/CustomKeyboardView';
 import {useAuth} from '../context/authContext'
-import { Loading } from '../components/Animation';
+import { Loading, LoadingSmile } from '../components/Animation';
+import { Colors } from '../constants/Colors';
+import Logo from '../assets/images/SplashScreen.svg';
+import LogoDark from '../assets/images/SplashScreen(Dark).svg';
+import { Poppins_500Medium, Poppins_600SemiBold, useFonts } from '@expo-google-fonts/poppins'
 
 const SignUp = () => {
 
@@ -16,6 +20,14 @@ const SignUp = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const usernameRef = useRef("");
+
+  const colorScheme = useColorScheme();
+  const theme = Colors[colorScheme] ?? Colors.light;
+
+  const [fontsLoaded] = useFonts ({
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+  })
 
   const handleRegister = async () => {
     if(!emailRef.current || !passwordRef.current || !usernameRef.current){
@@ -36,31 +48,36 @@ const SignUp = () => {
 
   return (
     <CustomKeyboardView inSignUp={true}>
-      <ScrollView>
-      <StatusBar style='dark' />
+      <ScrollView style={{backgroundColor: theme.appBackground}}>
       <View style={{paddingTop: hp(7), paddingHorizontal: wp(5)}} className='flex-1 gap-12'>
         {/* SignIn Image */}
         <View className='items-center'>
-          <Image style={styles.logo} source={require('../assets/images/HappiNUS2.png')}/>
+          {
+            colorScheme === 'light' ? (
+              <Logo width={'100%'} height={hp(20)}/>
+            ) : (
+              <LogoDark width={'100%'} height={hp(20)}/>
+            )
+          }
         </View>
 
-        <View className='gap-10'>
-          <Text style={{fontSize: hp(4)}} className='font-bold tracking-wider text-center text-neutral-950'>Sign Up</Text>
+        <View className='gap-5'>
+          <Text style={{fontSize: hp(4), fontFamily: (fontsLoaded ? 'Poppins_600SemiBold' : undefined), color: theme.header}} className='text-center'>Sign Up</Text>
 
           <View className='gap-4'>
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Feather name='user' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => usernameRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Username' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => usernameRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold' placeholder='Username' placeholderTextColor={'gray'}/>
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Octicons name='mail' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => emailRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' placeholder='Email Address' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => emailRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold' placeholder='Email Address' placeholderTextColor={'gray'}/>
             </View>
 
-            <View style={{height: hp(7)}} className='flex-row gap-4 px-4 bg-neutral-100 items-center rounded-xl'>
+            <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Octicons name='lock' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => passwordRef.current = value} style={{fontSize: hp(2)}} className='flex-1 font-semibold text-neutral-700' secureTextEntry placeholder='Password' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => passwordRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold' secureTextEntry placeholder='Password' placeholderTextColor={'gray'}/>
             </View>
 
             {/* SignUp Button */}
@@ -68,10 +85,10 @@ const SignUp = () => {
             <View>
               {loading ? (
                 <View className='flex-row justify-center'>
-                  <Loading size={hp(10)}/>
+                  <LoadingSmile size={hp(10)}/>
                 </View>
               ) : (
-                <TouchableOpacity onPress={handleRegister} style={{height: hp(6.5)}} className='bg-indigo-500 rounded-xl justify-center items-center'>
+                <TouchableOpacity onPress={handleRegister} style={{backgroundColor: theme.button}} className='rounded-xl justify-center items-center p-3'>
                   <Text style={{fontSize: hp(2.7)}} className='text-white font-bold tracking-wider'>
                     Sign Up
                   </Text>
@@ -83,7 +100,7 @@ const SignUp = () => {
             <View className='flex-row justify-center'>
               <Text style={{fontSize: hp(1.8)}} className='font-semibold text-neutral-500'>Already have an account? </Text>
               <Pressable onPress={() => {console.log('Navigating to Sign Ip'); router.push('./signIn');}}>
-                <Text style={{fontSize: hp(1.8)}} className='font-bold text-indigo-500'>Sign In</Text>
+                <Text style={{fontSize: hp(1.8), color: theme.header}} className='font-bold'>Sign In</Text>
               </Pressable>
             </View>
             

@@ -1,15 +1,15 @@
-import { Text, View } from 'react-native'
+import { Text, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { StatusBar } from 'expo-status-bar';
 import ChatList from '../../../../components/ChatList';
-import { Loading } from '../../../../components/Animation';
+import { Loading, LoadingSmile, Sloth } from '../../../../components/Animation';
 import { useUserList } from '../../../../context/userListProvider';
 import { getRoomId } from '../../../../components/common';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
-
+import { Colors } from '../../../../constants/Colors';
 
 const Chats = () => {
 
@@ -19,6 +19,8 @@ const Chats = () => {
   const [activeChats, setActiveChats] = useState([]);
   const [inactiveChats, setInactiveChats] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true);
+
+  const theme = Colors[useColorScheme()] ?? Colors.light;
 
   useEffect(() => {
     const fetchChatStatus = async () => {
@@ -59,30 +61,30 @@ const Chats = () => {
   }, [inactiveChats]);
 
   return (
-    <View className='flex-1 bg-white'>
-      <StatusBar style='light' />
+    <View style={{backgroundColor: theme.appBackground}} className='flex-1'>
       {
         loadingChats ? (
-          <Loading size={hp(15)} />
+          <LoadingSmile size={hp(15)} />
         ) : (
           <View>
             {activeChats.length > 0 && (
               <>
-                <Text className='text-center text-lg font-bold mt-3 italic'>Active Chats</Text>
+                <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Active Chats</Text>
                 <ChatList currentUser={user} users={activeChats}/>
               </>
             )}
             {
               activeChats.length === 0 && (
-                <View className='items-center'>
-                  <Text className='bg-slate-300 py-2 px-4 rounded-xl mt-2'>You have not been assigned any students...</Text>
+                <View className='items-center justify-center'>
+                  <Text style={{backgroundColor: theme.cardBackground, color: theme.text}} className='bg-slate-300 py-2 px-4 rounded-xl mt-2'>You have not been assigned any students...</Text>
+                  <Sloth size={hp(20)}/>
                 </View>
               )
             }
             {
               inactiveChats.length > 0 && (
                 <>
-                  <Text className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
+                  <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
                   <ChatList currentUser={user} users={inactiveChats}/>
                 </>
               )

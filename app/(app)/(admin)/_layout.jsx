@@ -1,10 +1,19 @@
-import { View, Text } from 'react-native'
+import { View, Text, useColorScheme } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
+import { Colors } from '../../../constants/Colors'
 
 const AdminLayout = () => {
+
+  const theme = Colors[useColorScheme()] ?? Colors.light;
+
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: {backgroundColor: theme.homeHeaderBackground},
+        headerTintColor: theme.header
+      }}
+    >
         <Stack.Screen name='(tabs)' options={{headerShown: false}}/>
         <Stack.Screen name='addMentor' options={{
           title: 'Register Mentor', 

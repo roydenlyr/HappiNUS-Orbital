@@ -7,10 +7,10 @@ const CustomKeyBoardView = ({ children, inChat, inSignUp, inProfile }) => {
 
   let kavConfig = {keyboardVerticalOffset: 0};
   if (inChat){
-    kavConfig = {keyboardVerticalOffset: 70};
+    kavConfig = {keyboardVerticalOffset: hp(8)};
   }
   if (inSignUp) kavConfig = {keyboardVerticalOffset: 0}
-  if (inProfile) kavConfig = {keyboardVerticalOffset: hp(10.8)}
+  if (inProfile) kavConfig = {keyboardVerticalOffset: 70}
 
   // console.log('offset: ', kavConfig.keyboardVerticalOffset);
   

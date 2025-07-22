@@ -1,4 +1,4 @@
-import { View, TextInput, TouchableOpacity, Alert, Keyboard } from 'react-native'
+import { View, TextInput, TouchableOpacity, Alert, Keyboard, useColorScheme } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
@@ -12,6 +12,7 @@ import { getRoomId } from '../../../components/common';
 import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { useChatContext } from '../../../context/chatContext';
+import { Colors } from '../../../constants/Colors';
 
 const ChatRoom = () => {
     const item = useLocalSearchParams();
@@ -30,6 +31,8 @@ const ChatRoom = () => {
 
     const [isActive, setIsActive] = useState(true);
     const [chatEndDate, setChatEndDate] = useState(null);
+
+    const theme = Colors[useColorScheme()] ?? Colors.light;
 
     useEffect(() => {
         createRoomIfNotExists();
@@ -177,22 +180,21 @@ const ChatRoom = () => {
   return (
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
-            <StatusBar style='dark' />
             <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate}/>
-            <View className='h-1 border-b border-neutral-300' />
-            <View className='flex-1 justify-between bg-neutral-100 overflow-visible'>
+            <View style={{backgroundColor: theme.chatRoomBorder}} className='h-0.5 border-b border-neutral-300' />
+            <View style={{backgroundColor: theme.chatRoomBackground}} className='flex-1 justify-between overflow-visible'>
                 <View className='flex-1'>
                     <MessageList scrollViewRef={scrollViewRef} messages={messages} currentUser={user} otherUserId={item?.userId} lastSeen={otherUserLastSeen} isActive={isActive} chatEndDate={chatEndDate} />
                 </View>
                 {
                     isActive && (
-                        <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-5'>
-                            <View className='flex-row justify-between bg-white border p-2 border-neutral-300 rounded-xl pl-5 mx-3'>
+                        <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-8'>
+                            <View style={{backgroundColor: theme.chatInputBackground}} className='flex-row justify-between border p-2 border-neutral-300 rounded-xl pl-5 mx-3'>
                                 <TextInput multiline={true} ref={inputRef} onChangeText={value => textRef.current = value} placeholder='Type message...' 
-                                style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll'}} className='flex-1 mr-2' />
+                                style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll', color: theme.chatInputText}} className='flex-1 mr-2'/>
                             </View>
-                            <TouchableOpacity onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end' hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
-                                <FontAwesome name='send' size={hp(2.7)} color={'white'}/>
+                            <TouchableOpacity style={{backgroundColor: theme.chatSendButtonBackground}} onPress={handleSendMessage} className='bg-green-600 p-2 mr-3 rounded-full self-end' hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+                                <FontAwesome name='send' size={hp(2.7)} color={theme.chatSendIcon}/>
                             </TouchableOpacity>
                         </View>
                     )

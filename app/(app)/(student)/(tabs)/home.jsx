@@ -78,7 +78,7 @@ const Home = () => {
       setQuote(quote.text);
     } catch (error) {
       console.error('Failed to retrieve quote: ', error);
-      setQuote('Askinf for help is a brave step toward healing.')
+      setQuote('Asking for help is a brave step toward healing.')
     }
   }
 
@@ -145,16 +145,16 @@ const Home = () => {
           </View>
           
           <View className='flex-1 justify-center items-center gap-5 -ml-6'>
-            <TouchableOpacity onPress={() => router.push('/GAD')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
+            <TouchableOpacity onPress={() => router.push('/resources')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
-                <Feather name='info' size={hp(2.3)} color={'white'}/> 
-                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3)}} className='text-white'>Resources</Text>
+                <Feather name='info' size={hp(2.3)} color={theme.textContrast}/> 
+                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3), color: theme.textContrast}}>Resources</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/contacts')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
-                <AntDesign name='contacts' size={hp(2.3)} color={'white'}/>
-                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3)}} className='text-white'>Contacts</Text>
+                <AntDesign name='contacts' size={hp(2.3)} color={theme.textContrast}/>
+                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3), color: theme.textContrast}}>Contacts</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -163,10 +163,10 @@ const Home = () => {
         <View className='items-start mt-3'>
           <View className='flex-row gap-3'>
             <TouchableOpacity onPress={handleSelection} style={{backgroundColor: cardsSelection === SYMPTOMS ? theme.selectionActive : theme.selectionInactive}} className='rounded-full p-3 justify-center items-center'>
-              <Text style={{fontFamily: (fontsLoaded ? 'Poppins_300Light': undefined), fontSize: hp(1.3)}} className='text-white'>Recognise the Signs</Text>
+              <Text style={{fontFamily: (fontsLoaded ? 'Poppins_300Light': undefined), fontSize: hp(1.3), color: cardsSelection === SYMPTOMS ? theme.selectionActiveText : theme.selectionInactiveText}}>Recognise the Signs</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleSelection} style={{backgroundColor: cardsSelection === COPING_TECHNIQUES ? theme.selectionActive : theme.selectionInactive}} className='rounded-full p-3 justify-center items-center'>
-              <Text style={{fontFamily: (fontsLoaded ? 'Poppins_300Light': undefined), fontSize: hp(1.3)}} className='text-white'>Coping Techniques</Text>
+              <Text style={{fontFamily: (fontsLoaded ? 'Poppins_300Light': undefined), fontSize: hp(1.3), color: cardsSelection === COPING_TECHNIQUES ? theme.selectionActiveText : theme.selectionInactiveText}}>Coping Techniques</Text>
             </TouchableOpacity>
           </View>
         </View>

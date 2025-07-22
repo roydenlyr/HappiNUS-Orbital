@@ -1,6 +1,6 @@
 import { View } from 'react-native'
 import React, { useEffect } from 'react'
-import { Slot, useSegments, useRouter } from 'expo-router'
+import { Slot, useSegments, useRouter, Stack } from 'expo-router'
 import '../global.css'
 import { AuthContextProvider, useAuth } from '../context/authContext'
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -8,6 +8,7 @@ import { UserListProvider } from '../context/userListProvider'
 import Toast from 'react-native-toast-message';
 import CustomToastConfig from '../components/CustomToastConfig'
 import { ChatContextProvider } from '../context/chatContext';
+import { StatusBar } from 'expo-status-bar'
 
 const MainLayout = () => {
   const {isAuthenticated, user} = useAuth();
@@ -38,7 +39,9 @@ const MainLayout = () => {
     }
   }, [isAuthenticated, router, segments, user])
 
-  return <Slot/>
+  return (
+    <Slot/>
+  )
 }
 
 const RootLayout = () => {
@@ -47,6 +50,7 @@ const RootLayout = () => {
       <AuthContextProvider>
         <UserListProvider>
           <ChatContextProvider>
+            <StatusBar style='auto'/>
             <MainLayout/>
             <Toast config={CustomToastConfig}/>
           </ChatContextProvider>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert, ScrollView, Keyboard } from 'react-native'
+import { View, Text, TouchableOpacity, Alert, ScrollView, Keyboard, useColorScheme } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Image } from 'expo-image'
 import { useAuth } from '../../../context/authContext'
@@ -14,7 +14,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Colors } from '../../../constants/Colors';
 
 const Profile= () => {
 
@@ -26,7 +27,7 @@ const Profile= () => {
     const newPasswordRef = useRef("");
     const confirmPasswordRef = useRef("");
 
-    const router = useRouter();
+    const theme = Colors[useColorScheme()] ?? Colors.light;
 
     const changeProfilePicture = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -114,27 +115,6 @@ const Profile= () => {
 
     }
 
-    const handleLogout = () => {
-        Alert.alert(
-            'Sign Out',
-            'Confirm sign out?',
-            [
-            {
-                text: 'Cancel',
-                style: 'cancel',
-            },
-            {
-                text: 'Yes',
-                style: 'destructive',
-                onPress: async () => {
-                await logout();
-                },
-            },
-            ],
-            { cancelable: true }
-        );
-    };
-
     const handleDeleteAccount = () => {
         Alert.alert('Delete Confirmation', 'Are you sure you want to proceed? This action cannot be undone', [{
             text: 'Dismiss'
@@ -211,7 +191,7 @@ const Profile= () => {
 
   return (
     <CustomKeyBoardView inProfile={true}>
-    <ScrollView className='bg-white'>
+    <ScrollView style={{backgroundColor: theme.appBackground}}>
     <View className='justify-start px-10 flex-1'>
         <View className='flex-row self-center'>
             <Image
@@ -221,54 +201,51 @@ const Profile= () => {
                 placeholder={blurhash}
                 transition={{effect: 'flip-from-bottom', duration: 500}}
             />
-            <TouchableOpacity onPress={changeProfilePicture} className='bg-black rounded-full self-end mb-8 -ml-8 justify-center' style={{height: hp(3), width: hp(3)}}>
-                <Feather name='edit-2' size={hp(2)} color={'white'} className='self-center'/>
+            <TouchableOpacity onPress={changeProfilePicture} className='rounded-full self-end mb-8 -ml-8 justify-center' style={{height: hp(3), width: hp(3), backgroundColor: theme.button}}>
+                <Feather name='edit-2' size={hp(2)} color={theme.textContrast} className='self-center'/>
             </TouchableOpacity>
         </View>
         <View className='items-center'>
-            <Text className='font-bold my-1' style={{fontSize: hp(3)}}>{user?.username}</Text>
+            <Text className='font-bold my-1' style={{fontSize: hp(3), color: theme.text}}>{user?.username}</Text>
             <Text className='font-medium' style={{color: 'gray', fontSize: hp(1.8)}}>{capitalizeFirstLetter(user?.role)}</Text>
         </View>
 
         {/* Email */}
         <View className='pt-10'>
-            <Text className='font-semibold pb-2' style={{fontSize: hp(2.5)}}>Email Address</Text>
-            <Text className='font-semibold pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.email}</Text>
-            <View className='border-b -mt-1'/>
+            <Text className='font-medium pb-2' style={{fontSize: hp(2.5), color: theme.text}}>Email Address</Text>
+            <Text className='font-medium pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.email}</Text>
+            <View style={{borderColor: theme.questionBorder}} className='border-b -mt-1'/>
             { !showChangePw && (
-                <TouchableOpacity onPress={() => setShowChangePw(true)} className='bg-black rounded-xl mt-3 justify-center items-center flex-row gap-5' style={{height: hp(5)}}>
-                    <Text className='font-semibold text-white' style={{fontSize: hp(2.5)}}>Change Password</Text>
-                    <MaterialCommunityIcons name='key-change' size={hp(2.5)} color={'white'}/>
+                <TouchableOpacity onPress={() => setShowChangePw(true)} className='rounded-xl mt-3 justify-center items-center flex-row gap-5 p-2' style={{backgroundColor: theme.button}}>
+                    <Text className='font-semibold' style={{fontSize: hp(2.5), color: theme.textContrast}}>Change Password</Text>
+                    <MaterialCommunityIcons name='key-change' size={hp(2.5)} color={theme.textContrast}/>
                 </TouchableOpacity>
             )}
         </View>
         {
             showChangePw && (
-                <View className='mt-3 bg-neutral-200 rounded-lg p-3 gap-3'>
+                <View style={{backgroundColor: theme.cardBackground}} className='mt-3 rounded-lg p-3 gap-3'>
                     <View className='flex-row gap-3 items-center'>
-                    <Text className='font-semibold flex-1' style={{fontSize: hp(2.2)}}>Change Password</Text>
-                        <TouchableOpacity onPress={() => setShowChangePw(false)} className='bg-white rounded-xl items-center flex-1 p-1'>
-                            <Text className='text-black font-semibold' style={{fontSize: hp(2)}}>Cancel</Text>
+                    <Text className='font-semibold flex-1' style={{fontSize: hp(2.2), color: theme.text}}>Change Password</Text>
+                        <TouchableOpacity onPress={() => setShowChangePw(false)} style={{backgroundColor: theme.selectionActive}} className='rounded-xl items-center flex-1 p-1'>
+                            <Text className='font-semibold' style={{fontSize: hp(2), color: theme.text}}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
-                    <TextInput onChangeText={value => passwordRef.current = value} label={'Current Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TextInput onChangeText={value => newPasswordRef.current = value} label={'New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TextInput onChangeText={value => confirmPasswordRef.current = value} label={'Confirm New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TouchableOpacity onPress={() => changePassword()} className='bg-black rounded-xl items-center flex-1 p-2'>
-                        <Text className='text-white font-semibold' style={{fontSize: hp(2)}}>Confirm</Text>
+                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => passwordRef.current = value} label={'Current Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => newPasswordRef.current = value} label={'New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => confirmPasswordRef.current = value} label={'Confirm New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    <TouchableOpacity onPress={() => changePassword()} style={{backgroundColor: theme.button}} className='rounded-xl items-center flex-1 p-2'>
+                        <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Confirm</Text>
                     </TouchableOpacity>
                 </View>
             )
         }
-        <TouchableOpacity onPress={handleLogout} className='bg-white rounded-xl mt-3 justify-center items-center border-2 border-black'>
-            <Text className='font-semibold' style={{fontSize: hp(2.5)}}>Sign Out</Text>
-        </TouchableOpacity>
         {
             user?.role === 'student' && (
                 <View className='justify-end items-end'>
-                <TouchableOpacity onPress={handleDeleteAccount} className='bg-rose-500 rounded-xl mt-3 justify-center items-center flex-row gap-1 p-2'>
-                    <Text className=' text-white' style={{fontSize: hp(1.5)}}>Delete Account</Text>
-                    <MaterialIcons name='delete-outline' size={hp(1.8)} color={'white'}/>
+                <TouchableOpacity onPress={handleDeleteAccount} style={{backgroundColor: theme.deactivateButton}} className='rounded-xl mt-3 justify-center items-center flex-row gap-1 p-2'>
+                    <Text style={{fontSize: hp(1.5), color: theme.textContrast}} className='font-medium'>Delete Account</Text>
+                    <MaterialIcons name='delete-outline' size={hp(2)} color={theme.textContrast}/>
                 </TouchableOpacity>
                 </View>
             )

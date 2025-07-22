@@ -1,8 +1,9 @@
-import { View, Text } from 'react-native'
+import { View, Text, useColorScheme } from 'react-native'
 import React, { useEffect } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { Colors } from '../constants/Colors';
 
 
 const MessageItem = ({message, currentUser, otherUserId, lastSeen}) => {
@@ -15,6 +16,8 @@ const MessageItem = ({message, currentUser, otherUserId, lastSeen}) => {
     const messageTime = message?.createdAt?.toDate?.();
     const seenTime = lastSeen ? new Date(lastSeen) : null;
     const isRead = seenTime && seenTime > messageTime;
+
+    const theme = Colors[useColorScheme()] ?? Colors.light;
 
     const fade = useSharedValue(0);
 
@@ -36,16 +39,16 @@ const MessageItem = ({message, currentUser, otherUserId, lastSeen}) => {
     return (
         <View className='flex-row justify-end mb-2 mr-3'>
             <View style={{width: wp(80)}}>
-                <View className='flex self-end p-3 rounded-2xl bg-indigo-100 border border-indigo-200'>
-                    <Text style={{fontSize: hp(2)}}>
+                <View style={{backgroundColor: theme.chatBubbleUser}} className='flex self-end p-3 rounded-2xl'>
+                    <Text style={{fontSize: hp(2), color: theme.chatText}}>
                         {message?.text}
                     </Text>
                     <View className='flex-row items-center justify-end mt-1 gap-1'>
-                        <Text style={{ fontSize: hp(1.3), color: '#666'}}>
+                        <Text style={{ fontSize: hp(1.3), color: theme.chatMetaText}}>
                             {time}
                         </Text>
                         <Animated.View style={animatedStyle}>
-                            <MaterialCommunityIcons name={isRead ? 'check-all' : 'check-underline'} color={'#666'} size={hp(1.3)}/>
+                            <MaterialCommunityIcons name={isRead ? 'check-all' : 'check-underline'} color={theme.chatMetaText} size={hp(1.3)}/>
                         </Animated.View>
                     </View>
                 </View>
@@ -55,44 +58,44 @@ const MessageItem = ({message, currentUser, otherUserId, lastSeen}) => {
   } else if (otherUserId === message?.userId) {
     return (
         <View style={{width: wp(80)}} className='ml-3 mb-2'>
-            <View className='flex self-start p-3 px-4 rounded-2xl bg-white border-neutral-200 border'>
-                <Text style={{fontSize: hp(2)}}>
+            <View style={{backgroundColor: theme.chatBubbleOthers}} className='flex self-start p-3 px-4 rounded-2xl'>
+                <Text style={{fontSize: hp(2), color: theme.chatText}}>
                     {message?.text}
                 </Text>
-                <Text style={{ fontSize: hp(1.3), color: '#666', marginTop: 4, alignSelf: 'flex-end' }}>
+                <Text style={{ fontSize: hp(1.3), color: theme.chatMetaText, marginTop: 4, alignSelf: 'flex-end' }}>
                     {time}
                 </Text>
             </View>
         </View>
     )
-  } else if (message.type !== 'system' && currentUser.role === 'mentor') {
+  } else if (message.type !== 'system' && currentUser?.role === 'mentor') {
     return (
         <View className='flex-row justify-end mb-2 mr-3'>
             <View style={{width: wp(80)}}>
-                <View className='flex self-end p-3 rounded-2xl bg-neutral-200 border border-indigo-200'>
-                    <Text style={{fontSize: hp(2)}}>
+                <View style={{backgroundColor: theme.chatBubbleTransfer}} className='flex self-end p-3 rounded-2xl'>
+                    <Text style={{fontSize: hp(2), color: theme.chatText}}>
                         {message?.text}
                     </Text>
                     <View className='flex-row items-center justify-end mt-1 gap-1'>
-                        <Text style={{ fontSize: hp(1.3), color: '#666'}}>
+                        <Text style={{ fontSize: hp(1.3), color: theme.chatMetaText}}>
                             {time}
                         </Text>
                         <Animated.View style={animatedStyle}>
-                            <MaterialCommunityIcons name={isRead ? 'check-all' : 'check-underline'} color={'#666'} size={hp(1.3)}/>
+                            <MaterialCommunityIcons name={isRead ? 'check-all' : 'check-underline'} color={theme.chatMetaText} size={hp(1.3)}/>
                         </Animated.View>
                     </View>
                 </View>
             </View>
         </View>
     )
-  } else if (message.type !== 'system' && currentUser.role === 'student') {
+  } else if (message.type !== 'system' && currentUser?.role === 'student') {
     return (
         <View style={{width: wp(80)}} className='ml-3 mb-2'>
-            <View className='flex self-start p-3 px-4 rounded-2xl bg-neutral-200 border-neutral-200 border'>
-                <Text style={{fontSize: hp(2)}}>
+            <View style={{backgroundColor: theme.chatBubbleTransfer}} className='flex self-start p-3 px-4 rounded-2xl'>
+                <Text style={{fontSize: hp(2), color: theme.chatText}}>
                     {message?.text}
                 </Text>
-                <Text style={{ fontSize: hp(1.3), color: '#666', marginTop: 4, alignSelf: 'flex-end' }}>
+                <Text style={{ fontSize: hp(1.3), color: theme.chatMetaText, marginTop: 4, alignSelf: 'flex-end' }}>
                     {time}
                 </Text>
             </View>
