@@ -27,6 +27,7 @@ const GAD = () => {
 
   const scrollRef = useRef();
   const question1Y = useRef(0);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const handleOptionPress = (questionIndex, optionIndex) => {
     const updatedSelections = [...selectedOptions];
@@ -39,6 +40,9 @@ const GAD = () => {
   };
 
   const handleStartAssessment = () => {
+    if (!startAssessment) {
+      setHasScrolled(false);
+    }
     setStartAssessment(value => !value);
   }
 
@@ -144,7 +148,15 @@ const GAD = () => {
       {
         startAssessment && (
         GAD_QUESTIONS.map((question, qIndex) => (
-          <View onLayout={qIndex===0?(event)=>{question1Y.current=event.nativeEvent.layout.y;}:undefined} key={qIndex} className="mt-3 items-center justify-center border rounded-3xl p-2 w-full" style={{borderColor: theme.border}}>
+          <View onLayout={qIndex === 0 ? (event) => {
+              question1Y.current=event.nativeEvent.layout.y;
+              if (startAssessment && !hasScrolled) {
+                scrollRef.current.scrollTo({ y: question1Y.current, animated: true });
+                setHasScrolled(true);
+              }
+            } : undefined} 
+            key={qIndex} className="mt-3 items-center justify-center border rounded-3xl p-2 w-full" style={{borderColor: theme.questionBorder}}
+          >
             <Text style={{fontFamily: (fontsLoaded ? 'Poppins_600SemiBold' : undefined), fontSize: hp(1.5), color: theme.header}} className="mb-2 text-center">
               Question {qIndex + 1}: {question}
             </Text>
@@ -152,7 +164,7 @@ const GAD = () => {
               {
                 OPTIONS.map((option, oIndex) => (
                   <TouchableOpacity onPress={() => handleOptionPress(qIndex, oIndex)} key={oIndex} style={{backgroundColor: (selectedOptions[qIndex] === oIndex ? theme.selectionActive : theme.selectionInactive)}} className="rounded-full p-2 w-full items-center">
-                    <Text style={{color: theme.textContrast}}>{option}</Text>
+                    <Text style={{color: (selectedOptions[qIndex] === oIndex ? theme.selectionActiveText : theme.selectionInactiveText)}}>{option}</Text>
                   </TouchableOpacity>
                 ))
               }
@@ -167,7 +179,9 @@ const GAD = () => {
               <Text style={{fontFamily: (fontsLoaded ? 'Poppins_500Medium' : undefined), fontSize: hp(1.8), color: theme.textContrast}}>Submit</Text>
             </TouchableOpacity>
           ) : (
-            <Loading size={hp(2)}/>
+            <View className='items-center -mt-20'>
+              <LoadingSmile size={hp(20)}/>
+            </View>
           )
         ) : null
       }

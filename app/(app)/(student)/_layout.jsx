@@ -16,10 +16,12 @@ const StudentLayout = () => {
         headerStyle: {backgroundColor: theme.homeHeaderBackground,},
         headerTintColor: theme.header
         }}>
-      <Stack.Screen name='(tabs)' options={{headerShown: false, title: 'Chats'}}/>
-      <Stack.Screen name='selectMentor' options={{title: ''}}/>
+      <Stack.Screen name='(tabs)' options={{headerShown: false, title: ''}}/>
+      <Stack.Screen name='selectMentor' options={{title: 'Choose Your Mentor'}}/>
       <Stack.Screen name='GAD' options={{title: 'Anxiety Self-Assessment Tool', headerBackTitle: 'Back', headerShadowVisible: false}}/>
       <Stack.Screen name='PHQ' options={{title: 'Depression Self-Assessment Tool', headerBackTitle: 'Back', headerShadowVisible: false}}/>
+      <Stack.Screen name='resources' options={{title: 'Resources', headerBackTitle: 'Back', headerShadowVisible: false}}/>
+      <Stack.Screen name='contacts' options={{title: 'Contacts', headerBackTitle: 'Back', headerShadowVisible: false}}/>
     </Stack>
   )
 }

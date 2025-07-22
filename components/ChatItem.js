@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, useColorScheme } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   widthPercentageToDP as wp,
@@ -14,10 +14,13 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { Colors } from "../constants/Colors";
 
 const ChatItem = ({ item, noBorder, currentUser, router }) => {
   const [lastSeen, setLastSeen] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const theme = Colors[useColorScheme()] ?? Colors.light;
 
   const openChatRoom = () => {
     router.push({ pathname: "/chatRoom", 
@@ -89,9 +92,9 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
     <TouchableOpacity
       onPress={openChatRoom}
       className={`flex-row justify-between mx-4 items-center gap-3 ${
-        noBorder ? "" : "border-b border-b-neutral-200 mb-4 pb-4"
+        noBorder ? "" : "border-b mb-4 pb-4"
       } `}
-      style={{maxHeight: hp(8)}}
+      style={{maxHeight: hp(8),borderColor: theme.questionBorder}}
     >
       <Image
         style={{ height: hp(6), width: hp(6), borderRadius: 100 }}
@@ -103,29 +106,29 @@ const ChatItem = ({ item, noBorder, currentUser, router }) => {
       <View className="flex-1 gap-1">
         <View className="flex-row justify-between">
           <Text
-            style={{ fontSize: hp(1.8) }}
-            className="font-semibold text-neutral-800"
+            style={{ fontSize: hp(1.8), color: theme.text }}
+            className="font-semibold"
           >
             {item?.username}
           </Text>
           
           <Text
-            style={{ fontSize: hp(1.8) }}
-            className="font-medium text-neutral-500"
+            style={{ fontSize: hp(1.8), color: theme.text2 }}
+            className="font-medium"
           >
             {renderTime()}
           </Text>
         </View>
         <View className='flex-row justify-between'>
             <Text
-            style={{ fontSize: hp(1.6), textAlign: 'justify' }}
-            className="font-medium text-neutral-500 flex-1"
+            style={{ fontSize: hp(1.6), textAlign: 'justify', color: theme.text2 }}
+            className="font-medium flex-1"
             >
             {renderLastMessage()}
             </Text>
             {unreadCount > 0 && (
-            <View className="bg-red-500 px-2 py-1 rounded-full ml-2 items-center justify-center self-center">
-              <Text style={{ fontSize: hp(1.3) }} className="text-white font-bold">
+            <View style={{backgroundColor: theme.deactivateButton}} className="px-2 py-1 rounded-full ml-2 items-center justify-center self-center">
+              <Text style={{ fontSize: hp(1.3), color: theme.textContrast }} className="font-bold">
                 {unreadCount}
               </Text>
             </View>

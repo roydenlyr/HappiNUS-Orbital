@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { View, Text, TouchableOpacity, Pressable, Alert, useColorScheme } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { Stack, useRouter } from 'expo-router'
 import { AntDesign, Entypo, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons'
@@ -9,6 +9,7 @@ import { rephraseMessage } from '../services/rephraseMessage';
 import { Loading } from './Animation';
 import { doc, Timestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
+import { Colors } from '../constants/Colors';
 
 const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, chatEndDate}) => {
 
@@ -18,6 +19,8 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     const [endChatLoading, setEndChatLoading] = useState(false);
 
     const router = useRouter();
+    
+    const theme = Colors[useColorScheme()] ?? Colors.light;
     
     user.profileUrl = decodeURIComponent(user.profileUrl);
     
@@ -98,6 +101,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 }
             }
         }]);
+        setEndChatLoading(false);
     }
 
     const handleChangeMentor = () => {
@@ -162,6 +166,9 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
         options={{
             title: '', 
             headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: theme.chatRoomHeaderBackground,
+            },
             headerLeft: () => (
                 <View className='flex-row items-center gap-3 -ml-3'>
                     <TouchableOpacity
@@ -172,12 +179,12 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             router.navigate('/(mentor)/(tabs)/chats');
                         }
                     }}>
-                        <Entypo name='chevron-left' size={hp(3)} color='#737373' />
+                        <Entypo name='chevron-left' size={hp(3)} color={theme.icon} />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
                         <Image source={{uri: user.profileUrl}} style={{height: hp(4.5), aspectRatio: 1, borderRadius: 100}} />
 
-                        <Text style={{fontSize: hp(2.5)}} className='text-neutral-700 font-medium'>
+                        <Text style={{fontSize: hp(2.5), color: theme.text}} className='font-medium'>
                             {user?.username}
                         </Text>
                     </View>
@@ -194,7 +201,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             rephraseLoading ? (
                                 <Loading size={hp(5)}/>
                             ) : (
-                                <FontAwesome name='stack-exchange' size={hp(2.8)} color={'#737373'}/>
+                                <FontAwesome name='stack-exchange' size={hp(2.8)} color={theme.icon}/>
                             )
                         }
                     </Pressable>
@@ -203,24 +210,19 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             summaryLoading ? (
                                 <Loading size={hp(5)}/>
                             ) : (
-                                <Feather name='clipboard' size={hp(2.8)} color={'#737373'}/>
+                                <Feather name='clipboard' size={hp(2.8)} color={theme.icon}/>
                             )
                         }
                     </Pressable>
                 </View>
             ) } else { return (
                 <View className='flex-row items-center gap-8'>
-                    {/* <Pressable onPress={handleFeedBack}>
-                        {
-                            <AntDesign name='staro' size={hp(2.8)}  color={'gray'}/>
-                        }
-                    </Pressable> */}
                     <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
                         {
                             changeLoading ? (
                                 <Loading size={hp(5)}/>
                             ) : (
-                                <MaterialIcons name='switch-account' size={hp(2.8)}  color={'gray'}/>
+                                <MaterialIcons name='switch-account' size={hp(2.8)}  color={theme.icon}/>
                             )
                         }
                     </Pressable>
@@ -229,7 +231,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             endChatLoading ? (
                                 <Loading size={hp(5)}/>
                             ) : (
-                                <Octicons name='x-circle' size={hp(2.8)}  color={'gray'}/>
+                                <Octicons name='x-circle' size={hp(2.8)}  color={theme.icon}/>
                             )
                         }
                     </Pressable>

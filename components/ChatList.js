@@ -10,7 +10,7 @@ const ChatList = ({users, currentUser}) => {
         <FlatList 
             data={users} 
             contentContainerStyle={{paddingVertical: 15}} 
-            keyExtractor={item => Math.random()} 
+            keyExtractor={item => item.userId} 
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}) => <ChatItem 
                 noBorder={index + 1 === users.length} 

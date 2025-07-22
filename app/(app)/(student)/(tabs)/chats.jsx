@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ChatList from '../../../../components/ChatList';
-import { Loading } from '../../../../components/Animation';
+import { Loading, LoadingSmile } from '../../../../components/Animation';
 import { useUserList } from '../../../../context/userListProvider';
 import { useRouter } from 'expo-router';
 import { getRoomId } from '../../../../components/common';
@@ -58,34 +58,33 @@ const Chats = () => {
 
   return (
     <View className='flex-1' style={{backgroundColor: theme.appBackground}}>
-      <StatusBar barStyle={'auto'} />
       {
         loadingChats ? (
           <View className='flex-1 justify-center items-center'>
-            <Loading size={hp(15)} />
+            <LoadingSmile size={hp(15)} />
           </View>
         ) : (
           <View>
             {activeChats.length > 0 && (
               <>
-                <Text className='text-center text-lg font-bold mt-3 italic'>Active Chats</Text>
+                <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Active Chats</Text>
                 <ChatList currentUser={user} users={activeChats}/>
               </>
             )}
             {
               inactiveChats.length > 0 && (
                 <>
-                  <Text className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
+                  <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
                   <ChatList currentUser={user} users={inactiveChats}/>
                 </>
               )
             }
             {
               activeChats.length === 0 && (
-                <View className='items-center bg-slate-300 rounded-xl mx-5 py-3'>
-                  <Text className='px-5 text-center mb-2'>It looks like you haven’t connected with a mentor yet. Find someone to chat with when you’re ready.</Text>
+                <View style={{backgroundColor: theme.cardBackground}} className='items-center rounded-xl mx-5 py-3'>
+                  <Text style={{color: theme.text}}  className='px-5 text-center mb-2'>It looks like you haven’t connected with a mentor yet. Find someone to chat with when you’re ready.</Text>
                   <Pressable onPress={() => {router.push('../selectMentor');}}>
-                    <Text style={{fontSize: hp(1.8)}} className='font-bold text-indigo-500'>Connect with Mentor</Text>
+                    <Text style={{fontSize: hp(1.8), color: theme.header}} className='font-bold'>Connect with Mentor</Text>
                   </Pressable>
                 </View>
               )
