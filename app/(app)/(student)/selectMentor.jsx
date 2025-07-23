@@ -51,6 +51,11 @@ const SelectMentor = () => {
     setSelectedFaculties(updatedSelections);
   }
 
+  const handleClearFilter = () => {
+    setSelectedFaculties(Array(FACULTY.length).fill(null));
+    setSelectedGenders(Array(GENDER.length).fill(null));
+  }
+
   const handleSheetChange = (index) => {
     if (index > 1) {
       Animated.timing(fadeAnimation, {
@@ -137,6 +142,10 @@ const SelectMentor = () => {
                 }
                 </View>
               ))}
+
+              <TouchableOpacity onPress={handleClearFilter} style={{backgroundColor: theme.button}} className='p-3 items-center justify-center rounded-xl'>
+                <Text style={{color: theme.textContrast}}>Clear Filter</Text>
+              </TouchableOpacity>
             </View>
           </Animated.View>
         }
