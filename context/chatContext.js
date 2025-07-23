@@ -42,10 +42,13 @@ export const ChatContextProvider = ({ children }) => {
             await updateDoc(messageDocRef, { notificationSent: true });
 
             Toast.show({
-            type: 'info',
+            type: 'customAlert',
             text1: `New message from ${msg.senderName}`,
             text2: msg.text,
             position: 'top',
+            props: {
+              type: 'info'
+            },
             onPress: () => {
                 router.push({
                 pathname: '/chatRoom',

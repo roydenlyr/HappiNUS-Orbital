@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import CustomToastConfig from '../components/CustomToastConfig'
 import { ChatContextProvider } from '../context/chatContext';
 import { StatusBar } from 'expo-status-bar'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 const MainLayout = () => {
   const {isAuthenticated, user} = useAuth();
@@ -50,9 +51,11 @@ const RootLayout = () => {
       <AuthContextProvider>
         <UserListProvider>
           <ChatContextProvider>
-            <StatusBar style='auto'/>
-            <MainLayout/>
-            <Toast config={CustomToastConfig}/>
+            <GestureHandlerRootView>
+              <StatusBar style='auto'/>
+              <MainLayout/>
+              <Toast config={CustomToastConfig}/>
+            </GestureHandlerRootView>
           </ChatContextProvider>
         </UserListProvider>
       </AuthContextProvider>

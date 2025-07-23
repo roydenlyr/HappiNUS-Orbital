@@ -5,7 +5,7 @@ import { Image, Text, TouchableOpacity, useColorScheme, View } from 'react-nativ
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { Colors } from '../constants/Colors';
 
-const MentorCard = ({mentor, fromRoom, keepChat}) => {
+const MentorCard = ({mentor, fromRoom, keepChat, prevMentorId}) => {
   // Calculating by academic year
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -27,6 +27,7 @@ const MentorCard = ({mentor, fromRoom, keepChat}) => {
       profileUrl: encodeURIComponent(mentor.profileUrl),
       fromRoom,
       keepChat,
+      prevMentorId
     }});     
   }
 

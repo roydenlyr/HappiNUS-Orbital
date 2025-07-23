@@ -53,7 +53,10 @@ export const Colors = {
     // Mentor Card
     gradientStart: '#C28262',
     gradientEnd: '#8B5746',
-    chatButton: '#F5F0E9'
+    chatButton: '#F5F0E9',
+
+    // Bottom Sheet
+    bottomSheetBackground: '#E5DAD1'
     
   },
 
@@ -111,6 +114,9 @@ export const Colors = {
     // Mentor Card
     gradientStart: '#D8947A',
     gradientEnd: '#8B5746',
-    chatButton: '#6B5848'
+    chatButton: '#6B5848',
+
+    // Bottom Sheet
+    bottomSheetBackground: '#3A2C28',
   },
 };

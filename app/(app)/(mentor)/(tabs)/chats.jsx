@@ -64,7 +64,9 @@ const Chats = () => {
     <View style={{backgroundColor: theme.appBackground}} className='flex-1'>
       {
         loadingChats ? (
-          <LoadingSmile size={hp(15)} />
+          <View className='flex-1 justify-center items-center'>
+            <LoadingSmile size={hp(15)} />
+          </View>
         ) : (
           <View>
             {activeChats.length > 0 && (
