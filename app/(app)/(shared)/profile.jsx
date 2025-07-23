@@ -250,6 +250,31 @@ const Profile= () => {
                 </View>
             )
         }
+        {
+            user?.role === 'mentor' && (
+                <View className='mt-3 gap-5'>
+                    <View style={{borderColor: theme.questionBorder}} className='border-b -mt-1'>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.5), color: theme.text}}>Faculty</Text>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.faculty}</Text>
+                    </View>
+                    <View style={{borderColor: theme.questionBorder}} className='border-b -mt-1'>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.5), color: theme.text}}>Gender</Text>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.gender}</Text>
+                    </View>
+                    <View style={{borderColor: theme.questionBorder}} className='border-b -mt-1'>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.5), color: theme.text}}>Date of Birth</Text>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.dob}</Text>
+                    </View>
+                    <View style={{borderColor: theme.questionBorder}} className='border-b -mt-1'>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.5), color: theme.text}}>Matriculation Year</Text>
+                        <Text className='font-medium pb-2' style={{fontSize: hp(2.2), color: 'gray'}}>{user?.matricYear}</Text>
+                    </View>
+                    <Text className='font-medium pb-2 text-center' style={{fontSize: hp(1.2), color: 'gray'}}>
+                        If any of the information is inaccurate, kindly reach out to the admin to request an update.
+                    </Text>
+                </View>
+            )
+        }
     </View>
     </ScrollView>
     </CustomKeyBoardView>

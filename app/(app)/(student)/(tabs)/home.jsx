@@ -1,4 +1,4 @@
-import { View, Text, Alert, ScrollView, useColorScheme, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Alert, useColorScheme, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useAuth } from '../../../../context/authContext';
@@ -54,6 +54,8 @@ const Home = () => {
       } else {
         Alert.alert('Error', json.message);
       }
+      console.log('Upload Complete');
+      
     } catch (error) {
       console.error('Failed to upload quotes:', error);
       Alert.alert('Error', error.message || 'An error occurred while uploading quotes.');
@@ -92,6 +94,7 @@ const Home = () => {
       if (dayOfYear === 0) {
         dayOfYear = 74;
       }
+
       const ref = doc(db, 'disney_quotes', dayOfYear.toString());
       const snapshot = await getDoc(ref);
 
@@ -209,14 +212,14 @@ const Home = () => {
             onBackButtonPress={() => setSelectedCard(null)}
             hideModalContentWhileAnimating={true}
             animationIn={'zoomIn'}
-            animationOut={'fadeOut'}
+            animationOut='fadeOut'
             backdropOpacity={0.5}
             propagateSwipe={true}
             style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
           >
             <ModalCard card={selectedCard} cards={cardsSelection} closeModal={() => setSelectedCard(null)}/>
           </Modal>
-        )} 
+        )}
     </View>
   )
 }

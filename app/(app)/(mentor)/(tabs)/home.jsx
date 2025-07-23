@@ -80,10 +80,13 @@ const Home = () => {
       await updateDoc(doc(db, 'users', user.userId), {activeAlert: true});
 
       Toast.show({
-        type: 'success',
-        text1: '🚨 Red Alert Activated',
+        type: 'customAlert',
+        text1: 'Red Alert Activated',
         text2: `Triggered by ${user.username}`,
         position: 'top',
+        props: {
+          type: 'error',
+        }
       });
     } else if (activateAlert === false) {
         console.log('Deactivating Alert...');
@@ -106,10 +109,13 @@ const Home = () => {
         //setActivateAlert(null);
 
         Toast.show({
-          type: 'info',
-          text1: '🔕 Alert Deactivated',
+          type: 'customAlert',
+          text1: 'Alert Deactivated',
           text2: 'Your red alert has been turned off.',
           position: 'top',
+          props: {
+            type: 'success'
+          }
         });
     }
   }
@@ -129,10 +135,13 @@ const Home = () => {
 
       if (newAlert && newAlert.triggeredBy !== user.username){
         Toast.show({
-        type: 'info',
-        text1: '🚨 New Red Alert',
+        type: 'customAlert',
+        text1: 'New Red Alert',
         text2: `Triggered by ${newAlert.triggeredBy}`,
         position: 'top',
+        props: {
+          type: 'error'
+        },
         onPress: () => {router.push('/(mentor)/(tabs)/home'); Toast.hide();}
       });
       }

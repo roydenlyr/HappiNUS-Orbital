@@ -1,47 +1,78 @@
-import { Feather } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import { useState } from 'react';
-import { StatusBar, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
-import Modal from 'react-native-modal';
+import { useMemo, useRef, useState } from 'react';
+import { Animated, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MentorCard from '../../../components/MentorCard';
 import { useUserList } from '../../../context/userListProvider';
 import { useLocalSearchParams } from 'expo-router';
 import { Colors } from '../../../constants/Colors';
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import { FACULTY, GENDER } from '../../../constants/FilterOptions';
 
 const SelectMentor = () => {
 
-  const { fromRoom, keepChat } = useLocalSearchParams();
-
+  const { fromRoom, keepChat, prevMentorId } = useLocalSearchParams();
   const { mentors } = useUserList();
-
-  const [isFilterVisible, setFilterVisible] = useState(false);
-  const [selectedGender, setSelectedGender] = useState('');
-  const [selectedFaculty, setSelectedFaculty] = useState('');
-
   const theme = Colors[useColorScheme()] ?? Colors.light;
+
+  const snapPoints = useMemo(() => ['10%', '50%', '70%', '100%'], []);
+  const bottomSheetRef = useRef(null);
+  const fadeAnimation = useRef(new Animated.Value(0)).current;
+
+  const [selectedGenders, setSelectedGenders] = useState(Array(GENDER.length).fill(null));
+  const [selectedFaculties, setSelectedFaculties] = useState(Array(FACULTY.length).fill(null));
+  const activeGenders = selectedGenders.filter(Boolean); // removes nulls
+  const activeFaculties = selectedFaculties.filter(Boolean);
 
   const filteredMentors = mentors.filter(
     m =>
-      (!selectedGender || m.gender === selectedGender) &&
-      (!selectedFaculty || m.faculty === selectedFaculty)
+    (activeGenders.length === 0 || activeGenders.includes(m.gender)) &&
+    (activeFaculties.length === 0 || activeFaculties.includes(m.faculty)) && 
+    m.userId !== prevMentorId
   );
+
+  const handleGenderFilter = (index) => {
+    const updatedSelections = [...selectedGenders];
+    if (updatedSelections[index]) {
+      updatedSelections[index] = null;
+    } else {
+      updatedSelections[index] = GENDER[index];
+    }
+    setSelectedGenders(updatedSelections);
+  }
+
+  const handleFacultyFilter = (index) => {
+    const updatedSelections = [...selectedFaculties];
+    if (updatedSelections[index]) {
+      updatedSelections[index] = null;
+    } else {
+      updatedSelections[index] = FACULTY[index];
+    }
+    setSelectedFaculties(updatedSelections);
+  }
+
+  const handleSheetChange = (index) => {
+    if (index > 1) {
+      Animated.timing(fadeAnimation, {
+        toValue: 1, 
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(fadeAnimation, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true
+      }).start();
+    }
+  }
 
   return (
     <View style={{backgroundColor: theme.appBackground}} className="flex-1 justify-center">
-      {/* Filter Button */}
-      <View className='justify-center items-center mb-20'>
-        <TouchableOpacity onPress={() => setFilterVisible(true)} className='flex-row rounded-full items-center justify-center gap-3 p-3' style={{width: wp(55), maxWidth: 600, backgroundColor: theme.ctaButton}}>
-          <Feather name='filter' color={theme.textContrast} size={hp(3)}/>
-          <Text style={{color: theme.textContrast}} className='font-semibold'>Open Filter</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Carousel */}
       <Carousel
         data={filteredMentors}
-        renderItem={({ item }) => <MentorCard mentor={item} fromRoom={fromRoom} keepChat={keepChat}/>}
+        renderItem={({ item }) => <MentorCard mentor={item} fromRoom={fromRoom} keepChat={keepChat} prevMentorId={prevMentorId}/>}
         pagingEnabled
         snapEnabled
         slideStyle={{ overflow: 'visible' }}
@@ -54,45 +85,63 @@ const SelectMentor = () => {
         }}
       />
 
-      {/* Slide-In Filter Modal */}
-      <Modal
-        isVisible={isFilterVisible}
-        onBackdropPress={() => setFilterVisible(false)}
-        animationIn="slideInRight"
-        animationOut="slideOutRight"
-        backdropOpacity={0.3}
-        style={{ margin: 0, justifyContent: 'center', alignItems: 'flex-end' }}
+      <BottomSheet ref={bottomSheetRef} snapPoints={snapPoints} index={1} 
+        backgroundStyle={{backgroundColor: theme.bottomSheetBackground}}
+        handleIndicatorStyle={{backgroundColor: theme.header}} 
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop {...props} appearsOnIndex={4} disappearsOnIndex={1} pressBehavior={1} />
+        )}
+        onChange={(index) => handleSheetChange(index)}
       >
-        <View style={{ width: wp(80), height: hp(100), backgroundColor: theme.cardBackground }} className='p-2 justify-center rounded-3xl'>
-          <Text style={{color: theme.header}} className="text-lg font-bold mb-4 self-center">Filter Mentors</Text>
-
-          <Text style={{color: theme.text}}>Gender:</Text>
-          <Picker selectedValue={selectedGender} onValueChange={setSelectedGender}>
-            <Picker.Item label="All" value="" />
-            <Picker.Item label="Male" value="Male" />
-            <Picker.Item label="Female" value="Female" />
-            <Picker.Item label="Others" value="Others" />
-          </Picker>
-
-          <Text style={{color: theme.text}}>Faculty:</Text>
-          <Picker selectedValue={selectedFaculty} onValueChange={setSelectedFaculty}>
-            <Picker.Item label="All" value="" />
-            <Picker.Item label="College of Design & Engineering" value="College of Design & Engineering" />
-            <Picker.Item label="School of Computing" value="School of Computing" />
-            <Picker.Item label="NUS Business School" value="NUS Business School" />
-            <Picker.Item label="Faculty of Arts and Social Sciences" value="Faculty of Arts and Social Sciences" />
-            <Picker.Item label="Yong Loo Lin School of Medicine" value="Yoo Long Lin School of Medicine" />
-            <Picker.Item label="Faculty of Law" value="Faculty of Law" />
-          </Picker>
-
-          <TouchableOpacity onPress={() => setFilterVisible(false)} style={{backgroundColor: theme.button}} className="mt-6 p-3 rounded-full">
-            <Text style={{color: theme.textContrast}} className="text-white text-center font-semibold">Apply Filters</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => {setFilterVisible(false); setSelectedFaculty(''); setSelectedGender('')}} style={{backgroundColor: theme.ctaButton}} className="mt-3 bg-white p-3 rounded-full">
-            <Text style={{color: theme.textContrast}} className="text-center font-semibold">Clear Filters</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+        <BottomSheetView className='items-center'>
+          <Text style={{color: theme.header}} className="text-lg font-bold mb-4 self-center">FILTER</Text>
+        </BottomSheetView>
+        {
+          // sheetIndex > 1 && (
+          <Animated.View style={{opacity: fadeAnimation}}>
+            <View className='p-5 gap-2'>
+              <Text style={{color: theme.text}} className='font-medium'>Gender</Text>
+              <View className='flex-row gap-3'>
+                {
+                  GENDER.map((gender, index) => (
+                    <TouchableOpacity onPress={() => handleGenderFilter(index)} key={index} style={{backgroundColor: (selectedGenders[index] ? theme.selectionActive : theme.selectionInactive )}} className='flex-1 p-3 rounded-3xl items-center justify-center'>
+                      <Text style={{color: (selectedGenders[index] ? theme.selectionActiveText : theme.selectionInactiveText)}}>{gender}</Text>
+                    </TouchableOpacity>
+                  ))
+                }
+              </View>
+            </View>
+            <View className='p-5 gap-2'>
+              <Text style={{color: theme.text}} className='font-medium'>Faculty</Text>
+              {
+                FACULTY.reduce((rows, faculty, index) => {
+                  if (index % 2 === 0) {
+                    rows.push([faculty, FACULTY[index + 1]]);
+                  }
+                  return rows;
+                }, []).map((pair, rowIndex) => (
+                  <View key={rowIndex} className='flex-row gap-3 p-1'>
+                    {pair.map((facultyItem, colIndex) => (
+                      facultyItem ? (
+                        <TouchableOpacity key={colIndex} onPress={() => handleFacultyFilter(rowIndex * 2 + colIndex)} style={{ backgroundColor: selectedFaculties[rowIndex * 2 + colIndex] ? theme.selectionActive : theme.selectionInactive,}}
+                          className='flex-1 p-3 rounded-3xl items-center justify-center'
+                        >
+                          <Text style={{ textAlign: 'center', color: selectedFaculties[rowIndex * 2 + colIndex] ? theme.selectionActiveText : theme.selectionInactiveText }}>
+                            {facultyItem}
+                          </Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <View key={colIndex} style={{ flex: 1 }} />
+                      )
+                    ))
+                }
+                </View>
+              ))}
+            </View>
+          </Animated.View>
+        }
+      </BottomSheet>
+        
     </View>
   );
 };

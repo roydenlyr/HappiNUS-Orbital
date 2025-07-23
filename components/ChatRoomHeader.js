@@ -6,32 +6,121 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { Image } from 'expo-image';
 import { summariseChat } from '../services/summariseChat';
 import { rephraseMessage } from '../services/rephraseMessage';
-import { Loading } from './Animation';
-import { doc, Timestamp, updateDoc } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { Loading, LoadingSmile } from './Animation';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { db, roomRef } from '../firebaseConfig';
 import { Colors } from '../constants/Colors';
+import ModalAlert from './ModalAlert';
 
-const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, chatEndDate}) => {
+const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, chatEndDate, currentUser}) => {
 
     const [summaryLoading, setSummaryLoading] = useState(false);
     const [rephraseLoading, setRephraseLoading] = useState(false);
     const [changeLoading, setChangeLoading] = useState(false);
     const [endChatLoading, setEndChatLoading] = useState(false);
+    const [reopenChatLoading, setReopenChatLoading] = useState(false);
+
+    const [header, setHeader] = useState('');
+    const [text, setText] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+
 
     const router = useRouter();
     
     const theme = Colors[useColorScheme()] ?? Colors.light;
     
     user.profileUrl = decodeURIComponent(user.profileUrl);
+
+    const handleReopenChat = async () => {
+        setReopenChatLoading(true);
+
+        try {
+            const q = query(roomRef, 
+                where('participants', 'array-contains', currentUser.userId),
+                where('active', '==', true)
+            );
+            const snapShot = await getDocs(q);
+
+            if (!snapShot.empty) {
+                Alert.alert('Cannot Reopen', 'You already have an active chat. Please end your current chat before reopening this one.');
+                setReopenChatLoading(false);
+                return;
+            }
+
+            Alert.alert('Reopen Chat', 'Are you sure you want to proceed?', 
+                [
+                    {
+                        text: 'Cancel',
+                    },
+                    {
+                        text: 'Proceed',
+                        onPress: () => proceedReopenChat()
+                    }
+                ],
+                {cancelable: true} 
+            )
+        } catch (error) {
+            console.error('Failed to reopen chat: ', error);
+            Alert.Alert('Error', 'An error occurred while trying to reopen the chat.');
+        } finally {
+            setReopenChatLoading(false);
+        }
+    }
+
+    const proceedReopenChat = async () => {
+        await updateDoc(doc(db, 'rooms', roomId), {
+            active: true,
+            inactiveOn: null
+        });
+
+        const messagesRef = collection(db, 'rooms', roomId, 'messages');
+        const snapShot = await getDocs(messagesRef);
+
+        const batchDeletions = snapShot.docs.filter(docSnap => {
+            const data = docSnap.data();
+            return data.subType === 'reopen';
+        });
+
+        const deletePromises = batchDeletions.map(docSnap => 
+            deleteDoc(doc(db, 'rooms', roomId, 'messages', docSnap.id))
+        );
+
+        await Promise.all(deletePromises);
+
+        const now = new Date();
+        console.log(now);
+        
+        const dateString = now.toLocaleString('en-SG', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        
+        await addDoc(collection(db, 'rooms', roomId, 'messages'), {
+            text: `Chat reopened on ${dateString}`,
+            type: 'system',
+            subType: 'reopen',
+            createdAt: Timestamp.now(),
+            senderName: 'system'
+        });
+
+        Alert.alert('Chat Reopened', 'This chat has been reopened successfully');
+    }
     
     const handleSummary = async () => {
-        
         if (messages && messages.length > 0){
             setSummaryLoading(true);
             try {
                 const summary = await summariseChat(messages, user.userId);
                 console.log('Summary: ', summary);
-                Alert.alert('Summary', summary);
+                // Alert.alert('Summary', summary);
+                setHeader('Summary');
+                setText(summary);
+                setModalVisible(true);
             } catch (error) {
                 console.error('Failed to summarise: ', error.message);
                 Alert.alert('Error', 'Failed to summarise chat. Please try again.');
@@ -49,22 +138,25 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
             try {
                 const rephrased = await rephraseMessage(textRef.current);
                 console.log('Rephrased text: ', rephrased);
-                Alert.alert('Rephrased', rephrased,
-                    [{
-                        text: 'Dismiss',
-                        style: 'cancel'
-                    },
-                    {
-                        text: 'Use',
-                        onPress: () => {
-                            textRef.current = rephrased;
-                            if (inputRef?.current){
-                                inputRef.current.setNativeProps({text: rephrased});
-                            }
-                        }
-                }],
-                {cancelable: true}
-                );
+                // Alert.alert('Rephrased', rephrased,
+                //     [{
+                //         text: 'Dismiss',
+                //         style: 'cancel'
+                //     },
+                //     {
+                //         text: 'Use',
+                //         onPress: () => {
+                            // textRef.current = rephrased;
+                            // if (inputRef?.current){
+                            //     inputRef.current.setNativeProps({text: rephrased});
+                            // }
+                //         }
+                // }],
+                // {cancelable: true}
+                // );
+                setHeader('Rephrased');
+                setText(rephrased);
+                setModalVisible(true);
             } catch (error) {
                 console.error('Failed to rephrase: ', error.message);
                 Alert.alert('Error', 'Failed to rephrase text. Please try again.');
@@ -77,11 +169,6 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     }
 
     const handleEndChat = () => {
-        // Add a active status for chatroom --> set to false to represent chat closed
-        // Add a timestamp for time of end convo
-        // Retain chatroom for 3 days from chat end
-        // Add a pill saying 'Chat has ended on {inactiveOn}'
-        // Once 3 days up, delete chatroom
         setEndChatLoading(true);
         Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed? This action is permanent and cannot be undone.', [{
             text: 'Dismiss',
@@ -105,13 +192,10 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     }
 
     const handleChangeMentor = () => {
-        // Does student want to retain message for the next selected mentor to see?
-        
         setChangeLoading(true);
         Alert.alert('Change Mentor', 'Are you sure you want to proceed?', 
             [{
                 text: 'Dismiss',
-                //style: 'cancel'
             },{
                 text: 'Proceed',
                 onPress: () => {
@@ -153,6 +237,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 params: {
                     fromRoom: roomId,
                     keepChat: keepChat ? 'true' : 'false',
+                    prevMentorId: user.userId
                 }
             });
         } catch (error) {
@@ -162,6 +247,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     }
 
   return (
+    <>
     <Stack.Screen 
         options={{
             title: '', 
@@ -179,7 +265,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                             router.navigate('/(mentor)/(tabs)/chats');
                         }
                     }}>
-                        <Entypo name='chevron-left' size={hp(3)} color={theme.icon} />
+                        <Ionicons name='chevron-back-sharp' size={hp(3)} color={theme.icon} />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
                         <Image source={{uri: user.profileUrl}} style={{height: hp(4.5), aspectRatio: 1, borderRadius: 100}} />
@@ -191,7 +277,21 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 </View>
             ),
             headerRight: () => {
-                if (!isActive && chatEndDate) return null;
+                if (!isActive && chatEndDate) {
+                    if (user?.role === 'student') return null;
+
+                    return (
+                        <Pressable onPress={handleReopenChat} disabled={reopenChatLoading} className='self-end'>
+                            {
+                                reopenChatLoading ? (
+                                    <LoadingSmile size={hp(8)}/>
+                                ) : (
+                                    <Ionicons name='chatbubble-outline' size={hp(2.8)} color={theme.icon}/>
+                                )
+                            }
+                        </Pressable>
+                    )
+                };
 
                 if (user?.role === 'student') {
                 return (
@@ -199,7 +299,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                     <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
                         {
                             rephraseLoading ? (
-                                <Loading size={hp(5)}/>
+                                <LoadingSmile size={hp(8)}/>
                             ) : (
                                 <FontAwesome name='stack-exchange' size={hp(2.8)} color={theme.icon}/>
                             )
@@ -208,7 +308,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                     <Pressable onPress={handleSummary} disabled={summaryLoading}>
                         {
                             summaryLoading ? (
-                                <Loading size={hp(5)}/>
+                                <LoadingSmile size={hp(8)}/>
                             ) : (
                                 <Feather name='clipboard' size={hp(2.8)} color={theme.icon}/>
                             )
@@ -220,7 +320,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                     <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
                         {
                             changeLoading ? (
-                                <Loading size={hp(5)}/>
+                                <LoadingSmile size={hp(8)}/>
                             ) : (
                                 <MaterialIcons name='switch-account' size={hp(2.8)}  color={theme.icon}/>
                             )
@@ -229,7 +329,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                     <Pressable onPress={handleEndChat} disabled={endChatLoading}>
                         {
                             endChatLoading ? (
-                                <Loading size={hp(5)}/>
+                                <LoadingSmile size={hp(8)}/>
                             ) : (
                                 <Octicons name='x-circle' size={hp(2.8)}  color={theme.icon}/>
                             )
@@ -238,6 +338,21 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 </View>
             )}
     }}} />
+    <ModalAlert 
+        isVisible={modalVisible}
+        header={header}
+        text={text}
+        onClose={() => setModalVisible(false)}
+        theme={theme}
+        onUse={() => {
+            textRef.current = text;
+            if (inputRef?.current){
+                inputRef.current.setNativeProps({text: text});
+            }
+            setModalVisible(false);
+        }}
+    />
+    </>
   )
 }
 

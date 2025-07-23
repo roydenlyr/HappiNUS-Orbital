@@ -76,7 +76,7 @@ const ModalCard = ({card, cards, closeModal}) => {
             )
         }
         {
-            cards === SYMPTOMS && (card.title === 'Anxiety' || card.title === 'Depression') &&  user?.role === 'student' && (
+            cards === SYMPTOMS && (card?.title === 'Anxiety' || card?.title === 'Depression') &&  user?.role === 'student' && (
                 <View>
                     <Text style={{fontFamily: (fontsLoaded ? 'Poppins_500Medium': undefined), fontSize: hp(2), color: theme.text}}>What You Can Do Next: </Text>
                     {

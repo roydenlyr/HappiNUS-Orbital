@@ -1,5 +1,6 @@
 import { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import CustomAlertToast from './CustomAlertToast'
 
 const CustomToastConfig = {
   success: (props) => (
@@ -41,6 +42,15 @@ const CustomToastConfig = {
       }}
       text1Style={{ fontSize: hp(2) }}
       text2Style={{ fontSize: hp(1.5) }}
+    />
+  ),
+  customAlert: ({ text1, text2, props }) => (
+    <CustomAlertToast
+      type={props.type}
+      text1={text1}
+      text2={text2}
+      actionLabel={props.actionLabel}
+      onAction={props.onAction}
     />
   )
 };

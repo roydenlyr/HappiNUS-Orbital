@@ -72,16 +72,8 @@ const Chats = () => {
               </>
             )}
             {
-              inactiveChats.length > 0 && (
-                <>
-                  <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
-                  <ChatList currentUser={user} users={inactiveChats}/>
-                </>
-              )
-            }
-            {
               activeChats.length === 0 && (
-                <View style={{backgroundColor: theme.cardBackground}} className='items-center rounded-xl mx-5 py-3'>
+                <View style={{backgroundColor: theme.cardBackground}} className='items-center rounded-xl mx-5 py-3 mt-3'>
                   <Text style={{color: theme.text}}  className='px-5 text-center mb-2'>It looks like you haven’t connected with a mentor yet. Find someone to chat with when you’re ready.</Text>
                   <Pressable onPress={() => {router.push('../selectMentor');}}>
                     <Text style={{fontSize: hp(1.8), color: theme.header}} className='font-bold'>Connect with Mentor</Text>
@@ -89,6 +81,15 @@ const Chats = () => {
                 </View>
               )
             }
+            {
+              inactiveChats.length > 0 && (
+                <>
+                  <Text style={{color: theme.text}} className='text-center text-lg font-bold mt-3 italic'>Inactive Chats</Text>
+                  <ChatList currentUser={user} users={inactiveChats}/>
+                </>
+              )
+            }
+            
           </View>
         )
       }

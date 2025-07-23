@@ -9,7 +9,7 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 import CustomKeyboardView from '../../../components/CustomKeyboardView'
 import {useAuth} from '../../../context/authContext'
 import { getRoomId } from '../../../components/common';
-import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderBy, query, serverTimestamp, setDoc, Timestamp, updateDoc, where, writeBatch } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 import { useChatContext } from '../../../context/chatContext';
 import { Colors } from '../../../constants/Colors';
@@ -28,6 +28,7 @@ const ChatRoom = () => {
 
     const fromRoom = item?.fromRoom || null;
     const keepChat = item?.keepChat === 'true'; // Convert string to boolean
+    const prevMentorId = item?.prevMentorId || null;
 
     const [isActive, setIsActive] = useState(true);
     const [chatEndDate, setChatEndDate] = useState(null);
@@ -90,35 +91,143 @@ const ChatRoom = () => {
                 active: true
             });
 
-            if (fromRoom && keepChat) {
-                console.log('Transferring Chat...');
-                
-                const oldMessagesSnap = await getDocs(collection(db, 'rooms', fromRoom, 'messages'));
-                const batch = writeBatch(db);
+            await transferChat();
+        } else {
+            const data = roomSnap.data();
 
-                oldMessagesSnap.forEach((message) => {
-                    const data = message.data();
-
-                    if (data?.subType === 'removed') return;
-
-                    const isPrevMentor = data.userId !== item.userId && data.userId !== user.userId;
-
-                    batch.set(doc(db, 'rooms', roomId, 'messages', message.id), {
-                        ...data,
-                        fromPreviousMentor: isPrevMentor
-                    });
-                });
-
-                batch.set(doc(db, 'rooms', roomId, 'messages', 'sys-divider'), {
-                    text: `This chat has been handed over successfully 😊.${'\n'}This is the beginning of your new chat`,
-                    type: 'system',
-                    subType: 'handover',
-                    createdAt: Timestamp.now(),
-                    senderName: 'system'
-                });
-
-                await batch.commit();
+            if (!data.active && fromRoom && keepChat) {
+                Alert.alert('Chat Closed', 'This chat has been closed by you previously. Do you want to reopen this chat?', 
+                    [
+                        {
+                            text: 'Select another mentor',
+                            onPress: () => {
+                                router.replace({
+                                    pathname: '/selectMentor',
+                                    params: {
+                                        fromRoom,
+                                        keepChat,
+                                        prevMentorId
+                                    }
+                                })
+                            }
+                        },
+                        {
+                            text: 'Reopen',
+                            onPress: async () => {await reopenChat();}
+                        }
+                    ]
+                );
+            } else if (!data.active && prevMentorId) {
+                const roomsRef = collection(db, 'rooms');
+                const q = query(roomsRef, 
+                    where('participants', 'array-contains', user.userId),
+                    where('active', '==', true)
+                );
+                const snapShot = await getDocs(q);
+    
+                if (snapShot.empty) {
+                    Alert.alert('Chat Closed', 'This chat has been closed by you previously. Do you want to reopen this chat?', 
+                    [
+                        {
+                            text: 'Select another mentor',
+                            onPress: () => {
+                                router.replace({
+                                    pathname: '/selectMentor',
+                                    params: {
+                                        fromRoom,
+                                        keepChat,
+                                        prevMentorId
+                                    }
+                                })
+                            }
+                        },
+                        {
+                            text: 'Reopen',
+                            onPress: async () => {await reopenChat();}
+                        }
+                    ]
+                );
+                    return;
+                }
             }
+        }
+    }
+
+    const reopenChat = async () => {
+        await updateDoc(doc(db, 'rooms', roomId), {
+            active: true,
+            inactiveOn: null
+        });
+
+        await transferChat();
+
+        const messagesRef = collection(db, 'rooms', roomId, 'messages');
+        const snapShot = await getDocs(messagesRef);
+
+        const batchDeletions = snapShot.docs.filter(docSnap => {
+            const data = docSnap.data();
+            return data.subType === 'reopen';
+        });
+
+        const deletePromises = batchDeletions.map(docSnap => 
+            deleteDoc(doc(db, 'rooms', roomId, 'messages', docSnap.id))
+        );
+
+        await Promise.all(deletePromises);
+
+        const now = new Date();
+        console.log(now);
+        
+        const dateString = now.toLocaleString('en-SG', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        
+        await addDoc(collection(db, 'rooms', roomId, 'messages'), {
+            text: `Chat reopened on ${dateString}`,
+            type: 'system',
+            subType: 'reopen',
+            createdAt: Timestamp.now(),
+            senderName: 'system'
+        });
+
+        Alert.alert('Chat Reopened', 'This chat has been reopened successfully');
+    }
+
+    const transferChat = async () => {
+        if (fromRoom && keepChat) {
+            console.log('Transferring Chat...');
+            
+            const oldMessagesSnap = await getDocs(collection(db, 'rooms', fromRoom, 'messages'));
+            const batch = writeBatch(db);
+
+            oldMessagesSnap.forEach((message) => {
+                const data = message.data();
+
+                if (data?.subType === 'removed') return;
+
+                const isPrevMentor = data.userId !== item.userId && data.userId !== user.userId;
+
+                batch.set(doc(db, 'rooms', roomId, 'messages', message.id), {
+                    ...data,
+                    fromPreviousMentor: isPrevMentor
+                });
+            });
+
+            batch.set(doc(db, 'rooms', roomId, 'messages', 'sys-divider'), {
+                text: `This chat has been handed over successfully 😊.${'\n'}This is the beginning of your new chat`,
+                type: 'system',
+                subType: 'handover',
+                createdAt: Timestamp.now(),
+                senderName: 'system'
+            });
+
+            await batch.commit();
         }
     }
 
@@ -180,7 +289,7 @@ const ChatRoom = () => {
   return (
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate}/>
+            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate} currentUser={user}/>
             <View style={{backgroundColor: theme.chatRoomBorder}} className='h-0.5 border-b border-neutral-300' />
             <View style={{backgroundColor: theme.chatRoomBackground}} className='flex-1 justify-between overflow-visible'>
                 <View className='flex-1'>
