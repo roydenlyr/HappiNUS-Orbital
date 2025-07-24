@@ -44,13 +44,14 @@ const CustomToastConfig = {
       text2Style={{ fontSize: hp(1.5) }}
     />
   ),
-  customAlert: ({ text1, text2, props }) => (
+  customAlert: ({ text1, text2, props, onPress }) => (
     <CustomAlertToast
       type={props.type}
       text1={text1}
       text2={text2}
       actionLabel={props.actionLabel}
       onAction={props.onAction}
+      onPress={onPress}
     />
   )
 };

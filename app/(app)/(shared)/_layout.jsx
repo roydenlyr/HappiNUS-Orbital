@@ -47,7 +47,8 @@ const SharedLayout = () => {
     <Stack
       screenOptions={{
         headerStyle: {backgroundColor: theme.homeHeaderBackground},
-        headerTintColor: theme.header
+        headerTintColor: theme.header,
+        animation: 'fade'
       }}
     >
         <Stack.Screen name='profile' 

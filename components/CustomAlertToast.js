@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const colors = {
   success: '#15803D',   // Dark green (darker than #22C55E)
@@ -30,11 +30,12 @@ const textBg = {
     warning: '#FEF3C7'   // Light amber yellow
 }
 
-const CustomAlertToast = ({ type, text1, text2, onAction, actionLabel }) => {
+const CustomAlertToast = ({ type, text1, text2, onAction, actionLabel, onPress }) => {
   const color = colors[type] || '#3B82F6';
   const icon = icons[type] || 'information-circle';
 
   return (
+    <TouchableOpacity onPress={onPress}>
     <View style={{
       flexDirection: 'column',
       backgroundColor: `${bgColorMap[type]}`,
@@ -44,17 +45,18 @@ const CustomAlertToast = ({ type, text1, text2, onAction, actionLabel }) => {
       padding: 12,
       marginHorizontal: 10,
     }}>
-      <View className='flex-row items-center justify-center gap-5'>
-        <View className='items-center justify-center'>
+      <View className='flex-row justify-center gap-5' style={{minWidth: wp(70)}}>
+        <View className='items-start justify-center'>
             <Ionicons name={icon} size={hp(3)} color={color} />
         </View>
         
-        <View>
+        <View className='flex-1'>
             <Text className='self-center font-extrabold' style={{fontSize: hp(2), color}}>{text1}</Text>
             <Text className='font-semibold rounded-full px-2 text-center' style={{fontSize: hp(1.5), color, backgroundColor: textBg[type]}}>{text2}</Text>
         </View>
       </View>
     </View>
+    </TouchableOpacity>
   );
 };
 

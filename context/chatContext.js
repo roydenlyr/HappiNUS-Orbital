@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { collection, doc, limit, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import { db, roomRef } from '@/firebaseConfig';
 import Toast from 'react-native-toast-message';
+import { useUserList } from './userListProvider';
 
 const ChatContext = createContext();
 
@@ -11,6 +12,13 @@ export const ChatContextProvider = ({ children }) => {
   const [activeRoomId, setActiveRoomId] = useState(null);
   const { user: currentUser } = useAuth();
   const router = useRouter();
+
+  const {chatUsers} = useUserList();
+
+  const extractOtherUserId = (roomId, currentUserId) => {
+    const ids = roomId.split('-');
+    return ids.find(id => id !== currentUserId);
+  }
 
   useEffect(() => {
   if (!currentUser?.userId) return;
@@ -31,7 +39,7 @@ export const ChatContextProvider = ({ children }) => {
         const msg = docSnap?.data();
         const msgId = docSnap?.id;
 
-        if (!msg || msg.userId === currentUser.userId || msg.notificationSent) return;
+        if (!msg || msg.userId === currentUser.userId || msg.notificationSent || msg?.delete === currentUser.userId) return;
 
         const roomData = roomDoc.data();
         const lastSeen = roomData?.lastSeen?.[currentUser.userId]?.toMillis?.();
@@ -41,21 +49,32 @@ export const ChatContextProvider = ({ children }) => {
             const messageDocRef = doc(db, 'rooms', roomId, 'messages', msgId);
             await updateDoc(messageDocRef, { notificationSent: true });
 
+            const otherUserId = extractOtherUserId(roomId, currentUser.userId);
+            const otherUser = chatUsers.find(user => user.userId === otherUserId) || {
+              userId: otherUserId,
+              username: 'Account Deleted',
+              profileUrl: (
+                currentUser.role === 'mentor' ?
+                  'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile2.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23' :
+                  'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23'
+              )
+            }
+
             Toast.show({
             type: 'customAlert',
             text1: `New message from ${msg.senderName}`,
             text2: msg.text,
             position: 'top',
             props: {
-              type: 'info'
+              type: 'info',
             },
             onPress: () => {
                 router.push({
                 pathname: '/chatRoom',
                 params: {
-                    userId: msg.userId,
-                    username: msg.senderName,
-                    profileUrl: encodeURIComponent(msg.profileUrl),
+                    userId: (msg.senderName === 'system' ? otherUserId : msg.userId),
+                    username: (msg.senderName === 'system' ? otherUser.username : msg.senderName),
+                    profileUrl: encodeURIComponent(msg.senderName === 'system' ? otherUser.profileUrl : msg.profileUrl),
                     role: (currentUser.role === 'mentor' ? 'student' : 'mentor')
                 },
                 });

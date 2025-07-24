@@ -24,7 +24,6 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     const [text, setText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
 
-
     const router = useRouter();
     
     const theme = Colors[useColorScheme()] ?? Colors.light;
@@ -138,22 +137,6 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
             try {
                 const rephrased = await rephraseMessage(textRef.current);
                 console.log('Rephrased text: ', rephrased);
-                // Alert.alert('Rephrased', rephrased,
-                //     [{
-                //         text: 'Dismiss',
-                //         style: 'cancel'
-                //     },
-                //     {
-                //         text: 'Use',
-                //         onPress: () => {
-                            // textRef.current = rephrased;
-                            // if (inputRef?.current){
-                            //     inputRef.current.setNativeProps({text: rephrased});
-                            // }
-                //         }
-                // }],
-                // {cancelable: true}
-                // );
                 setHeader('Rephrased');
                 setText(rephrased);
                 setModalVisible(true);
@@ -170,7 +153,8 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
 
     const handleEndChat = () => {
         setEndChatLoading(true);
-        Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed? This action is permanent and cannot be undone.', [{
+        const warn = user?.deleted ? 'This chat history can’t be reopened or transferred once you proceed. To preserve it, please select a new mentor' : 'This action is permanent and cannot be undone.';
+        Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed? \n\n' + warn, [{
             text: 'Dismiss',
         }, {
             text: 'Proceed',
@@ -277,9 +261,34 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 </View>
             ),
             headerRight: () => {
-                if (!isActive && chatEndDate) {
-                    if (user?.role === 'student') return null;
 
+                if (user?.role === 'student') {
+                    return (
+                        <View className='flex-row items-center gap-8'>
+                            {
+                                rephraseLoading || summaryLoading ? (
+                                    <LoadingSmile size={hp(8)}/>
+                                ) : (
+                                    <>
+                                        {
+                                            isActive && (
+                                                <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
+                                                    <FontAwesome name='stack-exchange' size={hp(2.8)} color={theme.icon}/>
+                                                </Pressable>
+                                            )
+                                        }
+                                        
+                                        <Pressable onPress={handleSummary} disabled={summaryLoading}>
+                                            <Feather name='clipboard' size={hp(2.8)} color={theme.icon}/>
+                                        </Pressable>
+                                    </>
+                                )
+                            }
+                        </View>
+                    )
+                }
+                
+                if (!isActive && chatEndDate && !user?.deleted) {
                     return (
                         <Pressable onPress={handleReopenChat} disabled={reopenChatLoading} className='self-end'>
                             {
@@ -290,54 +299,31 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                                 )
                             }
                         </Pressable>
-                    )
-                };
+                    )                    
+                }
 
-                if (user?.role === 'student') {
-                return (
-                <View className='flex-row items-center gap-8'>
-                    <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
-                        {
-                            rephraseLoading ? (
-                                <LoadingSmile size={hp(8)}/>
-                            ) : (
-                                <FontAwesome name='stack-exchange' size={hp(2.8)} color={theme.icon}/>
-                            )
-                        }
-                    </Pressable>
-                    <Pressable onPress={handleSummary} disabled={summaryLoading}>
-                        {
-                            summaryLoading ? (
-                                <LoadingSmile size={hp(8)}/>
-                            ) : (
-                                <Feather name='clipboard' size={hp(2.8)} color={theme.icon}/>
-                            )
-                        }
-                    </Pressable>
-                </View>
-            ) } else { return (
-                <View className='flex-row items-center gap-8'>
-                    <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
-                        {
-                            changeLoading ? (
-                                <LoadingSmile size={hp(8)}/>
-                            ) : (
-                                <MaterialIcons name='switch-account' size={hp(2.8)}  color={theme.icon}/>
-                            )
-                        }
-                    </Pressable>
-                    <Pressable onPress={handleEndChat} disabled={endChatLoading}>
-                        {
-                            endChatLoading ? (
-                                <LoadingSmile size={hp(8)}/>
-                            ) : (
-                                <Octicons name='x-circle' size={hp(2.8)}  color={theme.icon}/>
-                            )
-                        }
-                    </Pressable>
-                </View>
-            )}
-    }}} />
+                if (isActive || (user?.deleted && !isActive && chatEndDate === undefined)) {
+                    return (
+                        <View className='flex-row items-center gap-8'>
+                            {
+                                changeLoading || endChatLoading ? (
+                                    <LoadingSmile size={hp(8)}/>
+                                ) : (
+                                    <>
+                                        <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
+                                            <MaterialIcons name='switch-account' size={hp(2.8)}  color={theme.icon}/>
+                                        </Pressable>
+                                        <Pressable onPress={handleEndChat} disabled={endChatLoading}>
+                                            <Octicons name='x-circle' size={hp(2.8)}  color={theme.icon}/>
+                                        </Pressable>
+                                    </> 
+                                )
+                            }
+                        </View>
+                    )
+                }
+            }
+    }} />
     <ModalAlert 
         isVisible={modalVisible}
         header={header}

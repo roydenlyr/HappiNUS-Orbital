@@ -1,5 +1,5 @@
 import { View, Text, Alert, useColorScheme, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useAuth } from '../../../../context/authContext';
 import { doc, getDoc } from 'firebase/firestore';
@@ -14,7 +14,7 @@ import { SYMPTOMS, COPING_TECHNIQUES } from '../../../../constants/Data';
 import TitleCard from '../../../../components/TitleCard';
 import Modal from 'react-native-modal';
 import ModalCard from '../../../../components/ModalCard';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 
 const Home = () => {
 
@@ -29,6 +29,9 @@ const Home = () => {
   const [cardsSelection, setCardsSelection] = useState(SYMPTOMS);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
+
+  const [resourceLoading, setResourceLoading] = useState(false);
+  const [contactsLoading, setContactsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -132,6 +135,13 @@ const Home = () => {
     setSelectedCard(item);
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      setContactsLoading(false);
+      setResourceLoading(false);
+    }, [])
+  )
+
   return (
     <View style={{backgroundColor: theme.appBackground}} className='items-center pt-5  flex-1 justify-center'>
       <View style={{width: wp(90)}}>
@@ -148,13 +158,13 @@ const Home = () => {
           </View>
           
           <View className='flex-1 justify-center items-center gap-5 -ml-6'>
-            <TouchableOpacity onPress={() => router.push('/resources')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
+            <TouchableOpacity onPress={() => {setResourceLoading(true); router.push('/resources');}} disabled={resourceLoading} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
                 <Feather name='info' size={hp(2.3)} color={theme.textContrast}/> 
                 <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3), color: theme.textContrast}}>Resources</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('/contacts')} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
+            <TouchableOpacity onPress={() => {setContactsLoading(true); router.push('/contacts')}} disabled={contactsLoading} style={{backgroundColor: theme.button, height: hp(5)}} className='rounded-3xl justify-center items-center w-full'>
               <View className='flex-row justify-center items-center gap-3'>
                 <AntDesign name='contacts' size={hp(2.3)} color={theme.textContrast}/>
                 <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), fontSize: hp(2.3), color: theme.textContrast}}>Contacts</Text>

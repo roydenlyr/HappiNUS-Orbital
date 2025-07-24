@@ -39,7 +39,7 @@ const HomeHeader = () => {
 
   return (
     <View style={{backgroundColor: theme.appBackground}}>
-    <View style={{paddingTop: ios? top : top + 10, backgroundColor: theme.homeHeaderBackground}} className='flex-row justify-between px-5 pb-6 rounded-b-3xl' >
+    <View style={{paddingTop: ios? top : top + 10, backgroundColor: theme.homeHeaderBackground}} className='flex-row justify-between px-5 pb-6' >
       <View className='justify-center flex-1 items-center -my-20'>
         {
           colorScheme === 'light' ? (
