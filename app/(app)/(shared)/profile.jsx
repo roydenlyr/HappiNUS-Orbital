@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Alert, ScrollView, Keyboard, useColorScheme } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, Alert, ScrollView, useColorScheme } from 'react-native'
+import React, { useState } from 'react'
 import { Image } from 'expo-image'
 import { useAuth } from '../../../context/authContext'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -14,8 +14,8 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import * as FileSystem from 'expo-file-system';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
-import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Colors } from '../../../constants/Colors';
+import { LoadingSmile } from '../../../components/Animation';
 
 const Profile= () => {
 
@@ -23,9 +23,11 @@ const Profile= () => {
     const [profilePicture, setProfilePicture] = useState(user?.profileUrl);
     const [showChangePw, setShowChangePw] = useState(false);
 
-    const passwordRef = useRef("");
-    const newPasswordRef = useRef("");
-    const confirmPasswordRef = useRef("");
+    const [currentPw, setCurrentPw] = useState('');
+    const [newPw, setNewPw] = useState('');
+    const [confirmPw, setConfirmPw] = useState('');
+    const [changePwLoading, setChangePwLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
 
     const theme = Colors[useColorScheme()] ?? Colors.light;
 
@@ -92,25 +94,36 @@ const Profile= () => {
     };
 
     const changePassword = async () => {
-        if (!passwordRef.current || !newPasswordRef.current || !confirmPasswordRef.current){
+        if (!currentPw || !newPw || !confirmPw){
             Alert.alert('Change Password', 'Please fill in all the fields!');
             return;
         }
-        if (newPasswordRef.current !== confirmPasswordRef.current){
+        if (newPw !== confirmPw){
             Alert.alert('Change Password', 'Password do not match!');
             return;
         }
 
         try {
-            const credential = EmailAuthProvider.credential(user?.email, passwordRef.current);
+            setChangePwLoading(true);
+            const credential = EmailAuthProvider.credential(user?.email, currentPw);
             await reauthenticateWithCredential(auth.currentUser, credential);
+            
+            if (currentPw === newPw) {
+                Alert.alert('Password Unchanged', 'Your new password is the same as your current one. Please choose a different password.');
+                return;
+            }
 
-            await updatePassword(auth.currentUser, newPasswordRef.current);
+            await updatePassword(auth.currentUser, newPw);
             Alert.alert('Success', 'Password updated successfully!');
             setShowChangePw(false);
         } catch (error) {
-            console.error(error);
-            Alert.alert('Error', error.message);
+            // console.error(error);
+            Alert.alert('Invalid Password', 'The password entered is incorrect. Please try again.');
+        } finally {
+            setCurrentPw('');
+            setNewPw('');
+            setConfirmPw('');
+            setChangePwLoading(false);
         }
 
     }
@@ -122,6 +135,7 @@ const Profile= () => {
             text: 'Proceed',
             onPress: () => proceedWithDeletion()
         }])
+        setDeleteLoading(false);
     }
 
     const proceedWithDeletion = async () => {
@@ -145,10 +159,13 @@ const Profile= () => {
         } catch (error) {
             console.error('Error checking student chat: ', error);
             Alert.alert('Error', 'Could not complete deletion');
+        } finally {
+            setDeleteLoading(false);
         }
     }
 
     const handleForceDelete = async (docs, userId) => {
+        setDeleteLoading(true);
         try {
             for (const docSnap of docs) {
                 const roomRef = doc(db, 'rooms', docSnap.id);
@@ -163,7 +180,8 @@ const Profile= () => {
                     subType: 'removed',
                     text: '⚠️ This user account has been deleted.',
                     createdAt: Timestamp.now(),
-                    senderName: 'system'
+                    senderName: 'system',
+                    delete: user.userId
                 });
             }
 
@@ -175,6 +193,7 @@ const Profile= () => {
     }
 
     const callDeleteAccount = async (userId) => {
+        setDeleteLoading(true);
         try {
             const deleteUser = httpsCallable(functions, 'deleteAccount');
             const result = await deleteUser({userId: userId});
@@ -186,6 +205,8 @@ const Profile= () => {
         } catch (error) {
             console.error('User deletion error: ', error);
             Alert.alert('Error', error?.message || 'Failed to delete user.');
+        } finally {
+            setDeleteLoading(false);
         }
     }
 
@@ -231,23 +252,38 @@ const Profile= () => {
                             <Text className='font-semibold' style={{fontSize: hp(2), color: theme.text}}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
-                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => passwordRef.current = value} label={'Current Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => newPasswordRef.current = value} label={'New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TextInput activeOutlineColor={theme.selectionActive} onChangeText={value => confirmPasswordRef.current = value} label={'Confirm New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
-                    <TouchableOpacity onPress={() => changePassword()} style={{backgroundColor: theme.button}} className='rounded-xl items-center flex-1 p-2'>
-                        <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Confirm</Text>
-                    </TouchableOpacity>
+                    <TextInput value={currentPw} activeOutlineColor={theme.selectionActive} onChangeText={value => setCurrentPw(value)} label={'Current Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    <TextInput value={newPw} activeOutlineColor={theme.selectionActive} onChangeText={value => setNewPw(value)} label={'New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    <TextInput value={confirmPw} activeOutlineColor={theme.selectionActive} onChangeText={value => setConfirmPw(value)} label={'Confirm New Password'} mode='outlined' fontSize={hp(2)} secureTextEntry></TextInput>
+                    {
+                        changePwLoading ? (
+                            <View className='justify-center items-center'>
+                                <LoadingSmile size={hp(15)}/>
+                            </View>
+                        ) : (
+                            <TouchableOpacity onPress={() => changePassword()} style={{backgroundColor: theme.button}} className='rounded-xl items-center flex-1 p-2'>
+                                <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Confirm</Text>
+                            </TouchableOpacity>
+                        )
+                    }
                 </View>
             )
         }
         {
             user?.role === 'student' && (
-                <View className='justify-end items-end'>
-                <TouchableOpacity onPress={handleDeleteAccount} style={{backgroundColor: theme.deactivateButton}} className='rounded-xl mt-3 justify-center items-center flex-row gap-1 p-2'>
-                    <Text style={{fontSize: hp(1.5), color: theme.textContrast}} className='font-medium'>Delete Account</Text>
-                    <MaterialIcons name='delete-outline' size={hp(2)} color={theme.textContrast}/>
-                </TouchableOpacity>
-                </View>
+                deleteLoading ? (
+                    <View className='items-center justify-center'>
+                        <LoadingSmile size={hp(20)} />
+                        <Text style={{color: theme.header, fontSize: hp(2)}} className='-mt-10'>Loading</Text>
+                    </View>
+                ) : (
+                    <View className='justify-end items-end'>
+                        <TouchableOpacity onPress={handleDeleteAccount} style={{backgroundColor: theme.deactivateButton}} className='rounded-xl mt-3 justify-center items-center flex-row gap-1 p-2'>
+                            <Text style={{fontSize: hp(1.5), color: theme.textContrast}} className='font-medium'>Delete Account</Text>
+                            <MaterialIcons name='delete-outline' size={hp(2)} color={theme.textContrast}/>
+                        </TouchableOpacity>
+                    </View>
+                )
             )
         }
         {

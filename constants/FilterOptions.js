@@ -10,5 +10,5 @@ export const FACULTY = [
     'NUS Business School',
     'Faculty of Arts and Social Sciences',
     'Yong Loo Lin School of Medicine',
-    'Faculty of Law'
+    'Faculty of Law',
 ]

@@ -35,6 +35,7 @@ const EditMentor = () => {
     const router = useRouter();
     
     const [loading, setLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
     const [enableEdit, setEnableEdit] = useState(false);
     const [faculty, setFaculty] = useState(mentor.faculty);
     const [gender, setGender] = useState(mentor.gender);
@@ -51,10 +52,12 @@ const EditMentor = () => {
         }, {
             text: 'Proceed',
             onPress: () => proceedWithDeletion()
-        }])
+        }]);
+        setDeleteLoading(false);
     }
 
     const proceedWithDeletion = async () => {
+        setDeleteLoading(true);
         try {
             const roomQuery = query(collection(db, 'rooms'), 
                 where('participants', 'array-contains', mentor.userId),
@@ -206,21 +209,19 @@ const EditMentor = () => {
                             <TextInput editable={enableEdit} keyboardType='numeric' maxLength={4} value={matricYear} onChangeText={setMatricYear} style={{fontSize: hp(2), color: (enableEdit ? theme.text : 'gray')}} className='flex-1 text-neutral-700' placeholder={`Matriculation Year: ${mentor.matricYear}`} placeholderTextColor={'gray'}  />
                         </View>
                         {
-                            loading ? (
-                                <View className='justify-center items-center'>
-                                    <LoadingSmile size={hp(10)}/>
+                            loading || deleteLoading ? (
+                                <View className='justify-center items-center -mt-16'>
+                                    <LoadingSmile size={hp(20)}/>
                                 </View>
                             ) : enableEdit && (
-                                <TouchableOpacity onPress={handleUpdate} style={{backgroundColor: theme.activateButton}} className='rounded-xl p-3 justify-center items-center'>
-                                    <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Update Mentor</Text>
-                                </TouchableOpacity>
-                            )
-                        }
-                        {
-                            enableEdit && (
-                                <TouchableOpacity onPress={handleDelete} style={{backgroundColor: theme.deactivateButton}} className='rounded-xl p-3 justify-center items-center'>
-                                    <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Delete mentor</Text>
-                                </TouchableOpacity>
+                                <View className='justify-center items-center gap-2'>
+                                    <TouchableOpacity onPress={handleUpdate} style={{backgroundColor: theme.activateButton}} className='rounded-xl p-3 justify-center items-center w-full'>
+                                        <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Update Mentor</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={handleDelete} style={{backgroundColor: theme.deactivateButton}} className='rounded-xl p-3 justify-center items-center w-full'>
+                                        <Text className='font-semibold' style={{fontSize: hp(2), color: theme.textContrast}}>Delete mentor</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )
                         }
                         

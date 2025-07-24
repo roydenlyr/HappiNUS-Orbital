@@ -29,7 +29,7 @@ const ModalCard = ({card, cards, closeModal}) => {
     const router = useRouter();
 
   return (
-    <View style={{width: wp(80), height: hp(60), maxWidth: 600, borderRadius: 20, backgroundColor: theme.modalCardBackground}} className='items-center p-2'>
+    <View style={{width: wp(80), height: hp(60), maxWidth: 600, borderRadius: 20, backgroundColor: theme.modalCardBackground}} className='items-center py-2 px-4'>
         <ScrollView className='flex-1 w-full' showsVerticalScrollIndicator={false}>
         <Text style={{fontFamily: (fontsLoaded ? 'Poppins_500Medium': undefined), fontSize: hp(2), color: theme.text}}>{card?.title}</Text>
         <Text style={{textAlign: 'justify', color: theme.text}}>{card?.content}</Text>

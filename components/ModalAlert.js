@@ -37,11 +37,16 @@ const ModalAlert = ({header, text, isVisible, theme, onClose, onUse}) => {
                     ) : (
                         <View className='flex-row justify-end items-center gap-3 mt-3'>
                             <TouchableOpacity onPress={onClose} style={{backgroundColor: theme.button}} className='p-3 rounded-xl justify-center items-center flex-1'>
-                                <Text style={{color: theme.textContrast, fontSize: hp(1.8)}}>Cancel</Text>
+                                <Text style={{color: theme.textContrast, fontSize: hp(1.8)}}>Dismiss</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={onUse} style={{backgroundColor: theme.button}} className='p-3 rounded-xl justify-center items-center flex-1'>
-                                <Text style={{color: theme.textContrast, fontSize: hp(1.8)}}>Use</Text>
-                            </TouchableOpacity>
+                            {
+                                !text.includes('This message cannot be rephrased because it does not appear to be a peer support context.') && (
+                                    <TouchableOpacity onPress={onUse} style={{backgroundColor: theme.button}} className='p-3 rounded-xl justify-center items-center flex-1'>
+                                        <Text style={{color: theme.textContrast, fontSize: hp(1.8)}}>Use</Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+                            
                         </View>
                     )
                 }
