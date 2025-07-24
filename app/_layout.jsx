@@ -10,6 +10,7 @@ import CustomToastConfig from '../components/CustomToastConfig'
 import { ChatContextProvider } from '../context/chatContext';
 import { StatusBar } from 'expo-status-bar'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 const MainLayout = () => {
   const {isAuthenticated, user} = useAuth();
@@ -41,7 +42,9 @@ const MainLayout = () => {
   }, [isAuthenticated, router, segments, user])
 
   return (
-    <Slot/>
+    <SafeAreaProvider>
+      <Slot/>
+    </SafeAreaProvider>
   )
 }
 

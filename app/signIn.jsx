@@ -80,7 +80,7 @@ const SignIn = () => {
           <View className='gap-4'>
             <View style={{height: hp(7), backgroundColor: theme.selectionInactive}} className='flex-row gap-4 px-4 items-center rounded-xl'>
               <Octicons name='mail' size={hp(2.7)} color={'gray'}/>
-              <TextInput onChangeText={value => emailRef.current = value} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold' placeholder='Email Address' placeholderTextColor={'gray'}/>
+              <TextInput onChangeText={value => emailRef.current = value.trim()} style={{fontSize: hp(2), color: theme.text}} className='flex-1 font-semibold' placeholder='Email Address' placeholderTextColor={'gray'}/>
             </View>
 
             <View className='gap-2'>

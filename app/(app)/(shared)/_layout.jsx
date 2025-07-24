@@ -56,6 +56,7 @@ const SharedLayout = () => {
           title: 'Edit Profile', 
           headerShadowVisible: false,
           headerBackTitle: 'Back',
+          headerTitleAlign: 'center',
           headerLeft: () => (
             <TouchableOpacity onPress={goBackHome}>
               <Ionicons name='home' size={hp(2.3)} color={theme.header} />

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Feather } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import * as Location from 'expo-location';
-import { addDoc, collection, doc, getDocs, onSnapshot, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { addDoc, arrayUnion, collection, doc, getDocs, onSnapshot, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { db, usersRef } from '../../../../firebaseConfig';
 import { useAuth } from '../../../../context/authContext';
 import MapView, { Circle, Marker } from 'react-native-maps';
@@ -32,6 +32,8 @@ const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
 
+  const [activateLoading, setActivateLoading] = useState(false);
+
   const theme = Colors[useColorScheme()] ?? Colors.light;
 
   const [fontsLoaded] = useFonts({
@@ -44,6 +46,7 @@ const Home = () => {
 
   const handleAlert = async () => {
     if (activateAlert){
+      setActivateLoading(true);
       console.log('Alert activated...');
       
       let {status} = await Location.requestForegroundPermissionsAsync();
@@ -74,7 +77,8 @@ const Home = () => {
         triggeredBy: user.username,
         location: coords,
         locationName,
-        timestamp: Timestamp.now()
+        timestamp: Timestamp.now(),
+        notificationSent: [user.userId]
       });
 
       await updateDoc(doc(db, 'users', user.userId), {activeAlert: true});
@@ -88,6 +92,8 @@ const Home = () => {
           type: 'error',
         }
       });
+
+      setActivateLoading(false);
     } else if (activateAlert === false) {
         console.log('Deactivating Alert...');
         const q = query(
@@ -132,29 +138,34 @@ const Home = () => {
       const newAlert = activeAlerts.find(a => !previousAlertIds.includes(a.id));
 
       if (newAlert){
-
-      if (newAlert && newAlert.triggeredBy !== user.username){
-        Toast.show({
-        type: 'customAlert',
-        text1: 'New Red Alert',
-        text2: `Triggered by ${newAlert.triggeredBy}`,
-        position: 'top',
-        props: {
-          type: 'error'
-        },
-        onPress: () => {router.push('/(mentor)/(tabs)/home'); Toast.hide();}
-      });
-      }
+        if (newAlert && newAlert.triggeredBy !== user.username && !newAlert.notificationSent?.includes(user.userId)){
+          Toast.show({
+            type: 'customAlert',
+            text1: 'New Red Alert',
+            text2: `Triggered by ${newAlert.triggeredBy}`,
+            position: 'top',
+            props: {
+              type: 'error'
+            },
+            onPress: () => {router.push('/(mentor)/(tabs)/home'); Toast.hide();}
+          });
+          
+          (async () => {
+            await updateDoc(doc(db, 'alerts', newAlert.id), {
+              notificationSent: arrayUnion(user.userId)
+            });
+          })();
+        }
 
       if (mapRef.current && newAlert?.location) {
         mapRef.current.animateToRegion({
-        latitude: newAlert.location.latitude,
-        longitude: newAlert.location.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05
-      }, 500);
+          latitude: newAlert.location.latitude,
+          longitude: newAlert.location.longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05
+        }, 500);
+      }
     }
-  }
 
       setAlerts(activeAlerts);
       setPreviousAlertIds(activeAlerts.map(a => a.id))
@@ -202,8 +213,8 @@ const Home = () => {
   }
 
   return (
-    <View style={{backgroundColor: theme.appBackground}} className='flex-1 pt-5'>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flex: 1}}>
+    // <View style={{backgroundColor: theme.appBackground}} className='flex-1 pt-5'>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding: 20}} style={{backgroundColor: theme.appBackground}}>
         <View style={{width: wp(90)}} className='self-center'>
           <View className='mb-3 rounded-xl overflow-hidden'>
             <MapView key={alerts.map(a => a.id).join(',')} style={{height: hp(25), width: '100%'}} initialRegion={{
@@ -226,7 +237,7 @@ const Home = () => {
             activateAlert ? (
               <TouchableOpacity onPress={() => setToggleAlert(false)} style={{backgroundColor: theme.deactivateButton}} className='flex-row rounded-xl justify-center items-center gap-5 p-5'>
                 <Feather name='bell-off' size={hp(3)} color={theme.textContrast}/>
-                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), color: theme.textContrast, fontSize: hp(2.3)}}>Deactivate</Text>
+                <Text style={{fontFamily: (fontsLoaded ? 'Poppins_400Regular': undefined), color: theme.textContrast, fontSize: hp(2.3)}}>{activateLoading ? 'Activating...' : 'Deactivate'}</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={() => setToggleAlert(true)} style={{backgroundColor: theme.activateButton}} className='flex-row rounded-xl justify-center items-center gap-5 p-5'>
@@ -294,6 +305,7 @@ const Home = () => {
       }
       </View>
       { selectedCard && (
+        <View className='justify-center items-center'>
           <Modal
             isVisible={selectedCard}
             onBackdropPress={() => setSelectedCard(null)}
@@ -307,9 +319,10 @@ const Home = () => {
           >
             <ModalCard card={selectedCard} cards={cardsSelection} closeModal={() => setSelectedCard(null)}/>
           </Modal>
+        </View>
         )} 
         </ScrollView>
-    </View>
+    // </View>
   )
 }
 

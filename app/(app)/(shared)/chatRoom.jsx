@@ -13,10 +13,11 @@ import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, orderB
 import { db } from '../../../firebaseConfig';
 import { useChatContext } from '../../../context/chatContext';
 import { Colors } from '../../../constants/Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ChatRoom = () => {
     const item = useLocalSearchParams();
-    const {user} = useAuth();
+    const {user, refreshUser} = useAuth();
     const router = useRouter();
     const [messages, setMessages] = useState([]);
     const [otherUserLastSeen, setOtherUserLastSeen] = useState(null);
@@ -33,9 +34,12 @@ const ChatRoom = () => {
     const [isActive, setIsActive] = useState(true);
     const [chatEndDate, setChatEndDate] = useState(null);
 
+    const insets = useSafeAreaInsets();
+
     const theme = Colors[useColorScheme()] ?? Colors.light;
 
     useEffect(() => {
+        refreshUser();
         createRoomIfNotExists();
         
         setActiveRoomId(roomId);
@@ -289,7 +293,7 @@ const ChatRoom = () => {
   return (
     <CustomKeyboardView inChat={true}>
         <View className='flex-1'>
-            <ChatRoomHeader user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate} currentUser={user}/>
+            <ChatRoomHeader key={user?.activeAlert ?? user.userId} user={{...item, profileUrl: encodeURIComponent(item.profileUrl)}} roomId={roomId} messages={messages} textRef={textRef} inputRef={inputRef} isActive={isActive} chatEndDate={chatEndDate} currentUser={user}/>
             <View style={{backgroundColor: theme.chatRoomBorder}} className='h-0.5 border-b border-neutral-300' />
             <View style={{backgroundColor: theme.chatRoomBackground}} className='flex-1 justify-between overflow-visible'>
                 <View className='flex-1'>
@@ -297,7 +301,7 @@ const ChatRoom = () => {
                 </View>
                 {
                     isActive && (
-                        <View style={{marginBottom: hp(3)}} className='flex-row pt-2 justify-center items-center px-8'>
+                        <View style={{ paddingBottom: insets.bottom > 0 ? insets.bottom: 10}} className='flex-row pt-2 justify-center items-center px-8'>
                             <View style={{backgroundColor: theme.chatInputBackground}} className='flex-row justify-between border p-2 border-neutral-300 rounded-xl pl-5 mx-3'>
                                 <TextInput multiline={true} ref={inputRef} onChangeText={value => textRef.current = value} placeholder='Type message...' 
                                 style={{fontSize: hp(2), maxHeight: hp(20), overflow: 'scroll', color: theme.chatInputText}} className='flex-1 mr-2'/>

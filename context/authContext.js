@@ -125,7 +125,7 @@ export const AuthContextProvider = ({ children }) => {
 
             if (docSnap.exists()){
                 const data = docSnap.data();
-                setUser({...user, profileUrl: data.profileUrl});
+                setUser({...user, profileUrl: data.profileUrl, activeAlert: data.activeAlert});
             }
         } catch (error) {
             console.error('Failed to refresh user: ', error);
