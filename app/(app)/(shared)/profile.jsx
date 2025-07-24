@@ -68,16 +68,11 @@ const Profile= () => {
 
     const uploadImageToFirebase = async (uri, userId) => {
         try {
-            const base64 = await FileSystem.readAsStringAsync(uri, {
-            encoding: FileSystem.EncodingType.Base64,
-            });
+            const response = await fetch(uri);
+            const blob = await response.blob();
 
-            const blob = await fetch(`data:image/jpeg;base64,${base64}`).then(res => res.blob());
             const storage = getStorage(app);
-            const imageRef = ref(storage, `profilePictures/${userId}.jpg`);
-
-            console.log('Ref: ', imageRef);
-            
+            const imageRef = ref(storage, `profilePictures/${userId}.jpg`);            
 
             await uploadBytes(imageRef, blob);
             const downloadURL = await getDownloadURL(imageRef);

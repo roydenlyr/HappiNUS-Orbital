@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Pressable, Alert, useColorScheme } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { View, Text, TouchableOpacity, Pressable, Alert, useColorScheme, Platform } from 'react-native'
+import React, { use, useEffect, useRef, useState } from 'react'
 import { Stack, useRouter } from 'expo-router'
 import { AntDesign, Entypo, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -19,6 +19,13 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     const [changeLoading, setChangeLoading] = useState(false);
     const [endChatLoading, setEndChatLoading] = useState(false);
     const [reopenChatLoading, setReopenChatLoading] = useState(false);
+
+    const [rephraseButtonSize, setRephraseButtonSize] = useState({bottom: 15});
+    const [summaryButtonSize, setSummaryButtonSize] = useState({bottom: 15});
+    const [changeMentorButtonSize, setChangeMentorButtonSize] = useState({bottom: 15});
+    const [endChatButtonSize, setEndChatButtonSize] = useState({bottom: 15});
+    const [reopenButtonSize, setReopenButtonSize] = useState({bottom: 15});
+    const [backButtonSize, setBackButtonSize] = useState({bottom: 15});
 
     const [header, setHeader] = useState('');
     const [text, setText] = useState('');
@@ -230,6 +237,18 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
         }
     }
 
+    const generateHitSlopLayoutHandler = (setState) => (event) => {
+        const {height} = event.nativeEvent.layout;
+        const size = {
+            bottom: height
+        };
+        setState(size);
+    }
+
+    const setHitSlop = (state) => {
+        return Platform.OS === 'android' ? state : undefined
+    }
+
   return (
     <>
     <Stack.Screen 
@@ -243,12 +262,17 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 <View className='flex-row items-center gap-3 -ml-3'>
                     <TouchableOpacity
                     onPress={() => {
+                        console.log('Back button pressed');
+                        
                         if (user.role === 'mentor') {
                             router.navigate('/(student)/(tabs)/chats');
                         } else {
                             router.navigate('/(mentor)/(tabs)/chats');
                         }
-                    }}>
+                    }}
+                    onLayout={generateHitSlopLayoutHandler(setBackButtonSize)}
+                    hitSlop={setHitSlop(backButtonSize)}
+                    >
                         <Ionicons name='chevron-back-sharp' size={hp(3)} color={theme.icon} />
                     </TouchableOpacity>
                     <View className='flex-row items-center gap-3'>
@@ -272,15 +296,21 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                                     <>
                                         {
                                             isActive && (
-                                                <Pressable onPress={handleRephrase} disabled={rephraseLoading}>
+                                                <TouchableOpacity onPress={handleRephrase} disabled={rephraseLoading}
+                                                    onLayout={generateHitSlopLayoutHandler(setRephraseButtonSize)}
+                                                    hitSlop={setHitSlop(rephraseButtonSize)}
+                                                >
                                                     <FontAwesome name='stack-exchange' size={hp(2.8)} color={theme.icon}/>
-                                                </Pressable>
+                                                </TouchableOpacity>
                                             )
                                         }
                                         
-                                        <Pressable onPress={handleSummary} disabled={summaryLoading}>
+                                        <TouchableOpacity onPress={handleSummary} disabled={summaryLoading}
+                                            onLayout={generateHitSlopLayoutHandler(setSummaryButtonSize)}
+                                            hitSlop={setHitSlop(summaryButtonSize)}
+                                        >
                                             <Feather name='clipboard' size={hp(2.8)} color={theme.icon}/>
-                                        </Pressable>
+                                        </TouchableOpacity>
                                     </>
                                 )
                             }
@@ -290,7 +320,10 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                 
                 if (!isActive && chatEndDate && !user?.deleted) {
                     return (
-                        <Pressable onPress={handleReopenChat} disabled={reopenChatLoading} className='self-end'>
+                        <TouchableOpacity onPress={handleReopenChat} disabled={reopenChatLoading} className='self-end'
+                            onLayout={generateHitSlopLayoutHandler(setReopenButtonSize)}
+                            hitSlop={setHitSlop(reopenButtonSize)}
+                        >
                             {
                                 reopenChatLoading ? (
                                     <LoadingSmile size={hp(8)}/>
@@ -298,7 +331,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                                     <Ionicons name='chatbubble-outline' size={hp(2.8)} color={theme.icon}/>
                                 )
                             }
-                        </Pressable>
+                        </TouchableOpacity>
                     )                    
                 }
 
@@ -310,12 +343,18 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
                                     <LoadingSmile size={hp(8)}/>
                                 ) : (
                                     <>
-                                        <Pressable onPress={handleChangeMentor} disabled={changeLoading}>
+                                        <TouchableOpacity onPress={handleChangeMentor} disabled={changeLoading}
+                                            onLayout={generateHitSlopLayoutHandler(setChangeMentorButtonSize)}
+                                            hitSlop={setHitSlop(changeMentorButtonSize)}
+                                        >
                                             <MaterialIcons name='switch-account' size={hp(2.8)}  color={theme.icon}/>
-                                        </Pressable>
-                                        <Pressable onPress={handleEndChat} disabled={endChatLoading}>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={handleEndChat} disabled={endChatLoading}
+                                            onLayout={generateHitSlopLayoutHandler(setEndChatButtonSize)}
+                                            hitSlop={setHitSlop(endChatButtonSize)}
+                                        >
                                             <Octicons name='x-circle' size={hp(2.8)}  color={theme.icon}/>
-                                        </Pressable>
+                                        </TouchableOpacity>
                                     </> 
                                 )
                             }

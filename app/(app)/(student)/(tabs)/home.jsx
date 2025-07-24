@@ -216,19 +216,22 @@ const Home = () => {
           }
         </View>
         { selectedCard && (
-          <Modal
-            isVisible={selectedCard}
-            onBackdropPress={() => setSelectedCard(null)}
-            onBackButtonPress={() => setSelectedCard(null)}
-            hideModalContentWhileAnimating={true}
-            animationIn={'zoomIn'}
-            animationOut='fadeOut'
-            backdropOpacity={0.5}
-            propagateSwipe={true}
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
-          >
-            <ModalCard card={selectedCard} cards={cardsSelection} closeModal={() => setSelectedCard(null)}/>
-          </Modal>
+          <View className='justify-center items-center'>
+            <Modal
+              isVisible={selectedCard}
+              onBackdropPress={() => setSelectedCard(null)}
+              onBackButtonPress={() => setSelectedCard(null)}
+              hideModalContentWhileAnimating={true}
+              animationIn={'zoomIn'}
+              animationOut='fadeOut'
+              backdropOpacity={0.5}
+              propagateSwipe={true}
+              // statusBarTranslucent={true}
+              style={{ justifyContent: 'center', alignItems: 'center'}}
+            >
+              <ModalCard card={selectedCard} cards={cardsSelection} closeModal={() => setSelectedCard(null)}/>
+            </Modal>
+          </View>
         )}
     </View>
   )

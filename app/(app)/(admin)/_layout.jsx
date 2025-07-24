@@ -11,7 +11,8 @@ const AdminLayout = () => {
     <Stack
       screenOptions={{
         headerStyle: {backgroundColor: theme.homeHeaderBackground},
-        headerTintColor: theme.header
+        headerTintColor: theme.header,
+        headerTitleAlign: 'center',
       }}
     >
         <Stack.Screen name='(tabs)' options={{headerShown: false}}/>

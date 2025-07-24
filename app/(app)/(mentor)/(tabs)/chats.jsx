@@ -14,7 +14,7 @@ import { Colors } from '../../../../constants/Colors';
 const Chats = () => {
 
   const {chatUsers} = useUserList();
-  const {user} = useAuth();
+  const {user, refreshUser} = useAuth();
 
   const [activeChats, setActiveChats] = useState([]);
   const [inactiveChats, setInactiveChats] = useState([]);
@@ -53,12 +53,9 @@ const Chats = () => {
   }, [chatUsers]);
 
   useEffect(() => {
-    console.log('Active: ', activeChats);
-  }, [activeChats]);
+    refreshUser();
+  }, []);
 
-  useEffect(() => {
-    console.log('Inactive: ', inactiveChats);
-  }, [inactiveChats]);
 
   return (
     <View style={{backgroundColor: theme.appBackground}} className='flex-1'>

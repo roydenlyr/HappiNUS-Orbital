@@ -14,7 +14,8 @@ const StudentLayout = () => {
     <Stack 
       screenOptions={{
         headerStyle: {backgroundColor: theme.homeHeaderBackground,},
-        headerTintColor: theme.header
+        headerTintColor: theme.header,
+        headerTitleAlign: 'center',
         }}>
       <Stack.Screen name='(tabs)' options={{headerShown: false, title: ''}}/>
       <Stack.Screen name='selectMentor' options={{title: 'Choose Your Mentor'}}/>

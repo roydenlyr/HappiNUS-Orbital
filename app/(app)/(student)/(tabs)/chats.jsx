@@ -15,7 +15,7 @@ import { Colors } from '../../../../constants/Colors';
 const Chats = () => {
 
   const {chatUsers} = useUserList();
-  const {user} = useAuth();
+  const {user, refreshUser} = useAuth();
 
   const router = useRouter();
 
@@ -55,6 +55,10 @@ const Chats = () => {
     };
     fetchChatStatus();
   }, [chatUsers]);
+
+  useEffect(() => {
+      refreshUser();
+    }, []);
 
   return (
     <View className='flex-1' style={{backgroundColor: theme.appBackground}}>
