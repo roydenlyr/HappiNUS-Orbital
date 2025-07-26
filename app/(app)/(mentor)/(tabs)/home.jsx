@@ -47,7 +47,6 @@ const Home = () => {
   const handleAlert = async () => {
     if (activateAlert){
       setActivateLoading(true);
-      console.log('Alert activated...');
       
       let {status} = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted'){
@@ -95,7 +94,6 @@ const Home = () => {
 
       setActivateLoading(false);
     } else if (activateAlert === false) {
-        console.log('Deactivating Alert...');
         const q = query(
           collection(db, 'alerts'),
           where('active', '==', true),

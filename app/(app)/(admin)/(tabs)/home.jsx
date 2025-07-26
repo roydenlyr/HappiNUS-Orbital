@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Pressable, useColorScheme } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../../../../context/authContext';
 import { useRouter } from 'expo-router';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { arrayUnion, collection, doc, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../../../firebaseConfig';
 import Toast from 'react-native-toast-message';
 import MapView, { Marker } from 'react-native-maps';
@@ -42,12 +42,21 @@ const AdminHome = () => {
       if (newAlert) {
         if (newAlert && newAlert.triggeredBy !== user.username) {
           Toast.show({
-            type: 'info',
-            text1: '🚨 New Red Alert',
-            text2: `Triggered by ${newAlert.triggeredBy}`,
-            position: 'top',
-            onPress: () => {router.push('/(admin)/(tabs)/home'); Toast.hide();}
-          });
+                      type: 'customAlert',
+                      text1: 'New Red Alert',
+                      text2: `Triggered by ${newAlert.triggeredBy}`,
+                      position: 'top',
+                      props: {
+                        type: 'error'
+                      },
+                      onPress: () => {router.push('/(admin)/(tabs)/home'); Toast.hide();}
+                    });
+                    
+                    (async () => {
+                      await updateDoc(doc(db, 'alerts', newAlert.id), {
+                        notificationSent: arrayUnion(user.userId)
+                      });
+                    })();
         }
 
         if (mapRef.current && newAlert?.location) {

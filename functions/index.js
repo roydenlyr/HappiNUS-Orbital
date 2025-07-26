@@ -348,10 +348,6 @@ exports.summariseChat = functions
   exports.registerMentor = functions.https.onCall(async (data, context) => {
     const { email, password, username, faculty, gender, dob, matricYear } = data;
 
-    // if (!context.auth || context.auth.token.role !== 'admin') {
-    //   throw new functions.https.HttpsError('permission-denied', 'Only admins can register mentors.');
-    // }
-
     try {
       const userRecord = await admin.auth().createUser({
         email,

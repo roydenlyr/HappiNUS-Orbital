@@ -45,7 +45,6 @@ const Home = () => {
 
   const callUploadQuotes = async () => {
     try {
-      console.log('Uploading quotes...');
       const response = await fetch('https://us-central1-happinus-ba24a.cloudfunctions.net/uploadQuotes', {
         method: 'POST'
       });
@@ -56,9 +55,7 @@ const Home = () => {
         Alert.alert('Success', json.message);
       } else {
         Alert.alert('Error', json.message);
-      }
-      console.log('Upload Complete');
-      
+      }      
     } catch (error) {
       console.error('Failed to upload quotes:', error);
       Alert.alert('Error', error.message || 'An error occurred while uploading quotes.');

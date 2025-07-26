@@ -1,9 +1,11 @@
-import { Text, useColorScheme, View } from 'react-native'
+import { Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
 import HomeHeader from '../../../components/HomeHeader'
 import { Searchbar } from 'react-native-paper'
 import { Colors } from '../../../constants/Colors'
+import { Ionicons } from '@expo/vector-icons'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 const StudentLayout = () => {
 

@@ -39,7 +39,6 @@ const SignIn = () => {
     setLoading(true);
     const response = await login(emailRef.current, passwordRef.current);
     setLoading(false);
-    console.log('sign in response: ', response);
     if(!response.success){
       Alert.alert('Sign In', response.msg);
     }
@@ -55,7 +54,6 @@ const SignIn = () => {
       await sendPasswordResetEmail(auth, emailRef.current);
       Alert.alert('Reset Password', `A password reset link has been sent to ${emailRef.current}.`);
     } catch (error) {
-      console.log('Password reset error: ', error);
       Alert.alert('Reset Failed', error.message);
     }
   }
@@ -111,7 +109,7 @@ const SignIn = () => {
             {/* SignUp */}
             <View className='flex-row justify-center'>
               <Text style={{fontSize: hp(1.8)}} className='font-semibold text-neutral-500'>Don&apos;t have an account? </Text>
-              <Pressable onPress={() => {console.log('Navigating to Sign Up'); router.push('./signUp');}}>
+              <Pressable onPress={() => {router.push('./signUp');}}>
                 <Text style={{fontSize: hp(1.8), color: theme.header}} className='font-bold'>Sign Up</Text>
               </Pressable>
             </View>

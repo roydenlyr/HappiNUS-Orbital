@@ -52,7 +52,7 @@ const CustomAlertToast = ({ type, text1, text2, onAction, actionLabel, onPress }
         
         <View className='flex-1'>
             <Text className='self-center font-extrabold' style={{fontSize: hp(2), color}}>{text1}</Text>
-            <Text className='font-semibold rounded-full px-2 text-center' style={{fontSize: hp(1.5), color, backgroundColor: textBg[type]}}>{text2}</Text>
+            <Text className='font-semibold rounded-3xl px-2 text-center' style={{fontSize: hp(1.5), color, backgroundColor: textBg[type]}}>{text2}</Text>
         </View>
       </View>
     </View>

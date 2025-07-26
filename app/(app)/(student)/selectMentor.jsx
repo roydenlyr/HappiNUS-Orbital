@@ -1,13 +1,15 @@
 import { useMemo, useRef, useState } from 'react';
-import { Animated, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { Animated, Pressable, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MentorCard from '../../../components/MentorCard';
 import { useUserList } from '../../../context/userListProvider';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { Colors } from '../../../constants/Colors';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { FACULTY, GENDER } from '../../../constants/FilterOptions';
+import { useFocusEffect } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const SelectMentor = () => {
 
@@ -18,6 +20,9 @@ const SelectMentor = () => {
   const snapPoints = useMemo(() => ['10%', '50%', '70%', '100%'], []);
   const bottomSheetRef = useRef(null);
   const fadeAnimation = useRef(new Animated.Value(0)).current;
+  const [sheetIndex, setSheetIndex] = useState(1);
+
+  const navigation = useNavigation();
 
   const [selectedGenders, setSelectedGenders] = useState(Array(GENDER.length).fill(null));
   const [selectedFaculties, setSelectedFaculties] = useState(Array(FACULTY.length).fill(null));
@@ -30,6 +35,21 @@ const SelectMentor = () => {
     (activeFaculties.length === 0 || activeFaculties.includes(m.faculty)) && 
     m.userId !== prevMentorId
   );
+
+  const toggleSheet = () => {
+    const nextIndex = sheetIndex === 3 ? 1 : 3;
+    bottomSheetRef.current?.snapToIndex(nextIndex);
+  }
+
+  useFocusEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={toggleSheet}>
+          <Ionicons name='filter' size={hp(2.3)} color={theme.header}/>
+        </TouchableOpacity>
+      ),
+    });
+  })
 
   const handleGenderFilter = (index) => {
     const updatedSelections = [...selectedGenders];
@@ -57,6 +77,7 @@ const SelectMentor = () => {
   }
 
   const handleSheetChange = (index) => {
+    setSheetIndex(index);
     if (index > 1) {
       Animated.timing(fadeAnimation, {
         toValue: 1, 
@@ -89,7 +110,7 @@ const SelectMentor = () => {
           parallaxScrollingOffset: wp(25),
         }}
       />
-
+      
       <BottomSheet ref={bottomSheetRef} snapPoints={snapPoints} index={1} 
         backgroundStyle={{backgroundColor: theme.bottomSheetBackground}}
         handleIndicatorStyle={{backgroundColor: theme.header}} 
@@ -98,9 +119,11 @@ const SelectMentor = () => {
         )}
         onChange={(index) => handleSheetChange(index)}
       >
+        <Pressable disabled={sheetIndex > 1} onPress={() => bottomSheetRef.current?.snapToIndex(3)} >
         <BottomSheetView className='items-center'>
           <Text style={{color: theme.header}} className="text-lg font-bold mb-4 self-center">FILTER</Text>
         </BottomSheetView>
+        
         {
           // sheetIndex > 1 && (
           <Animated.View style={{opacity: fadeAnimation}}>
@@ -149,6 +172,7 @@ const SelectMentor = () => {
             </View>
           </Animated.View>
         }
+        </Pressable>
       </BottomSheet>
         
     </View>

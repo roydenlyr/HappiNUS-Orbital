@@ -40,7 +40,6 @@ const SignUp = () => {
     let response = await register(emailRef.current, passwordRef.current, usernameRef.current, 'https://firebasestorage.googleapis.com/v0/b/happinus-ba24a.firebasestorage.app/o/profilePictures%2Fsmile2.jpg?alt=media&token=54944b3f-caa7-4066-b8e1-784d4c341b23', 'student');
     setLoading(false);
 
-    console.log('got results: ', response);
     if (!response.success){
       Alert.alert('Sign Up', response.msg);
     }
@@ -99,7 +98,7 @@ const SignUp = () => {
             {/* SignIn */}
             <View className='flex-row justify-center'>
               <Text style={{fontSize: hp(1.8)}} className='font-semibold text-neutral-500'>Already have an account? </Text>
-              <Pressable onPress={() => {console.log('Navigating to Sign Ip'); router.push('./signIn');}}>
+              <Pressable onPress={() => {router.push('./signIn');}}>
                 <Text style={{fontSize: hp(1.8), color: theme.header}} className='font-bold'>Sign In</Text>
               </Pressable>
             </View>

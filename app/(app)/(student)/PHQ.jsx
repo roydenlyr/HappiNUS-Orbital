@@ -76,10 +76,7 @@ const PHQ = () => {
       else severity = 'Severe Anxiety';
       
       try {
-        console.log('Calling PHQ9Explanation...');
-        const result = await PHQ9Explanation(totalScore, severity);
-        console.log('PHQ9Explanation returned:', result);
-  
+        const result = await PHQ9Explanation(totalScore, severity);  
         // Display result to user
         handleStartAssessment();
         clearOptions();
@@ -109,11 +106,11 @@ const PHQ = () => {
             Please note that this is a self-assessment and not a medical diagnosis.{" "}
             Results are analysed by OpenAI API referencing{' '}
             <Link 
-              href="https://www.nuhs.edu.sg/docs/nuhslibraries/content-document/care-in-the-community/patient-health-questionnaire.pdf?sfvrsn=4ebcec88_1" 
+              href="https://www.healthhub.sg/programmes/mindsg/caring-for-ourselves/understanding-depression-adults?utm_source=google&utm_medium=paid-search&utm_campaign=fy25mhao&utm_content=rerunpost6_depression_adults&gad_source=1#home" 
               style={{ color: theme.ctaButton, textDecorationLine: 'underline' }} 
               target="_blank"
             >
-              NUHS guidelines
+              HealthHub (Ministry of Health) guidelines
             </Link>
             .
           </Text>

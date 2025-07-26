@@ -75,9 +75,7 @@ const GAD = () => {
     else severity = 'Severe Anxiety';
     
     try {
-      console.log('Calling GAD7Explanation...');
       const result = await GAD7Explanation(totalScore, severity);
-      console.log('GAD7Explanation returned:', result);
 
       // Display result to user
       handleStartAssessment();

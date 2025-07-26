@@ -10,9 +10,7 @@ export const AuthContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
     useEffect(() => {
-        const unsub = onAuthStateChanged(auth, (user) => {
-            // console.log('got user: ', user);
-            
+        const unsub = onAuthStateChanged(auth, (user) => {            
             if (user){
                 updateUserData(user);
             } else {
@@ -66,8 +64,6 @@ export const AuthContextProvider = ({ children }) => {
     const register = async(email, password, username, profileUrl, role) => {
         try {
              const response = await createUserWithEmailAndPassword(auth, email, password);
-             console.log('response.user: ', response?.user);
-
             await setDoc(doc(db, 'users', response?.user?.uid), {
                 username,
                 profileUrl,
@@ -90,7 +86,6 @@ export const AuthContextProvider = ({ children }) => {
     const registerMentor = async(email, password, username, profileUrl, role, faculty, gender, dob, matricYear, activeAlert) => {
         try {
              const response = await createUserWithEmailAndPassword(auth, email, password);
-             console.log('response.user: ', response?.user);
 
             await setDoc(doc(db, 'users', response?.user?.uid), {
                 username,

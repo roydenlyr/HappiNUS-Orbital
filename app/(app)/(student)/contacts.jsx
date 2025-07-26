@@ -33,8 +33,6 @@ const Contacts = () => {
 
   const handleCall1 = (number) => {
   try {
-    console.log('Call Initiated:', number);
-
     if (!number) {
       Alert.alert('Invalid Number', 'No number provided.');
       return;
