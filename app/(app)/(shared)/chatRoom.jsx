@@ -180,7 +180,6 @@ const ChatRoom = () => {
         await Promise.all(deletePromises);
 
         const now = new Date();
-        console.log(now);
         
         const dateString = now.toLocaleString('en-SG', {
             day: '2-digit',
@@ -204,9 +203,7 @@ const ChatRoom = () => {
     }
 
     const transferChat = async () => {
-        if (fromRoom && keepChat) {
-            console.log('Transferring Chat...');
-            
+        if (fromRoom && keepChat) {            
             const oldMessagesSnap = await getDocs(collection(db, 'rooms', fromRoom, 'messages'));
             const batch = writeBatch(db);
 

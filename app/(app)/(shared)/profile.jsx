@@ -59,7 +59,6 @@ const Profile= () => {
             profileUrl: downloadURL,
             });
             setProfilePicture(downloadURL);
-            console.log('Profile updated with image:', downloadURL);
         } catch (error) {
             console.error('Error updating Firestore:', error);
             Alert.alert('Error updating profile', error.message);

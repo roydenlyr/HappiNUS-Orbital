@@ -27,7 +27,7 @@ const ModalAlert = ({header, text, isVisible, theme, onClose, onUse}) => {
         style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}
     >
         {/* <View style={{width: wp(80), maxWidth: 600, maxHeight: hp(40), borderRadius: 20, backgroundColor: theme.modalCardBackground}} className='items-center p-2 justify-center'> */}
-            <ScrollView style={{width: wp(80), maxWidth: 600, maxHeight: hp(40), borderRadius: 20, backgroundColor: theme.modalCardBackground, padding: 8}} className='w-full p-3' contentContainerStyle={{justifyContent: 'center', padding: 12}} showsVerticalScrollIndicator={false}>
+            <ScrollView style={{width: wp(80), maxWidth: 600, maxHeight: hp(40),  borderRadius: 20, backgroundColor: theme.modalCardBackground, padding: 8}} className='w-full p-3' contentContainerStyle={{justifyContent: 'center', padding: 12, flexGrow: 1}} showsVerticalScrollIndicator={false}>
                 <Text className='text-center mb-3' style={{ fontFamily: (fontsLoaded ? 'Poppins_500Medium': undefined), color: theme.header}}>{header}</Text>
                 <Text style={{color: theme.text, textAlign: 'justify'}}>{text}</Text>
                 {

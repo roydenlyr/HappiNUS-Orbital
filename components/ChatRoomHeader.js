@@ -93,9 +93,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
 
         await Promise.all(deletePromises);
 
-        const now = new Date();
-        console.log(now);
-        
+        const now = new Date();        
         const dateString = now.toLocaleString('en-SG', {
             day: '2-digit',
             month: '2-digit',
@@ -122,8 +120,6 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
             setSummaryLoading(true);
             try {
                 const summary = await summariseChat(messages, user.userId);
-                console.log('Summary: ', summary);
-                // Alert.alert('Summary', summary);
                 setHeader('Summary');
                 setText(summary);
                 setModalVisible(true);
@@ -143,7 +139,6 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
             setRephraseLoading(true);
             try {
                 const rephrased = await rephraseMessage(textRef.current);
-                console.log('Rephrased text: ', rephrased);
                 setHeader('Rephrased');
                 setText(rephrased);
                 setModalVisible(true);
@@ -182,8 +177,21 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
         setEndChatLoading(false);
     }
 
-    const handleChangeMentor = () => {
+    const handleChangeMentor = async () => {
         setChangeLoading(true);
+
+        const q = query(roomRef, 
+            where('participants', 'array-contains', currentUser.userId),
+            where('active', '==', true)
+        );
+        const snapShot = await getDocs(q);
+
+        if (!snapShot.empty) {
+            Alert.alert('Unable to Transfer', 'You already have an active chat. Please end your current chat before transferring.');
+            setChangeLoading(false);
+            return;
+        }
+
         Alert.alert('Change Mentor', 'Are you sure you want to proceed?', 
             [{
                 text: 'Dismiss',
@@ -261,9 +269,7 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
             headerLeft: () => (
                 <View className='flex-row items-center gap-3 -ml-3'>
                     <TouchableOpacity
-                    onPress={() => {
-                        console.log('Back button pressed');
-                        
+                    onPress={() => {                        
                         if (user.role === 'mentor') {
                             router.navigate('/(student)/(tabs)/chats');
                         } else {
