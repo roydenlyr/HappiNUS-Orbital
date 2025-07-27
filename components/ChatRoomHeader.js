@@ -180,18 +180,19 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
     const handleChangeMentor = async () => {
         setChangeLoading(true);
 
-        const q = query(roomRef, 
-            where('participants', 'array-contains', currentUser.userId),
-            where('active', '==', true)
-        );
-        const snapShot = await getDocs(q);
+        if (user?.deleted) {
+            const q = query(roomRef, 
+                where('participants', 'array-contains', currentUser.userId),
+                where('active', '==', true)
+            );
+            const snapShot = await getDocs(q);
 
-        if (!snapShot.empty) {
-            Alert.alert('Unable to Transfer', 'You already have an active chat. Please end your current chat before transferring.');
-            setChangeLoading(false);
-            return;
+            if (!snapShot.empty) {
+                Alert.alert('Unable to Transfer', 'You already have an active chat. Please end your current chat before transferring.');
+                setChangeLoading(false);
+                return;
+            }
         }
-
         Alert.alert('Change Mentor', 'Are you sure you want to proceed?', 
             [{
                 text: 'Dismiss',
