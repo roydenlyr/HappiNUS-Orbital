@@ -155,8 +155,8 @@ const ChatRoomHeader = ({user, roomId, messages, textRef, inputRef, isActive, ch
 
     const handleEndChat = () => {
         setEndChatLoading(true);
-        const warn = user?.deleted ? 'This chat history can’t be reopened or transferred once you proceed. To preserve it, please select a new mentor' : 'This action is permanent and cannot be undone.';
-        Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed? \n\n' + warn, [{
+        const warn = user?.deleted ? '\n\nThis chat history can’t be reopened or transferred once you proceed. To preserve it, please select a new mentor' : '';
+        Alert.alert('End Chat Confirmation', 'Are you sure you want to proceed?' + warn, [{
             text: 'Dismiss',
         }, {
             text: 'Proceed',
