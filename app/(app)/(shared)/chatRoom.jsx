@@ -210,7 +210,7 @@ const ChatRoom = () => {
             oldMessagesSnap.forEach((message) => {
                 const data = message.data();
 
-                if (data?.subType === 'removed' || data?.type === 'system') return;
+                if (data?.subType === 'removed' || data?.subType === 'reopen') return;
 
                 const isPrevMentor = data.userId !== item.userId && data.userId !== user.userId;
 
