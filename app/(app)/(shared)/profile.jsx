@@ -48,6 +48,7 @@ const Profile= () => {
         if (result.canceled) return;
 
         const selectedImageUri = result.assets[0].uri;
+        setProfilePicture(selectedImageUri);
         const downloadURL = await uploadImageToFirebase(selectedImageUri, user?.userId);
         if (!downloadURL) {
             Alert.alert('Upload failed', 'Unable to upload image');
@@ -58,7 +59,7 @@ const Profile= () => {
             await updateDoc(doc(db, 'users', user?.userId), {
             profileUrl: downloadURL,
             });
-            setProfilePicture(downloadURL);
+            // setProfilePicture(downloadURL);
         } catch (error) {
             console.error('Error updating Firestore:', error);
             Alert.alert('Error updating profile', error.message);

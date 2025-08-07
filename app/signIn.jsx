@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { Alert, Image, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Octicons } from '@expo/vector-icons';
@@ -60,6 +60,7 @@ const SignIn = () => {
 
   return (
     <CustomKeyboardView>
+      <ScrollView style={{backgroundColor: theme.appBackground}}>
       <View style={{paddingTop: hp(8), paddingHorizontal: wp(5), backgroundColor: theme.appBackground}} className='flex-1 gap-12'>
         {/* SignIn Image */}
         <View className='items-center'>
@@ -117,6 +118,7 @@ const SignIn = () => {
           </View>
         </View>
       </View>
+      </ScrollView>
     </CustomKeyboardView>
   )
 }
