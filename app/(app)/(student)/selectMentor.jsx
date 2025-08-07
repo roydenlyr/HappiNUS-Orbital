@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
-import { Animated, Pressable, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Alert, Animated, Pressable, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import MentorCard from '../../../components/MentorCard';
@@ -28,6 +28,7 @@ const SelectMentor = () => {
   const [selectedFaculties, setSelectedFaculties] = useState(Array(FACULTY.length).fill(null));
   const activeGenders = selectedGenders.filter(Boolean); // removes nulls
   const activeFaculties = selectedFaculties.filter(Boolean);
+  const carouselRef = useRef(null);
 
   const filteredMentors = mentors.filter(
     m =>
@@ -93,17 +94,32 @@ const SelectMentor = () => {
     }
   }
 
+  useEffect(() => {
+    if (filteredMentors.length === 0) {
+      Alert.alert('No Matches Found', 'No mentors match your selected filters. Filters will be cleared to show all available mentors.', 
+        [{
+          text: 'OK',
+          onPress: handleClearFilter
+        }]);
+    } else if (filteredMentors.length === 1) {
+      carouselRef.current?.scrollTo({index: 0, animated: true});
+    }
+  }, [filteredMentors])
+
   return (
     <View style={{backgroundColor: theme.appBackground}} className="flex-1 justify-center">
       {/* Carousel */}
       <Carousel
+        key={filteredMentors.length > 1 ? '1' : '2'}
+        ref={carouselRef}
         data={filteredMentors}
         renderItem={({ item }) => <MentorCard mentor={item} fromRoom={fromRoom} keepChat={keepChat} prevMentorId={prevMentorId}/>}
         pagingEnabled
         snapEnabled
-        slideStyle={{ overflow: 'visible' }}
+        slideStyle={{ overflow: (filteredMentors.length === 1 ? '' : 'visible') }}
         height={hp(55)}
         width={wp(100)}
+        loop={filteredMentors.length === 1 ? false : true}
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 0.9,
